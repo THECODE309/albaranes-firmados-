@@ -1,1 +1,210 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
+    <title>Albaranes Firmados</title>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #f4f4f4;
+            margin: 0;
+            padding: 40px 20px;
+        }
+
+        .contenedor {
+            max-width: 600px;
+            margin: auto;
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.12);
+        }
+
+        h1 {
+            margin-top: 0;
+            color: #1f1f1f;
+        }
+
+        .subtitulo {
+            color: #666;
+            margin-bottom: 30px;
+        }
+
+        label {
+            display: block;
+            margin-top: 18px;
+            margin-bottom: 6px;
+            font-weight: bold;
+        }
+
+        input {
+            width: 100%;
+            box-sizing: border-box;
+            padding: 12px;
+            font-size: 16px;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+        }
+
+        button {
+            width: 100%;
+            margin-top: 25px;
+            padding: 14px;
+            border: none;
+            border-radius: 6px;
+            background: #1769aa;
+            color: white;
+            font-size: 17px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background: #0d4f82;
+        }
+
+        .resultado {
+            display: none;
+            margin-top: 30px;
+            padding: 20px;
+            background: #f1f7fb;
+            border-radius: 8px;
+            border: 1px solid #c9dce9;
+        }
+
+        .codigo {
+            font-size: 22px;
+            font-weight: bold;
+            word-break: break-all;
+            margin: 15px 0;
+        }
+
+        .ok {
+            color: #16803c;
+            font-weight: bold;
+        }
+
+        .datos {
+            line-height: 1.8;
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="contenedor">
+
+    <h1>Albaranes Firmados</h1>
+
+    <div class="subtitulo">
+        Primera versión de prueba
+    </div>
+
+    <label for="serie">Serie</label>
+    <input
+        type="text"
+        id="serie"
+        value="A26"
+        placeholder="Ejemplo: A26"
+    >
+
+    <label for="numero">Número de albarán</label>
+    <input
+        type="text"
+        id="numero"
+        placeholder="Ejemplo: 396"
+    >
+
+    <label for="cliente">Código de cliente</label>
+    <input
+        type="text"
+        id="cliente"
+        placeholder="Ejemplo: 285"
+    >
+
+    <label for="fecha">Fecha</label>
+    <input
+        type="date"
+        id="fecha"
+    >
+
+    <button onclick="generarCodigo()">
+        GENERAR CÓDIGO
+    </button>
+
+    <div class="resultado" id="resultado">
+
+        <div class="ok">
+            ✓ Código generado correctamente
+        </div>
+
+        <div class="datos">
+            <strong>Serie:</strong>
+            <span id="mostrarSerie"></span><br>
+
+            <strong>Albarán:</strong>
+            <span id="mostrarNumero"></span><br>
+
+            <strong>Cliente:</strong>
+            <span id="mostrarCliente"></span><br>
+
+            <strong>Fecha:</strong>
+            <span id="mostrarFecha"></span>
+        </div>
+
+        <hr>
+
+        <strong>CÓDIGO REAL:</strong>
+
+        <div class="codigo" id="codigoFinal"></div>
+
+    </div>
+
+</div>
+
+<script>
+
+function generarCodigo() {
+
+    const serie = document.getElementById("serie").value.trim();
+    const numero = document.getElementById("numero").value.trim();
+    const cliente = document.getElementById("cliente").value.trim();
+    const fecha = document.getElementById("fecha").value;
+
+    if (!serie || !numero || !cliente || !fecha) {
+        alert("Debes rellenar todos los campos.");
+        return;
+    }
+
+    /*
+     * FORMATO DEL CÓDIGO
+     *
+     * SERIE / NÚMERO DE ALBARÁN / CLIENTE / FECHA
+     *
+     * Ejemplo:
+     * A26/396/285/2026-09-08
+     */
+
+    const codigoFinal =
+        serie + "/" +
+        numero + "/" +
+        cliente + "/" +
+        fecha;
+
+    document.getElementById("mostrarSerie").textContent = serie;
+    document.getElementById("mostrarNumero").textContent = numero;
+    document.getElementById("mostrarCliente").textContent = cliente;
+    document.getElementById("mostrarFecha").textContent = fecha;
+
+    document.getElementById("codigoFinal").textContent = codigoFinal;
+
+    document.getElementById("resultado").style.display = "block";
+}
+
+</script>
+
+</body>
+</html>
