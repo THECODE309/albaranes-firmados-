@@ -1261,3 +1261,405 @@ a {
         grid-template-columns: 1fr;
     }
 }
+/* =========================================================
+   STEIL · ALBARANES
+   ESTILOS DEL MÓDULO
+   ========================================================= */
+
+
+/* =========================================================
+   OPCIONES PRINCIPALES
+   ========================================================= */
+
+.albaranes-options {
+
+    display: grid;
+
+    grid-template-columns:
+        repeat(2, 1fr);
+
+    gap: 18px;
+
+    margin-bottom: 20px;
+}
+
+
+.albaran-option-card {
+
+    background: white;
+
+    border: 1px solid var(--border);
+
+    border-radius: var(--radius);
+
+    padding: 22px;
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 16px;
+
+    cursor: pointer;
+
+    box-shadow: var(--shadow);
+
+    transition:
+        transform .18s ease,
+        box-shadow .18s ease,
+        border-color .18s ease;
+}
+
+
+.albaran-option-card:hover {
+
+    transform: translateY(-2px);
+
+    box-shadow:
+        0 6px 18px rgba(25, 35, 40, 0.08);
+
+    border-color: #cbd4d8;
+}
+
+
+/* ICONO */
+
+.albaran-option-icon {
+
+    width: 52px;
+    height: 52px;
+
+    min-width: 52px;
+
+    border-radius: 10px;
+
+    background: var(--primary-light);
+
+    color: var(--primary);
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    font-size: 19px;
+}
+
+
+/* TEXTO */
+
+.albaran-option-content {
+
+    flex: 1;
+}
+
+
+.albaran-option-content h2 {
+
+    font-size: 14px;
+
+    font-weight: 700;
+
+    color: var(--text-main);
+
+    margin-bottom: 5px;
+}
+
+
+.albaran-option-content p {
+
+    font-size: 10px;
+
+    line-height: 1.5;
+
+    color: var(--text-secondary);
+
+    max-width: 400px;
+}
+
+
+/* FLECHA */
+
+.albaran-option-arrow {
+
+    width: 30px;
+    height: 30px;
+
+    border-radius: 50%;
+
+    background: #f4f6f7;
+
+    color: #7c878d;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    font-size: 10px;
+
+    transition:
+        background .18s ease,
+        color .18s ease;
+}
+
+
+.albaran-option-card:hover
+.albaran-option-arrow {
+
+    background: var(--primary);
+
+    color: white;
+}
+
+
+/* =========================================================
+   RESUMEN DE ALBARANES
+   ========================================================= */
+
+.albaranes-summary {
+
+    display: grid;
+
+    grid-template-columns:
+        repeat(4, 1fr);
+
+    gap: 14px;
+
+    margin-bottom: 20px;
+}
+
+
+.summary-card {
+
+    background: white;
+
+    border: 1px solid var(--border);
+
+    border-radius: var(--radius);
+
+    padding: 17px 18px;
+
+    box-shadow: var(--shadow);
+
+    display: flex;
+
+    flex-direction: column;
+}
+
+
+.summary-card span {
+
+    font-size: 9px;
+
+    color: var(--text-secondary);
+
+    margin-bottom: 7px;
+}
+
+
+.summary-card strong {
+
+    font-size: 21px;
+
+    font-weight: 700;
+
+    color: var(--text-main);
+}
+
+
+/* =========================================================
+   PANEL DE ÚLTIMOS ALBARANES
+   ========================================================= */
+
+.albaranes-recent-panel {
+
+    width: 100%;
+}
+
+
+/* =========================================================
+   TABLA
+   ========================================================= */
+
+.albaranes-table-container {
+
+    width: 100%;
+
+    overflow-x: auto;
+}
+
+
+.albaranes-table {
+
+    width: 100%;
+
+    border-collapse: collapse;
+
+    min-width: 700px;
+}
+
+
+.albaranes-table thead {
+
+    background: #fafbfb;
+}
+
+
+.albaranes-table th {
+
+    text-align: left;
+
+    padding: 12px 18px;
+
+    font-size: 8px;
+
+    letter-spacing: .7px;
+
+    font-weight: 700;
+
+    color: #7b868c;
+
+    border-bottom:
+        1px solid var(--border);
+}
+
+
+.albaranes-table td {
+
+    padding: 14px 18px;
+
+    font-size: 10px;
+
+    border-bottom:
+        1px solid #eef0f1;
+
+    color: var(--text-main);
+}
+
+
+.albaranes-table tbody tr:hover {
+
+    background: #fafcfc;
+}
+
+
+/* =========================================================
+   ESTADO VACÍO
+   ========================================================= */
+
+.empty-table-row td {
+
+    padding: 0 !important;
+}
+
+
+.empty-table {
+
+    min-height: 220px;
+
+    display: flex;
+
+    flex-direction: column;
+
+    align-items: center;
+
+    justify-content: center;
+
+    text-align: center;
+
+    padding: 30px;
+}
+
+
+.empty-table > i {
+
+    width: 48px;
+    height: 48px;
+
+    border-radius: 10px;
+
+    background: var(--primary-light);
+
+    color: var(--primary);
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    font-size: 18px;
+
+    margin-bottom: 12px;
+}
+
+
+.empty-table strong {
+
+    font-size: 11px;
+
+    font-weight: 600;
+
+    color: var(--text-main);
+
+    margin-bottom: 5px;
+}
+
+
+.empty-table span {
+
+    font-size: 9px;
+
+    color: var(--text-secondary);
+}
+
+
+/* =========================================================
+   RESPONSIVE ALBARANES
+   ========================================================= */
+
+@media (max-width: 1000px) {
+
+    .albaranes-options {
+
+        grid-template-columns: 1fr;
+    }
+
+
+    .albaranes-summary {
+
+        grid-template-columns:
+            repeat(2, 1fr);
+    }
+
+}
+
+
+@media (max-width: 600px) {
+
+    .albaranes-summary {
+
+        grid-template-columns: 1fr;
+    }
+
+
+    .albaran-option-card {
+
+        padding: 17px;
+    }
+
+
+    .albaran-option-icon {
+
+        width: 45px;
+        height: 45px;
+
+        min-width: 45px;
+
+        font-size: 16px;
+    }
+
+}
