@@ -4,207 +4,751 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>Albaranes Firmados</title>
+    <title>STEIL · Gestión Interna</title>
 
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            background: #f4f4f4;
-            margin: 0;
-            padding: 40px 20px;
-        }
+    <meta name="description" content="Sistema interno de gestión STEIL">
 
-        .contenedor {
-            max-width: 600px;
-            margin: auto;
-            background: white;
-            padding: 30px;
-            border-radius: 12px;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.12);
-        }
+    <!-- CSS PRINCIPAL -->
+    <link rel="stylesheet" href="css/style.css">
 
-        h1 {
-            margin-top: 0;
-            color: #1f1f1f;
-        }
-
-        .subtitulo {
-            color: #666;
-            margin-bottom: 30px;
-        }
-
-        label {
-            display: block;
-            margin-top: 18px;
-            margin-bottom: 6px;
-            font-weight: bold;
-        }
-
-        input {
-            width: 100%;
-            box-sizing: border-box;
-            padding: 12px;
-            font-size: 16px;
-            border: 1px solid #ccc;
-            border-radius: 6px;
-        }
-
-        button {
-            width: 100%;
-            margin-top: 25px;
-            padding: 14px;
-            border: none;
-            border-radius: 6px;
-            background: #1769aa;
-            color: white;
-            font-size: 17px;
-            font-weight: bold;
-            cursor: pointer;
-        }
-
-        button:hover {
-            background: #0d4f82;
-        }
-
-        .resultado {
-            display: none;
-            margin-top: 30px;
-            padding: 20px;
-            background: #f1f7fb;
-            border-radius: 8px;
-            border: 1px solid #c9dce9;
-        }
-
-        .codigo {
-            font-size: 22px;
-            font-weight: bold;
-            word-break: break-all;
-            margin: 15px 0;
-        }
-
-        .ok {
-            color: #16803c;
-            font-weight: bold;
-        }
-
-        .datos {
-            line-height: 1.8;
-        }
-    </style>
+    <!-- ICONOS -->
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
 </head>
 
 <body>
 
-<div class="contenedor">
+<div class="app">
 
-    <h1>Albaranes Firmados</h1>
+    <!-- =====================================================
+         SIDEBAR
+    ====================================================== -->
 
-    <div class="subtitulo">
-        Primera versión de prueba
-    </div>
+    <aside class="sidebar">
 
-    <label for="serie">Serie</label>
-    <input
-        type="text"
-        id="serie"
-        value="A26"
-        placeholder="Ejemplo: A26"
-    >
+        <div class="sidebar-header">
 
-    <label for="numero">Número de albarán</label>
-    <input
-        type="text"
-        id="numero"
-        placeholder="Ejemplo: 396"
-    >
+            <div class="logo">
+                <span class="logo-steil">STEIL</span>
+                <span class="logo-subtitle">GESTIÓN INTERNA</span>
+            </div>
 
-    <label for="cliente">Código de cliente</label>
-    <input
-        type="text"
-        id="cliente"
-        placeholder="Ejemplo: 285"
-    >
-
-    <label for="fecha">Fecha</label>
-    <input
-        type="date"
-        id="fecha"
-    >
-
-    <button onclick="generarCodigo()">
-        GENERAR CÓDIGO
-    </button>
-
-    <div class="resultado" id="resultado">
-
-        <div class="ok">
-            ✓ Código generado correctamente
         </div>
 
-        <div class="datos">
-            <strong>Serie:</strong>
-            <span id="mostrarSerie"></span><br>
 
-            <strong>Albarán:</strong>
-            <span id="mostrarNumero"></span><br>
+        <!-- NAVEGACIÓN PRINCIPAL -->
 
-            <strong>Cliente:</strong>
-            <span id="mostrarCliente"></span><br>
+        <nav class="main-nav">
 
-            <strong>Fecha:</strong>
-            <span id="mostrarFecha"></span>
+            <div class="nav-section-title">
+                PRINCIPAL
+            </div>
+
+            <a href="#" class="nav-item active" data-page="dashboard">
+                <i class="fa-solid fa-house"></i>
+                <span>Dashboard</span>
+            </a>
+
+
+            <div class="nav-section-title">
+                GESTIÓN COMERCIAL
+            </div>
+
+            <a href="#" class="nav-item" data-page="clientes">
+                <i class="fa-solid fa-users"></i>
+                <span>Clientes</span>
+            </a>
+
+            <a href="#" class="nav-item" data-page="proveedores">
+                <i class="fa-solid fa-truck-field"></i>
+                <span>Proveedores</span>
+            </a>
+
+            <a href="#" class="nav-item" data-page="ofertas">
+                <i class="fa-solid fa-file-invoice-dollar"></i>
+                <span>Ofertas</span>
+            </a>
+
+            <a href="#" class="nav-item" data-page="pedidos">
+                <i class="fa-solid fa-cart-shopping"></i>
+                <span>Pedidos</span>
+            </a>
+
+            <a href="#" class="nav-item" data-page="albaranes">
+                <i class="fa-solid fa-file-lines"></i>
+                <span>Albaranes</span>
+            </a>
+
+            <a href="#" class="nav-item" data-page="facturas">
+                <i class="fa-solid fa-file-invoice"></i>
+                <span>Facturas</span>
+            </a>
+
+
+            <div class="nav-section-title">
+                PRODUCTOS Y ALMACÉN
+            </div>
+
+            <a href="#" class="nav-item" data-page="productos">
+                <i class="fa-solid fa-box"></i>
+                <span>Productos</span>
+            </a>
+
+            <a href="#" class="nav-item" data-page="almacen">
+                <i class="fa-solid fa-warehouse"></i>
+                <span>Almacén</span>
+            </a>
+
+            <a href="#" class="nav-item" data-page="inventario">
+                <i class="fa-solid fa-boxes-stacked"></i>
+                <span>Inventario</span>
+            </a>
+
+
+            <div class="nav-section-title">
+                COMUNICACIÓN
+            </div>
+
+            <a href="#" class="nav-item" data-page="whatsapp">
+                <i class="fa-brands fa-whatsapp"></i>
+                <span>WhatsApp</span>
+            </a>
+
+            <a href="#" class="nav-item" data-page="emails">
+                <i class="fa-solid fa-envelope"></i>
+                <span>Correos</span>
+            </a>
+
+
+            <div class="nav-section-title">
+                ADMINISTRACIÓN
+            </div>
+
+            <a href="#" class="nav-item" data-page="compras">
+                <i class="fa-solid fa-bag-shopping"></i>
+                <span>Compras</span>
+            </a>
+
+            <a href="#" class="nav-item" data-page="gastos">
+                <i class="fa-solid fa-euro-sign"></i>
+                <span>Gastos</span>
+            </a>
+
+            <a href="#" class="nav-item" data-page="informes">
+                <i class="fa-solid fa-chart-column"></i>
+                <span>Informes</span>
+            </a>
+
+
+            <div class="nav-section-title">
+                SISTEMA
+            </div>
+
+            <a href="#" class="nav-item" data-page="configuracion">
+                <i class="fa-solid fa-gear"></i>
+                <span>Configuración</span>
+            </a>
+
+        </nav>
+
+
+        <!-- USUARIO -->
+
+        <div class="sidebar-user">
+
+            <div class="user-avatar">
+                PA
+            </div>
+
+            <div class="user-info">
+                <strong>Administrador</strong>
+                <span>STEIL</span>
+            </div>
+
+            <button class="user-menu">
+                <i class="fa-solid fa-ellipsis-vertical"></i>
+            </button>
+
         </div>
 
-        <hr>
+    </aside>
 
-        <strong>CÓDIGO REAL:</strong>
 
-        <div class="codigo" id="codigoFinal"></div>
 
-    </div>
+    <!-- =====================================================
+         CONTENIDO PRINCIPAL
+    ====================================================== -->
+
+    <main class="main-content">
+
+
+        <!-- TOPBAR -->
+
+        <header class="topbar">
+
+            <div class="topbar-left">
+
+                <button class="menu-toggle" id="menuToggle">
+                    <i class="fa-solid fa-bars"></i>
+                </button>
+
+                <div class="breadcrumb">
+                    <span>STEIL</span>
+                    <i class="fa-solid fa-chevron-right"></i>
+                    <strong>Dashboard</strong>
+                </div>
+
+            </div>
+
+
+            <div class="topbar-right">
+
+                <!-- BUSCADOR -->
+
+                <div class="global-search">
+
+                    <i class="fa-solid fa-magnifying-glass"></i>
+
+                    <input
+                        type="text"
+                        id="globalSearch"
+                        placeholder="Buscar cliente, producto, albarán..."
+                    >
+
+                    <span class="search-shortcut">
+                        CTRL K
+                    </span>
+
+                </div>
+
+
+                <!-- NOTIFICACIONES -->
+
+                <button class="topbar-button notifications">
+
+                    <i class="fa-regular fa-bell"></i>
+
+                    <span class="notification-badge">
+                        3
+                    </span>
+
+                </button>
+
+
+                <!-- AYUDA -->
+
+                <button class="topbar-button">
+
+                    <i class="fa-regular fa-circle-question"></i>
+
+                </button>
+
+            </div>
+
+        </header>
+
+
+
+        <!-- =================================================
+             ÁREA DE PÁGINA
+        ================================================== -->
+
+        <section class="page-container" id="pageContainer">
+
+
+            <!-- =============================================
+                 DASHBOARD
+            ============================================== -->
+
+            <div class="page active" id="page-dashboard">
+
+                <div class="page-header">
+
+                    <div>
+                        <span class="page-kicker">
+                            GESTIÓN INTERNA
+                        </span>
+
+                        <h1>
+                            Dashboard
+                        </h1>
+
+                        <p>
+                            Resumen general de la actividad de STEIL.
+                        </p>
+                    </div>
+
+
+                    <div class="page-actions">
+
+                        <button class="btn btn-secondary">
+                            <i class="fa-solid fa-download"></i>
+                            Exportar
+                        </button>
+
+                        <button class="btn btn-primary">
+                            <i class="fa-solid fa-plus"></i>
+                            Nueva operación
+                        </button>
+
+                    </div>
+
+                </div>
+
+
+
+                <!-- KPI -->
+
+                <div class="kpi-grid">
+
+
+                    <div class="kpi-card">
+
+                        <div class="kpi-icon">
+                            <i class="fa-solid fa-file-lines"></i>
+                        </div>
+
+                        <div class="kpi-content">
+
+                            <span>
+                                Albaranes pendientes
+                            </span>
+
+                            <strong>
+                                12
+                            </strong>
+
+                            <small class="positive">
+                                +8,4% este mes
+                            </small>
+
+                        </div>
+
+                    </div>
+
+
+
+                    <div class="kpi-card">
+
+                        <div class="kpi-icon">
+                            <i class="fa-solid fa-cart-shopping"></i>
+                        </div>
+
+                        <div class="kpi-content">
+
+                            <span>
+                                Pedidos pendientes
+                            </span>
+
+                            <strong>
+                                24
+                            </strong>
+
+                            <small>
+                                6 para hoy
+                            </small>
+
+                        </div>
+
+                    </div>
+
+
+
+                    <div class="kpi-card">
+
+                        <div class="kpi-icon">
+                            <i class="fa-solid fa-truck"></i>
+                        </div>
+
+                        <div class="kpi-content">
+
+                            <span>
+                                Compras pendientes
+                            </span>
+
+                            <strong>
+                                8
+                            </strong>
+
+                            <small>
+                                3 urgentes
+                            </small>
+
+                        </div>
+
+                    </div>
+
+
+
+                    <div class="kpi-card">
+
+                        <div class="kpi-icon">
+                            <i class="fa-solid fa-euro-sign"></i>
+                        </div>
+
+                        <div class="kpi-content">
+
+                            <span>
+                                Ventas del mes
+                            </span>
+
+                            <strong>
+                                48.620 €
+                            </strong>
+
+                            <small class="positive">
+                                +12,6%
+                            </small>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+
+                <!-- ACTIVIDAD -->
+
+                <div class="dashboard-grid">
+
+
+                    <div class="panel">
+
+                        <div class="panel-header">
+
+                            <div>
+                                <h2>
+                                    Actividad reciente
+                                </h2>
+
+                                <span>
+                                    Últimas operaciones
+                                </span>
+                            </div>
+
+                            <button class="text-button">
+                                Ver todo
+                            </button>
+
+                        </div>
+
+
+                        <div class="activity-list">
+
+
+                            <div class="activity-item">
+
+                                <div class="activity-icon">
+                                    <i class="fa-solid fa-file-lines"></i>
+                                </div>
+
+                                <div class="activity-info">
+
+                                    <strong>
+                                        Albarán ALB-2026-0148
+                                    </strong>
+
+                                    <span>
+                                        Cliente pendiente de facturación
+                                    </span>
+
+                                </div>
+
+                                <time>
+                                    Hace 12 min
+                                </time>
+
+                            </div>
+
+
+
+                            <div class="activity-item">
+
+                                <div class="activity-icon">
+                                    <i class="fa-solid fa-cart-shopping"></i>
+                                </div>
+
+                                <div class="activity-info">
+
+                                    <strong>
+                                        Pedido PED-2026-083
+                                    </strong>
+
+                                    <span>
+                                        Pedido recibido
+                                    </span>
+
+                                </div>
+
+                                <time>
+                                    Hace 34 min
+                                </time>
+
+                            </div>
+
+
+
+                            <div class="activity-item">
+
+                                <div class="activity-icon">
+                                    <i class="fa-brands fa-whatsapp"></i>
+                                </div>
+
+                                <div class="activity-info">
+
+                                    <strong>
+                                        Nuevo contacto WhatsApp
+                                    </strong>
+
+                                    <span>
+                                        Consulta de material eléctrico
+                                    </span>
+
+                                </div>
+
+                                <time>
+                                    Hace 1 h
+                                </time>
+
+                            </div>
+
+
+                        </div>
+
+                    </div>
+
+
+
+                    <!-- ALERTAS -->
+
+                    <div class="panel">
+
+                        <div class="panel-header">
+
+                            <div>
+
+                                <h2>
+                                    Alertas
+                                </h2>
+
+                                <span>
+                                    Requieren atención
+                                </span>
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="alerts-list">
+
+
+                            <div class="alert-item warning">
+
+                                <i class="fa-solid fa-triangle-exclamation"></i>
+
+                                <div>
+
+                                    <strong>
+                                        Stock bajo
+                                    </strong>
+
+                                    <span>
+                                        7 referencias necesitan reposición
+                                    </span>
+
+                                </div>
+
+                            </div>
+
+
+
+                            <div class="alert-item danger">
+
+                                <i class="fa-solid fa-clock"></i>
+
+                                <div>
+
+                                    <strong>
+                                        Pedidos atrasados
+                                    </strong>
+
+                                    <span>
+                                        3 pedidos superan la fecha prevista
+                                    </span>
+
+                                </div>
+
+                            </div>
+
+
+
+                            <div class="alert-item info">
+
+                                <i class="fa-solid fa-file-invoice"></i>
+
+                                <div>
+
+                                    <strong>
+                                        Albaranes sin facturar
+                                    </strong>
+
+                                    <span>
+                                        12 albaranes pendientes
+                                    </span>
+
+                                </div>
+
+                            </div>
+
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+
+            <!-- =============================================
+                 PÁGINAS / MÓDULOS
+            ============================================== -->
+
+            <div class="page" id="page-clientes">
+                <div class="empty-page">
+                    <h1>Clientes</h1>
+                    <p>Módulo en desarrollo.</p>
+                </div>
+            </div>
+
+
+            <div class="page" id="page-proveedores">
+                <div class="empty-page">
+                    <h1>Proveedores</h1>
+                    <p>Módulo en desarrollo.</p>
+                </div>
+            </div>
+
+
+            <div class="page" id="page-ofertas">
+                <div class="empty-page">
+                    <h1>Ofertas</h1>
+                    <p>Módulo en desarrollo.</p>
+                </div>
+            </div>
+
+
+            <div class="page" id="page-pedidos">
+                <div class="empty-page">
+                    <h1>Pedidos</h1>
+                    <p>Módulo en desarrollo.</p>
+                </div>
+            </div>
+
+
+            <div class="page" id="page-albaranes">
+                <div class="empty-page">
+                    <h1>Albaranes</h1>
+                    <p>Módulo en desarrollo.</p>
+                </div>
+            </div>
+
+
+            <div class="page" id="page-facturas">
+                <div class="empty-page">
+                    <h1>Facturas</h1>
+                    <p>Módulo en desarrollo.</p>
+                </div>
+            </div>
+
+
+            <div class="page" id="page-productos">
+                <div class="empty-page">
+                    <h1>Productos</h1>
+                    <p>Módulo en desarrollo.</p>
+                </div>
+            </div>
+
+
+            <div class="page" id="page-almacen">
+                <div class="empty-page">
+                    <h1>Almacén</h1>
+                    <p>Módulo en desarrollo.</p>
+                </div>
+            </div>
+
+
+            <div class="page" id="page-inventario">
+                <div class="empty-page">
+                    <h1>Inventario</h1>
+                    <p>Módulo en desarrollo.</p>
+                </div>
+            </div>
+
+
+            <div class="page" id="page-whatsapp">
+                <div class="empty-page">
+                    <h1>WhatsApp</h1>
+                    <p>Módulo en desarrollo.</p>
+                </div>
+            </div>
+
+
+            <div class="page" id="page-emails">
+                <div class="empty-page">
+                    <h1>Correos</h1>
+                    <p>Módulo en desarrollo.</p>
+                </div>
+            </div>
+
+
+            <div class="page" id="page-compras">
+                <div class="empty-page">
+                    <h1>Compras</h1>
+                    <p>Módulo en desarrollo.</p>
+                </div>
+            </div>
+
+
+            <div class="page" id="page-gastos">
+                <div class="empty-page">
+                    <h1>Gastos</h1>
+                    <p>Módulo en desarrollo.</p>
+                </div>
+            </div>
+
+
+            <div class="page" id="page-informes">
+                <div class="empty-page">
+                    <h1>Informes</h1>
+                    <p>Módulo en desarrollo.</p>
+                </div>
+            </div>
+
+
+            <div class="page" id="page-configuracion">
+                <div class="empty-page">
+                    <h1>Configuración</h1>
+                    <p>Módulo en desarrollo.</p>
+                </div>
+            </div>
+
+
+        </section>
+
+    </main>
 
 </div>
 
-<script>
 
-function generarCodigo() {
+<!-- =====================================================
+     JAVASCRIPT
+====================================================== -->
 
-    const serie = document.getElementById("serie").value.trim();
-    const numero = document.getElementById("numero").value.trim();
-    const cliente = document.getElementById("cliente").value.trim();
-    const fecha = document.getElementById("fecha").value;
-
-    if (!serie || !numero || !cliente || !fecha) {
-        alert("Debes rellenar todos los campos.");
-        return;
-    }
-
-    /*
-     * FORMATO DEL CÓDIGO
-     *
-     * SERIE / NÚMERO DE ALBARÁN / CLIENTE / FECHA
-     *
-     * Ejemplo:
-     * A26/396/285/2026-09-08
-     */
-
-    const codigoFinal =
-        serie + "/" +
-        numero + "/" +
-        cliente + "/" +
-        fecha;
-
-    document.getElementById("mostrarSerie").textContent = serie;
-    document.getElementById("mostrarNumero").textContent = numero;
-    document.getElementById("mostrarCliente").textContent = cliente;
-    document.getElementById("mostrarFecha").textContent = fecha;
-
-    document.getElementById("codigoFinal").textContent = codigoFinal;
-
-    document.getElementById("resultado").style.display = "block";
-}
-
-</script>
+<script src="js/app.js"></script>
 
 </body>
 </html>
