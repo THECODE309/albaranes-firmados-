@@ -1,1532 +1,967 @@
-/* =========================================================
+/* ============================================================
    STEIL · GESTIÓN INTERNA
-   JAVASCRIPT PRINCIPAL
-   MÓDULO ALBARANES
-   ========================================================= */
+   APP.JS · V2 FUNCIONAL
+   ============================================================ */
+
+(function () {
+    "use strict";
+
+    /* ============================================================
+       CONFIGURACIÓN
+    ============================================================ */
+
+    const STORAGE_KEY = "steil_albaranes_v2";
+
+    const PAGE_NAMES = {
+        dashboard: "Dashboard",
+        clientes: "Clientes",
+        proveedores: "Proveedores",
+        ofertas: "Ofertas",
+        pedidos: "Pedidos",
+        albaranes: "Albaranes",
+        facturas: "Facturas",
+        productos: "Productos",
+        almacen: "Almacén",
+        inventario: "Inventario",
+        whatsapp: "WhatsApp",
+        emails: "Correos",
+        compras: "Compras",
+        gastos: "Gastos",
+        informes: "Informes",
+        configuracion: "Configuración"
+    };
 
 
-/* =========================================================
-   ELEMENTOS GENERALES
-   ========================================================= */
+    /* ============================================================
+       INICIO
+    ============================================================ */
 
-const navItems = document.querySelectorAll(".nav-item");
-const pages = document.querySelectorAll(".page");
+    document.addEventListener("DOMContentLoaded", function () {
 
-const breadcrumbCurrent =
-    document.querySelector(".breadcrumb strong");
+        iniciarNavegacion();
+        iniciarAlbaranes();
+        iniciarBuscadorGlobal();
+        iniciarMenu();
 
-const menuToggle =
-    document.getElementById("menuToggle");
-
-const sidebar =
-    document.querySelector(".sidebar");
-
-const globalSearch =
-    document.getElementById("globalSearch");
-
-
-/* =========================================================
-   ALMACENAMIENTO
-   ========================================================= */
-
-const ALBARANES_STORAGE_KEY =
-    "steil_albaranes";
-
-let albaranes = [];
-
-let fotografiaActual = "";
-
-let albaranEditandoId = null;
-
-
-/* =========================================================
-   NAVEGACIÓN
-   ========================================================= */
-
-navItems.forEach(item => {
-
-    item.addEventListener("click", function(event) {
-
-        event.preventDefault();
-
-        const pageName =
-            this.dataset.page;
-
-        if (!pageName) return;
-
-        openPage(pageName);
-
-    });
-
-});
-
-
-function openPage(pageName) {
-
-    navItems.forEach(item => {
-
-        item.classList.remove("active");
+        actualizarResumenAlbaranes();
+        renderAlbaranesRecientes();
 
     });
 
 
-    const selectedNav =
-        document.querySelector(
-            `.nav-item[data-page="${pageName}"]`
-        );
+    /* ============================================================
+       NAVEGACIÓN PRINCIPAL
+    ============================================================ */
 
+    function iniciarNavegacion() {
 
-    if (selectedNav) {
+        const navItems = document.querySelectorAll(".nav-item");
 
-        selectedNav.classList.add("active");
+        navItems.forEach(function (item) {
+
+            item.addEventListener("click", function (event) {
+
+                event.preventDefault();
+
+                const page = item.dataset.page;
+
+                if (!page) {
+                    return;
+                }
+
+                mostrarPagina(page);
+
+            });
+
+        });
 
     }
 
 
-    pages.forEach(page => {
+    function mostrarPagina(pageName) {
 
-        page.classList.remove("active");
+        const pages = document.querySelectorAll(".page");
 
-    });
-
-
-    const selectedPage =
-        document.getElementById(
-            `page-${pageName}`
-        );
+        pages.forEach(function (page) {
+            page.classList.remove("active");
+        });
 
 
-    if (selectedPage) {
+        const target = document.getElementById("page-" + pageName);
 
-        selectedPage.classList.add("active");
+        if (!target) {
+            return;
+        }
 
-    }
+        target.classList.add("active");
 
 
-    if (breadcrumbCurrent) {
+        /* -----------------------------------------
+           MENÚ
+        ----------------------------------------- */
+
+        const navItems = document.querySelectorAll(".nav-item");
+
+        navItems.forEach(function (item) {
+
+            item.classList.remove("active");
+
+            if (item.dataset.page === pageName) {
+                item.classList.add("active");
+            }
+
+        });
+
+
+        /* -----------------------------------------
+           BREADCRUMB
+        ----------------------------------------- */
+
+        const breadcrumb = document.querySelector(".breadcrumb strong");
+
+        if (breadcrumb) {
+
+            breadcrumb.textContent =
+                PAGE_NAMES[pageName] || pageName;
+
+        }
+
+
+        /* -----------------------------------------
+           SI ENTRAMOS EN ALBARANES
+        ----------------------------------------- */
+
+        if (pageName === "albaranes") {
+
+            actualizarResumenAlbaranes();
+            renderAlbaranesRecientes();
+
+        }
+
+
+        /* -----------------------------------------
+           SI ENTRAMOS EN CONSULTA
+        ----------------------------------------- */
 
         if (pageName === "albaranes-consulta") {
 
-            breadcrumbCurrent.textContent =
-                "Consultar albaranes";
+            renderConsultaAlbaranes();
 
-        } else if (selectedNav) {
+        }
 
-            const text =
-                selectedNav.querySelector("span");
 
-            if (text) {
+        /* -----------------------------------------
+           CERRAR SIDEBAR EN MÓVIL
+        ----------------------------------------- */
 
-                breadcrumbCurrent.textContent =
-                    text.textContent;
+        const sidebar = document.querySelector(".sidebar");
 
-            }
+        if (sidebar && window.innerWidth <= 900) {
+            sidebar.classList.remove("open");
+        }
+
+    }
+
+
+    /* ============================================================
+       ALBARANES
+    ============================================================ */
+
+    function iniciarAlbaranes() {
+
+        /* -----------------------------------------
+           CONSULTAR
+        ----------------------------------------- */
+
+        const optionConsultar =
+            document.getElementById("optionConsultar");
+
+        if (optionConsultar) {
+
+            optionConsultar.addEventListener("click", function () {
+
+                mostrarConsultaAlbaranes();
+
+            });
+
+        }
+
+
+        /* -----------------------------------------
+           VER TODOS
+        ----------------------------------------- */
+
+        const verTodos =
+            document.getElementById("verTodosAlbaranes");
+
+        if (verTodos) {
+
+            verTodos.addEventListener("click", function () {
+
+                mostrarConsultaAlbaranes();
+
+            });
+
+        }
+
+
+        /* -----------------------------------------
+           VOLVER
+        ----------------------------------------- */
+
+        const volver =
+            document.getElementById("btnVolverAlbaranes");
+
+        if (volver) {
+
+            volver.addEventListener("click", function () {
+
+                mostrarPagina("albaranes");
+
+            });
+
+        }
+
+
+        /* -----------------------------------------
+           NUEVO ALBARÁN DESDE CONSULTA
+        ----------------------------------------- */
+
+        const nuevoConsulta =
+            document.getElementById("btnNuevoAlbaranConsulta");
+
+        if (nuevoConsulta) {
+
+            nuevoConsulta.addEventListener("click", function () {
+
+                mostrarPagina("albaranes");
+
+                setTimeout(function () {
+                    abrirNuevoAlbaran();
+                }, 100);
+
+            });
+
+        }
+
+
+        /* -----------------------------------------
+           NUEVO ALBARÁN
+        ----------------------------------------- */
+
+        const nuevo =
+            document.getElementById("btnNuevoAlbaran");
+
+        if (nuevo) {
+
+            nuevo.addEventListener("click", function () {
+
+                abrirNuevoAlbaran();
+
+            });
+
+        }
+
+
+        /* -----------------------------------------
+           ESCANEAR
+        ----------------------------------------- */
+
+        const escanear =
+            document.getElementById("optionEscanear");
+
+        if (escanear) {
+
+            escanear.addEventListener("click", function () {
+
+                abrirEscaner();
+
+            });
+
+        }
+
+
+        /* -----------------------------------------
+           BUSCAR
+        ----------------------------------------- */
+
+        const buscar =
+            document.getElementById("btnBuscarAlbaranes");
+
+        if (buscar) {
+
+            buscar.addEventListener("click", function () {
+
+                renderConsultaAlbaranes();
+
+            });
+
+        }
+
+
+        /* -----------------------------------------
+           LIMPIAR
+        ----------------------------------------- */
+
+        const limpiar =
+            document.getElementById("btnLimpiarConsulta");
+
+        if (limpiar) {
+
+            limpiar.addEventListener("click", function () {
+
+                const buscarInput =
+                    document.getElementById("consultaBuscar");
+
+                const desde =
+                    document.getElementById("consultaFechaDesde");
+
+                const hasta =
+                    document.getElementById("consultaFechaHasta");
+
+                const estado =
+                    document.getElementById("consultaEstado");
+
+
+                if (buscarInput) {
+                    buscarInput.value = "";
+                }
+
+                if (desde) {
+                    desde.value = "";
+                }
+
+                if (hasta) {
+                    hasta.value = "";
+                }
+
+                if (estado) {
+                    estado.value = "Todos";
+                }
+
+
+                renderConsultaAlbaranes();
+
+            });
+
+        }
+
+
+        /* -----------------------------------------
+           ENTER EN BUSCADOR
+        ----------------------------------------- */
+
+        const consultaBuscar =
+            document.getElementById("consultaBuscar");
+
+        if (consultaBuscar) {
+
+            consultaBuscar.addEventListener("keydown", function (event) {
+
+                if (event.key === "Enter") {
+
+                    event.preventDefault();
+
+                    renderConsultaAlbaranes();
+
+                }
+
+            });
 
         }
 
     }
 
 
-    if (sidebar) {
+    /* ============================================================
+       MOSTRAR CONSULTA
+    ============================================================ */
 
-        sidebar.classList.remove("open");
+    function mostrarConsultaAlbaranes() {
 
-    }
+        mostrarPagina("albaranes-consulta");
 
-
-    window.scrollTo({
-        top: 0,
-        behavior: "smooth"
-    });
-
-}
-
-
-/* =========================================================
-   MENÚ MÓVIL
-   ========================================================= */
-
-if (menuToggle) {
-
-    menuToggle.addEventListener(
-        "click",
-        function() {
-
-            sidebar.classList.toggle("open");
-
-        }
-    );
-
-}
-
-
-/* =========================================================
-   BÚSQUEDA GLOBAL
-   ========================================================= */
-
-if (globalSearch) {
-
-    globalSearch.addEventListener(
-        "keydown",
-        function(event) {
-
-            if (event.key !== "Enter") return;
-
-            const search =
-                this.value.trim();
-
-            if (!search) return;
-
-            const texto =
-                search.toLowerCase();
-
-            if (
-                texto.includes("albaran") ||
-                texto.includes("albarán")
-            ) {
-
-                abrirConsultaAlbaranes();
-
-            } else {
-
-                console.log(
-                    "Búsqueda global:",
-                    search
-                );
-
-            }
-
-        }
-    );
-
-}
-
-
-/* =========================================================
-   CTRL + K
-   ========================================================= */
-
-document.addEventListener(
-    "keydown",
-    function(event) {
-
-        if (
-            (event.ctrlKey || event.metaKey) &&
-            event.key.toLowerCase() === "k"
-        ) {
-
-            event.preventDefault();
-
-            if (globalSearch) {
-
-                globalSearch.focus();
-                globalSearch.select();
-
-            }
-
-        }
+        renderConsultaAlbaranes();
 
     }
-);
 
 
-/* =========================================================
-   CARGAR ALBARANES
-   ========================================================= */
+    /* ============================================================
+       STORAGE
+    ============================================================ */
 
-function cargarAlbaranes() {
+    function obtenerAlbaranes() {
 
-    try {
+        try {
 
-        const datos =
-            localStorage.getItem(
-                ALBARANES_STORAGE_KEY
+            const data =
+                localStorage.getItem(STORAGE_KEY);
+
+            if (!data) {
+                return [];
+            }
+
+            const parsed = JSON.parse(data);
+
+            if (!Array.isArray(parsed)) {
+                return [];
+            }
+
+            return parsed;
+
+        } catch (error) {
+
+            console.error(
+                "Error leyendo albaranes:",
+                error
             );
 
-
-        if (datos) {
-
-            albaranes =
-                JSON.parse(datos);
-
-        } else {
-
-            albaranes = [];
+            return [];
 
         }
 
-    } catch (error) {
-
-        console.error(
-            "Error cargando albaranes:",
-            error
-        );
-
-        albaranes = [];
-
     }
 
-}
 
+    function guardarAlbaranes(albaranes) {
 
-/* =========================================================
-   GUARDAR ALBARANES
-   ========================================================= */
+        try {
 
-function guardarAlbaranes() {
+            localStorage.setItem(
+                STORAGE_KEY,
+                JSON.stringify(albaranes)
+            );
 
-    try {
+        } catch (error) {
 
-        localStorage.setItem(
-            ALBARANES_STORAGE_KEY,
-            JSON.stringify(albaranes)
-        );
+            console.error(
+                "Error guardando albaranes:",
+                error
+            );
 
-        return true;
-
-    } catch (error) {
-
-        console.error(
-            "Error guardando albaranes:",
-            error
-        );
-
-        alert(
-            "No se ha podido guardar la información."
-        );
-
-        return false;
-
-    }
-
-}
-
-
-/* =========================================================
-   FORMATEAR FECHA
-   ========================================================= */
-
-function formatearFecha(fecha) {
-
-    if (!fecha) return "-";
-
-    const partes =
-        fecha.split("-");
-
-    if (partes.length !== 3) {
-
-        return fecha;
-
-    }
-
-    return (
-        partes[2] +
-        "/" +
-        partes[1] +
-        "/" +
-        partes[0]
-    );
-
-}
-
-
-/* =========================================================
-   ESCAPAR HTML
-   ========================================================= */
-
-function escaparHTML(texto) {
-
-    if (!texto) return "";
-
-    return String(texto)
-        .replace(/&/g, "&amp;")
-        .replace(/</g, "&lt;")
-        .replace(/>/g, "&gt;")
-        .replace(/"/g, "&quot;")
-        .replace(/'/g, "&#039;");
-
-}
-
-
-/* =========================================================
-   ESTADO
-   ========================================================= */
-
-function estadoHTML(estado) {
-
-    if (estado === "Firmado") {
-
-        return `
-            <span style="
-                display:inline-block;
-                padding:5px 9px;
-                border-radius:20px;
-                background:#e8f4ec;
-                color:#2e7546;
-                font-size:9px;
-                font-weight:700;
-            ">
-                Firmado
-            </span>
-        `;
+        }
 
     }
 
 
-    return `
-        <span style="
-            display:inline-block;
-            padding:5px 9px;
-            border-radius:20px;
-            background:#fff4df;
-            color:#9a6816;
-            font-size:9px;
-            font-weight:700;
-        ">
-            Pendiente
-        </span>
-    `;
+    /* ============================================================
+       NUEVO ALBARÁN
+    ============================================================ */
 
-}
+    function abrirNuevoAlbaran() {
+
+        abrirModalAlbaran();
+
+    }
 
 
-/* =========================================================
-   ABRIR FORMULARIO NUEVO
-   ========================================================= */
+    function abrirModalAlbaran(datosIniciales) {
 
-function abrirFormularioAlbaran() {
-
-    cerrarModalAlbaran();
-
-    albaranEditandoId = null;
-
-    fotografiaActual = "";
-
-    const modal =
-        document.createElement("div");
-
-    modal.id =
-        "modalAlbaran";
+        const datos =
+            datosIniciales || {};
 
 
-    modal.innerHTML = `
-
-        <div style="
-            position:fixed;
-            inset:0;
-            background:rgba(10,20,25,.55);
-            display:flex;
-            align-items:center;
-            justify-content:center;
-            padding:20px;
-            z-index:9999;
-        ">
-
-            <div style="
-                width:100%;
-                max-width:720px;
-                max-height:92vh;
-                overflow:auto;
-                background:#fff;
-                border-radius:14px;
-                box-shadow:0 20px 60px rgba(0,0,0,.25);
-            ">
-
-                <div style="
-                    display:flex;
-                    align-items:center;
-                    justify-content:space-between;
-                    padding:20px 24px;
-                    border-bottom:1px solid #e5e9eb;
-                ">
-
-                    <div>
-
-                        <div style="
-                            font-size:9px;
-                            letter-spacing:1.2px;
-                            font-weight:700;
-                            color:#176d79;
-                            margin-bottom:5px;
-                        ">
-                            GESTIÓN DE ALBARANES
-                        </div>
-
-                        <h2 style="
-                            margin:0;
-                            font-size:20px;
-                            color:#14222b;
-                        ">
-                            Nuevo albarán
-                        </h2>
-
-                    </div>
-
-                    <button
-                        type="button"
-                        id="cerrarModalAlbaran"
-                        style="
-                            width:34px;
-                            height:34px;
-                            border:0;
-                            border-radius:50%;
-                            background:#f2f4f5;
-                            color:#52616a;
-                            cursor:pointer;
-                            font-size:18px;
-                        "
-                    >
-                        ×
-                    </button>
-
-                </div>
+        cerrarModal();
 
 
-                <form
-                    id="formAlbaran"
-                    style="padding:24px;"
-                >
+        const modal =
+            document.createElement("div");
 
-                    <div style="
-                        display:grid;
-                        grid-template-columns:1fr 1fr;
-                        gap:16px;
-                    ">
+        modal.id = "steilAlbaranModal";
+
+        modal.innerHTML = `
+
+            <div class="steil-modal-overlay">
+
+                <div class="steil-modal">
+
+                    <div class="steil-modal-header">
 
                         <div>
-
-                            <label style="
-                                display:block;
-                                font-size:11px;
-                                font-weight:700;
-                                color:#35434b;
-                                margin-bottom:7px;
-                            ">
-                                Nº DE ALBARÁN *
-                            </label>
-
-                            <input
-                                type="text"
-                                id="numeroAlbaran"
-                                required
-                                placeholder="Ej. ALB-2026-00125"
-                                style="
-                                    width:100%;
-                                    box-sizing:border-box;
-                                    padding:11px 12px;
-                                    border:1px solid #d8dfe2;
-                                    border-radius:7px;
-                                    font-size:12px;
-                                "
-                            >
-
-                        </div>
-
-
-                        <div>
-
-                            <label style="
-                                display:block;
-                                font-size:11px;
-                                font-weight:700;
-                                color:#35434b;
-                                margin-bottom:7px;
-                            ">
-                                FECHA *
-                            </label>
-
-                            <input
-                                type="date"
-                                id="fechaAlbaran"
-                                required
-                                style="
-                                    width:100%;
-                                    box-sizing:border-box;
-                                    padding:11px 12px;
-                                    border:1px solid #d8dfe2;
-                                    border-radius:7px;
-                                    font-size:12px;
-                                "
-                            >
-
-                        </div>
-
-                    </div>
-
-
-                    <div style="margin-top:16px;">
-
-                        <label style="
-                            display:block;
-                            font-size:11px;
-                            font-weight:700;
-                            color:#35434b;
-                            margin-bottom:7px;
-                        ">
-                            CLIENTE *
-                        </label>
-
-                        <input
-                            type="text"
-                            id="clienteAlbaran"
-                            required
-                            placeholder="Nombre del cliente"
-                            style="
-                                width:100%;
-                                box-sizing:border-box;
-                                padding:11px 12px;
-                                border:1px solid #d8dfe2;
-                                border-radius:7px;
-                                font-size:12px;
-                            "
-                        >
-
-                    </div>
-
-
-                    <div style="margin-top:18px;">
-
-                        <label style="
-                            display:block;
-                            font-size:11px;
-                            font-weight:700;
-                            color:#35434b;
-                            margin-bottom:8px;
-                        ">
-                            FOTOGRAFÍA DEL ALBARÁN
-                        </label>
-
-                        <label
-                            for="fotoAlbaran"
-                            style="
-                                display:flex;
-                                flex-direction:column;
-                                align-items:center;
-                                justify-content:center;
-                                min-height:150px;
-                                border:2px dashed #cbd8dc;
-                                border-radius:10px;
-                                background:#f8fafb;
-                                cursor:pointer;
-                                text-align:center;
-                                padding:20px;
-                                box-sizing:border-box;
-                            "
-                        >
-
-                            <i
-                                class="fa-solid fa-camera"
-                                style="
-                                    font-size:28px;
-                                    color:#176d79;
-                                    margin-bottom:10px;
-                                "
-                            ></i>
-
-                            <strong style="
-                                font-size:12px;
-                                color:#26343c;
-                                margin-bottom:5px;
-                            ">
-                                Hacer o seleccionar fotografía
-                            </strong>
-
-                            <span style="
-                                font-size:10px;
-                                color:#7a878e;
-                            ">
-                                Pulsa aquí para añadir la imagen
+                            <span class="steil-modal-kicker">
+                                GESTIÓN DE ALBARANES
                             </span>
 
-                        </label>
-
-
-                        <input
-                            type="file"
-                            id="fotoAlbaran"
-                            accept="image/*"
-                            capture="environment"
-                            style="display:none;"
-                        >
-
-
-                        <div
-                            id="previewFotoAlbaran"
-                            style="
-                                margin-top:12px;
-                                display:none;
-                            "
-                        ></div>
-
-                    </div>
-
-
-                    <div style="margin-top:18px;">
-
-                        <label style="
-                            display:block;
-                            font-size:11px;
-                            font-weight:700;
-                            color:#35434b;
-                            margin-bottom:8px;
-                        ">
-                            ESTADO
-                        </label>
-
-
-                        <div style="
-                            display:flex;
-                            gap:10px;
-                        ">
-
-
-                            <label style="
-                                flex:1;
-                                cursor:pointer;
-                            ">
-
-                                <input
-                                    type="radio"
-                                    name="estadoAlbaran"
-                                    value="Pendiente"
-                                    checked
-                                    style="display:none;"
-                                >
-
-                                <span
-                                    class="estado-option"
-                                    style="
-                                        display:block;
-                                        padding:11px;
-                                        text-align:center;
-                                        border:1px solid #d8dfe2;
-                                        border-radius:7px;
-                                        font-size:11px;
-                                        font-weight:600;
-                                    "
-                                >
-                                    Pendiente
-                                </span>
-
-                            </label>
-
-
-                            <label style="
-                                flex:1;
-                                cursor:pointer;
-                            ">
-
-                                <input
-                                    type="radio"
-                                    name="estadoAlbaran"
-                                    value="Firmado"
-                                    style="display:none;"
-                                >
-
-                                <span
-                                    class="estado-option"
-                                    style="
-                                        display:block;
-                                        padding:11px;
-                                        text-align:center;
-                                        border:1px solid #d8dfe2;
-                                        border-radius:7px;
-                                        font-size:11px;
-                                        font-weight:600;
-                                    "
-                                >
-                                    Firmado
-                                </span>
-
-                            </label>
-
-
+                            <h2>
+                                Nuevo albarán
+                            </h2>
                         </div>
-
-                    </div>
-
-
-                    <div style="margin-top:18px;">
-
-                        <label style="
-                            display:block;
-                            font-size:11px;
-                            font-weight:700;
-                            color:#35434b;
-                            margin-bottom:7px;
-                        ">
-                            OBSERVACIONES
-                        </label>
-
-                        <textarea
-                            id="observacionesAlbaran"
-                            rows="3"
-                            placeholder="Observaciones adicionales..."
-                            style="
-                                width:100%;
-                                box-sizing:border-box;
-                                padding:11px 12px;
-                                border:1px solid #d8dfe2;
-                                border-radius:7px;
-                                font-size:12px;
-                                resize:vertical;
-                            "
-                        ></textarea>
-
-                    </div>
-
-
-                    <div style="
-                        display:flex;
-                        justify-content:flex-end;
-                        gap:10px;
-                        margin-top:24px;
-                        padding-top:18px;
-                        border-top:1px solid #e5e9eb;
-                    ">
 
                         <button
                             type="button"
-                            id="cancelarAlbaran"
-                            style="
-                                border:1px solid #d5dde0;
-                                background:#fff;
-                                color:#52616a;
-                                padding:10px 18px;
-                                border-radius:7px;
-                                font-size:11px;
-                                font-weight:600;
-                                cursor:pointer;
-                            "
+                            class="steil-modal-close"
+                            id="steilCerrarModal"
+                        >
+                            <i class="fa-solid fa-xmark"></i>
+                        </button>
+
+                    </div>
+
+
+                    <div class="steil-modal-body">
+
+                        <div class="steil-form-grid">
+
+                            <div class="steil-form-group">
+
+                                <label>
+                                    Nº ALBARÁN
+                                </label>
+
+                                <input
+                                    type="text"
+                                    id="steilNumeroAlbaran"
+                                    placeholder="Ej. ALB-2026-0149"
+                                    value="${escapeHtml(datos.numero || "")}"
+                                >
+
+                            </div>
+
+
+                            <div class="steil-form-group">
+
+                                <label>
+                                    FECHA
+                                </label>
+
+                                <input
+                                    type="date"
+                                    id="steilFechaAlbaran"
+                                    value="${escapeHtml(
+                                        datos.fecha ||
+                                        obtenerFechaHoy()
+                                    )}"
+                                >
+
+                            </div>
+
+
+                            <div
+                                class="steil-form-group"
+                                style="grid-column:1/-1;"
+                            >
+
+                                <label>
+                                    CLIENTE
+                                </label>
+
+                                <input
+                                    type="text"
+                                    id="steilClienteAlbaran"
+                                    placeholder="Nombre del cliente"
+                                    value="${escapeHtml(datos.cliente || "")}"
+                                >
+
+                            </div>
+
+
+                            <div class="steil-form-group">
+
+                                <label>
+                                    ESTADO
+                                </label>
+
+                                <select
+                                    id="steilEstadoAlbaran"
+                                >
+
+                                    <option value="Pendiente">
+                                        Pendiente
+                                    </option>
+
+                                    <option value="Firmado">
+                                        Firmado
+                                    </option>
+
+                                </select>
+
+                            </div>
+
+
+                            <div
+                                class="steil-form-group"
+                                style="grid-column:1/-1;"
+                            >
+
+                                <label>
+                                    OBSERVACIONES
+                                </label>
+
+                                <textarea
+                                    id="steilObservacionesAlbaran"
+                                    rows="4"
+                                    placeholder="Observaciones..."
+                                >${escapeHtml(
+                                    datos.observaciones || ""
+                                )}</textarea>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="steil-modal-footer">
+
+                        <button
+                            type="button"
+                            class="btn btn-secondary"
+                            id="steilCancelarAlbaran"
                         >
                             Cancelar
                         </button>
 
-
                         <button
-                            type="submit"
-                            style="
-                                border:0;
-                                background:#176d79;
-                                color:#fff;
-                                padding:10px 20px;
-                                border-radius:7px;
-                                font-size:11px;
-                                font-weight:700;
-                                cursor:pointer;
-                            "
+                            type="button"
+                            class="btn btn-primary"
+                            id="steilGuardarAlbaran"
                         >
-
-                            <i class="fa-solid fa-floppy-disk"></i>
-
+                            <i class="fa-solid fa-check"></i>
                             Guardar albarán
-
                         </button>
 
                     </div>
 
-                </form>
+                </div>
 
             </div>
 
-        </div>
+        `;
 
-    `;
 
+        document.body.appendChild(modal);
 
-    document.body.appendChild(modal);
 
+        /* -----------------------------------------
+           ESTADO
+        ----------------------------------------- */
 
-    ponerFechaHoy();
+        const estado =
+            document.getElementById(
+                "steilEstadoAlbaran"
+            );
 
+        if (estado && datos.estado) {
+            estado.value = datos.estado;
+        }
 
-    configurarFormularioAlbaran();
 
-}
+        /* -----------------------------------------
+           CERRAR
+        ----------------------------------------- */
 
-
-/* =========================================================
-   FECHA DE HOY
-   ========================================================= */
-
-function ponerFechaHoy() {
-
-    const input =
-        document.getElementById(
-            "fechaAlbaran"
-        );
-
-    if (!input) return;
-
-
-    const hoy =
-        new Date();
-
-
-    const year =
-        hoy.getFullYear();
-
-
-    const month =
-        String(
-            hoy.getMonth() + 1
-        ).padStart(2, "0");
-
-
-    const day =
-        String(
-            hoy.getDate()
-        ).padStart(2, "0");
-
-
-    input.value =
-        `${year}-${month}-${day}`;
-
-}
-
-
-/* =========================================================
-   CONFIGURAR FORMULARIO
-   ========================================================= */
-
-function configurarFormularioAlbaran() {
-
-    const cerrar =
-        document.getElementById(
-            "cerrarModalAlbaran"
-        );
-
-
-    const cancelar =
-        document.getElementById(
-            "cancelarAlbaran"
-        );
-
-
-    const foto =
-        document.getElementById(
-            "fotoAlbaran"
-        );
-
-
-    const formulario =
-        document.getElementById(
-            "formAlbaran"
-        );
-
-
-    if (cerrar) {
-
-        cerrar.addEventListener(
-            "click",
-            cerrarModalAlbaran
-        );
-
-    }
-
-
-    if (cancelar) {
-
-        cancelar.addEventListener(
-            "click",
-            cerrarModalAlbaran
-        );
-
-    }
-
-
-    if (foto) {
-
-        foto.addEventListener(
-            "change",
-            procesarFotografia
-        );
-
-    }
-
-
-    document
-        .querySelectorAll(
-            'input[name="estadoAlbaran"]'
-        )
-        .forEach(
-            radio => {
-
-                radio.addEventListener(
-                    "change",
-                    actualizarEstadoVisual
-                );
-
-            }
-        );
-
-
-    actualizarEstadoVisual();
-
-
-    if (formulario) {
-
-        formulario.addEventListener(
-            "submit",
-            guardarNuevoAlbaran
-        );
-
-    }
-
-}
-
-
-/* =========================================================
-   CERRAR MODAL
-   ========================================================= */
-
-function cerrarModalAlbaran() {
-
-    const modal =
-        document.getElementById(
-            "modalAlbaran"
-        );
-
-
-    if (modal) {
-
-        modal.remove();
-
-    }
-
-}
-
-
-/* =========================================================
-   FOTOGRAFÍA
-   ========================================================= */
-
-function procesarFotografia(event) {
-
-    const file =
-        event.target.files[0];
-
-
-    if (!file) return;
-
-
-    const reader =
-        new FileReader();
-
-
-    reader.onload = function(e) {
-
-        fotografiaActual =
-            e.target.result;
-
-
-        mostrarPreviewFotografia(
-            fotografiaActual
-        );
-
-    };
-
-
-    reader.readAsDataURL(file);
-
-}
-
-
-/* =========================================================
-   PREVIEW FOTOGRAFÍA
-   ========================================================= */
-
-function mostrarPreviewFotografia(imagen) {
-
-    const preview =
-        document.getElementById(
-            "previewFotoAlbaran"
-        );
-
-
-    if (!preview) return;
-
-
-    preview.style.display =
-        "block";
-
-
-    preview.innerHTML = `
-
-        <div style="
-            position:relative;
-            border:1px solid #dce3e5;
-            border-radius:9px;
-            overflow:hidden;
-            background:#f5f7f8;
-        ">
-
-            <img
-                src="${imagen}"
-                style="
-                    width:100%;
-                    max-height:280px;
-                    object-fit:contain;
-                    display:block;
-                "
-            >
-
-            <button
-                type="button"
-                id="eliminarFoto"
-                style="
-                    position:absolute;
-                    top:10px;
-                    right:10px;
-                    width:30px;
-                    height:30px;
-                    border:0;
-                    border-radius:50%;
-                    background:rgba(0,0,0,.65);
-                    color:#fff;
-                    cursor:pointer;
-                    font-size:16px;
-                "
-            >
-                ×
-            </button>
-
-        </div>
-
-    `;
-
-
-    const eliminar =
-        document.getElementById(
-            "eliminarFoto"
-        );
-
-
-    if (eliminar) {
-
-        eliminar.addEventListener(
-            "click",
-            function() {
-
-                fotografiaActual =
-                    "";
-
-                fotoInputReset();
-
-                preview.innerHTML =
-                    "";
-
-                preview.style.display =
-                    "none";
-
-            }
-        );
-
-    }
-
-}
-
-
-/* =========================================================
-   RESET FOTO
-   ========================================================= */
-
-function fotoInputReset() {
-
-    const input =
-        document.getElementById(
-            "fotoAlbaran"
-        );
-
-
-    if (input) {
-
-        input.value =
-            "";
-
-    }
-
-}
-
-
-/* =========================================================
-   ESTADO VISUAL
-   ========================================================= */
-
-function actualizarEstadoVisual() {
-
-    const radios =
-        document.querySelectorAll(
-            'input[name="estadoAlbaran"]'
-        );
-
-
-    radios.forEach(radio => {
-
-        const span =
-            radio.parentElement.querySelector(
-                ".estado-option"
+        document
+            .getElementById("steilCerrarModal")
+            ?.addEventListener(
+                "click",
+                cerrarModal
             );
 
 
-        if (!span) return;
+        document
+            .getElementById("steilCancelarAlbaran")
+            ?.addEventListener(
+                "click",
+                cerrarModal
+            );
 
 
-        if (radio.checked) {
+        /* -----------------------------------------
+           GUARDAR
+        ----------------------------------------- */
 
-            span.style.background =
-                "#e7f2f4";
+        document
+            .getElementById("steilGuardarAlbaran")
+            ?.addEventListener(
+                "click",
+                guardarNuevoAlbaran
+            );
 
-            span.style.borderColor =
-                "#176d79";
 
-            span.style.color =
-                "#176d79";
+        /* -----------------------------------------
+           ESC
+        ----------------------------------------- */
 
-        } else {
+        document.addEventListener(
+            "keydown",
+            manejarEscapeModal,
+            { once: true }
+        );
 
-            span.style.background =
-                "#fff";
 
-            span.style.borderColor =
-                "#d8dfe2";
+        setTimeout(function () {
 
-            span.style.color =
-                "#52616a";
+            const numero =
+                document.getElementById(
+                    "steilNumeroAlbaran"
+                );
+
+            if (numero) {
+                numero.focus();
+            }
+
+        }, 50);
+
+    }
+
+
+    function guardarNuevoAlbaran() {
+
+        const numero =
+            document.getElementById(
+                "steilNumeroAlbaran"
+            )?.value.trim();
+
+
+        const fecha =
+            document.getElementById(
+                "steilFechaAlbaran"
+            )?.value;
+
+
+        const cliente =
+            document.getElementById(
+                "steilClienteAlbaran"
+            )?.value.trim();
+
+
+        const estado =
+            document.getElementById(
+                "steilEstadoAlbaran"
+            )?.value;
+
+
+        const observaciones =
+            document.getElementById(
+                "steilObservacionesAlbaran"
+            )?.value.trim();
+
+
+        if (!numero) {
+
+            mostrarAviso(
+                "Introduce el número de albarán."
+            );
+
+            return;
 
         }
 
-    });
 
-}
+        if (!fecha) {
 
+            mostrarAviso(
+                "Selecciona la fecha."
+            );
 
-/* =========================================================
-   GUARDAR NUEVO ALBARÁN
-   ========================================================= */
+            return;
 
-function guardarNuevoAlbaran(event) {
-
-    event.preventDefault();
+        }
 
 
-    const numero =
-        document
-            .getElementById(
-                "numeroAlbaran"
-            )
-            .value
-            .trim();
+        if (!cliente) {
+
+            mostrarAviso(
+                "Introduce el cliente."
+            );
+
+            return;
+
+        }
 
 
-    const fecha =
-        document
-            .getElementById(
-                "fechaAlbaran"
-            )
-            .value;
+        const albaranes =
+            obtenerAlbaranes();
 
 
-    const cliente =
-        document
-            .getElementById(
-                "clienteAlbaran"
-            )
-            .value
-            .trim();
+        const existe =
+            albaranes.some(function (albaran) {
+
+                return String(albaran.numero)
+                    .toLowerCase() ===
+                    numero.toLowerCase();
+
+            });
 
 
-    const observaciones =
-        document
-            .getElementById(
-                "observacionesAlbaran"
-            )
-            .value
-            .trim();
+        if (existe) {
+
+            mostrarAviso(
+                "Ya existe un albarán con ese número."
+            );
+
+            return;
+
+        }
 
 
-    const estadoElement =
-        document.querySelector(
-            'input[name="estadoAlbaran"]:checked'
+        const nuevo = {
+
+            id:
+                "alb_" +
+                Date.now() +
+                "_" +
+                Math.random()
+                    .toString(36)
+                    .slice(2, 8),
+
+            numero: numero,
+
+            fecha: fecha,
+
+            cliente: cliente,
+
+            estado:
+                estado ||
+                "Pendiente",
+
+            observaciones:
+                observaciones || "",
+
+            creado:
+                new Date().toISOString()
+
+        };
+
+
+        albaranes.unshift(nuevo);
+
+
+        guardarAlbaranes(albaranes);
+
+
+        cerrarModal();
+
+
+        actualizarResumenAlbaranes();
+        renderAlbaranesRecientes();
+
+
+        mostrarAviso(
+            "Albarán guardado correctamente.",
+            "success"
         );
-
-
-    const estado =
-        estadoElement
-            ? estadoElement.value
-            : "Pendiente";
-
-
-    if (
-        !numero ||
-        !fecha ||
-        !cliente
-    ) {
-
-        alert(
-            "Completa los campos obligatorios."
-        );
-
-        return;
 
     }
 
 
-    const nuevoAlbaran = {
+    /* ============================================================
+       ESCÁNER
+    ============================================================ */
 
-        id:
-            Date.now().toString(),
+    function abrirEscaner() {
 
-        numero:
-            numero,
+        const input =
+            document.createElement("input");
 
-        fecha:
-            fecha,
+        input.type = "file";
 
-        cliente:
-            cliente,
+        input.accept =
+            "image/*";
 
-        estado:
-            estado,
-
-        observaciones:
-            observaciones,
-
-        foto:
-            fotografiaActual || "",
-
-        creado:
-            new Date().toISOString()
-
-    };
+        input.capture =
+            "environment";
 
 
-    albaranes.unshift(
-        nuevoAlbaran
-    );
+        input.style.display =
+            "none";
 
 
-    if (!guardarAlbaranes()) {
-
-        albaranes.shift();
-
-        return;
-
-    }
+        document.body.appendChild(input);
 
 
-    renderizarAlbaranes();
+        input.addEventListener(
+            "change",
+            function () {
 
-    actualizarResumenAlbaranes();
-
-    renderizarConsultaAlbaranes();
-
-
-    cerrarModalAlbaran();
-
-    fotografiaActual =
-        "";
+                const archivo =
+                    input.files &&
+                    input.files[0];
 
 
-    alert(
-        "Albarán guardado correctamente."
-    );
+                if (!archivo) {
 
-}
+                    input.remove();
+
+                    return;
+
+                }
 
 
-/* =========================================================
-   RENDER TABLA PRINCIPAL
-   ========================================================= */
+                input.remove();
 
-function renderizarAlbaranes() {
 
-    const tbody =
-        document.getElementById(
-            "albaranesTableBody"
+                abrirModalAlbaran({
+
+                    fecha:
+                        obtenerFechaHoy(),
+
+                    observaciones:
+                        "Documento escaneado: " +
+                        archivo.name
+
+                });
+
+            }
         );
 
 
-    if (!tbody) return;
-
-
-    if (albaranes.length === 0) {
-
-        tbody.innerHTML = `
-
-            <tr class="empty-table-row">
-
-                <td colspan="5">
-
-                    <div class="empty-table">
-
-                        <i class="fa-solid fa-file-circle-plus"></i>
-
-                        <strong>
-                            Todavía no hay albaranes
-                        </strong>
-
-                        <span>
-                            Los albaranes que registres aparecerán aquí.
-                        </span>
-
-                    </div>
-
-                </td>
-
-            </tr>
-
-        `;
-
-        return;
+        input.click();
 
     }
 
 
-    tbody.innerHTML =
-        albaranes
-            .slice(0, 10)
-            .map(
-                albaran => filaAlbaranHTML(
-                    albaran
-                )
-            )
-            .join("");
+    /* ============================================================
+       RESUMEN ALBARANES
+    ============================================================ */
 
-}
+    function actualizarResumenAlbaranes() {
+
+        const albaranes =
+            obtenerAlbaranes();
 
 
-/* =========================================================
-   FILA ALBARÁN
-   ========================================================= */
-
-function filaAlbaranHTML(albaran) {
-
-    return `
-
-        <tr>
-
-            <td>
-
-                <strong>
-                    ${escaparHTML(
-                        albaran.numero
-                    )}
-                </strong>
-
-            </td>
+        const total =
+            albaranes.length;
 
 
-            <td>
-                ${formatearFecha(
-                    albaran.fecha
-                )}
-            </td>
+        const pendientes =
+            albaranes.filter(function (item) {
+
+                return item.estado ===
+                    "Pendiente";
+
+            }).length;
 
 
-            <td>
-                ${escaparHTML(
-                    albaran.cliente
-                )}
-            </td>
+        const firmados =
+            albaranes.filter(function (item) {
+
+                return item.estado ===
+                    "Firmado";
+
+            }).length;
 
 
-            <td>
-                ${estadoHTML(
-                    albaran.estado
-                )}
-            </td>
+        const hoy =
+            new Date();
 
 
-            <td>
-
-                <div style="
-                    display:flex;
-                    gap:6px;
-                ">
-
-                    <button
-                        type="button"
-                        onclick="verAlbaran('${albaran.id}')"
-                        title="Ver albarán"
-                        style="
-                            width:30px;
-                            height:30px;
-                            border:0;
-                            border-radius:6px;
-                            background:#edf4f5;
-                            color:#176d79;
-                            cursor:pointer;
-                        "
-                    >
-                        <i class="fa-solid fa-eye"></i>
-                    </button>
+        const mes =
+            hoy.getMonth();
 
 
-                    <button
-                        type="button"
-                        onclick="eliminarAlbaran('${albaran.id}')"
-                        title="Eliminar"
-                        style="
-                            width:30px;
-                            height:30px;
-                            border:0;
-                            border-radius:6px;
-                            background:#f7eeee;
-                            color:#a14d4d;
-                            cursor:pointer;
-                        "
-                    >
-                        <i class="fa-solid fa-trash"></i>
-                    </button>
-
-                </div>
-
-            </td>
-
-        </tr>
-
-    `;
-
-}
+        const ano =
+            hoy.getFullYear();
 
 
-/* =========================================================
-   RESUMEN
-   ========================================================= */
-
-function actualizarResumenAlbaranes() {
-
-    const total =
-        albaranes.length;
-
-
-    const pendientes =
-        albaranes.filter(
-            item =>
-                item.estado === "Pendiente"
-        ).length;
-
-
-    const firmados =
-        albaranes.filter(
-            item =>
-                item.estado === "Firmado"
-        ).length;
-
-
-    const ahora =
-        new Date();
-
-
-    const esteMes =
-        albaranes.filter(
-            item => {
+        const esteMes =
+            albaranes.filter(function (item) {
 
                 if (!item.fecha) {
                     return false;
                 }
-
 
                 const fecha =
                     new Date(
@@ -1534,274 +969,420 @@ function actualizarResumenAlbaranes() {
                         "T00:00:00"
                     );
 
-
                 return (
-                    fecha.getMonth() ===
-                    ahora.getMonth() &&
-                    fecha.getFullYear() ===
-                    ahora.getFullYear()
+                    fecha.getMonth() === mes &&
+                    fecha.getFullYear() === ano
                 );
 
-            }
-        ).length;
+            }).length;
 
 
-    const totalElement =
-        document.getElementById(
-            "totalAlbaranes"
+        ponerTexto(
+            "totalAlbaranes",
+            total
         );
 
 
-    const pendientesElement =
-        document.getElementById(
-            "albaranesPendientes"
+        ponerTexto(
+            "albaranesPendientes",
+            pendientes
         );
 
 
-    const firmadosElement =
-        document.getElementById(
-            "albaranesFirmados"
+        ponerTexto(
+            "albaranesFirmados",
+            firmados
         );
 
 
-    const mesElement =
-        document.getElementById(
-            "albaranesMes"
+        ponerTexto(
+            "albaranesMes",
+            esteMes
         );
-
-
-    if (totalElement) {
-
-        totalElement.textContent =
-            total;
 
     }
 
 
-    if (pendientesElement) {
+    /* ============================================================
+       ÚLTIMOS ALBARANES
+    ============================================================ */
 
-        pendientesElement.textContent =
-            pendientes;
+    function renderAlbaranesRecientes() {
 
-    }
-
-
-    if (firmadosElement) {
-
-        firmadosElement.textContent =
-            firmados;
-
-    }
+        const tbody =
+            document.getElementById(
+                "albaranesTableBody"
+            );
 
 
-    if (mesElement) {
-
-        mesElement.textContent =
-            esteMes;
-
-    }
-
-}
+        if (!tbody) {
+            return;
+        }
 
 
-/* =========================================================
-   CONSULTA
-   ========================================================= */
-
-function abrirConsultaAlbaranes() {
-
-    openPage(
-        "albaranes-consulta"
-    );
+        const albaranes =
+            obtenerAlbaranes()
+                .sort(
+                    ordenarPorFechaDesc
+                )
+                .slice(0, 10);
 
 
-    renderizarConsultaAlbaranes();
+        if (!albaranes.length) {
 
-}
+            tbody.innerHTML = `
 
+                <tr class="empty-table-row">
 
-function obtenerAlbaranesFiltrados() {
+                    <td colspan="5">
 
-    const buscar =
-        document.getElementById(
-            "consultaBuscar"
-        );
+                        <div class="empty-table">
 
+                            <i class="fa-solid fa-file-circle-plus"></i>
 
-    const fechaDesde =
-        document.getElementById(
-            "consultaFechaDesde"
-        );
+                            <strong>
+                                Todavía no hay albaranes
+                            </strong>
 
+                            <span>
+                                Los albaranes que registres aparecerán aquí.
+                            </span>
 
-    const fechaHasta =
-        document.getElementById(
-            "consultaFechaHasta"
-        );
+                        </div>
 
+                    </td>
 
-    const estado =
-        document.getElementById(
-            "consultaEstado"
-        );
+                </tr>
 
+            `;
 
-    const texto =
-        buscar
-            ? buscar.value
-                .trim()
-                .toLowerCase()
-            : "";
-
-
-    const desde =
-        fechaDesde
-            ? fechaDesde.value
-            : "";
-
-
-    const hasta =
-        fechaHasta
-            ? fechaHasta.value
-            : "";
-
-
-    const estadoValor =
-        estado
-            ? estado.value
-            : "Todos";
-
-
-    return albaranes.filter(
-        albaran => {
-
-            const numero =
-                String(
-                    albaran.numero || ""
-                ).toLowerCase();
-
-
-            const cliente =
-                String(
-                    albaran.cliente || ""
-                ).toLowerCase();
-
-
-            if (
-                texto &&
-                !numero.includes(texto) &&
-                !cliente.includes(texto)
-            ) {
-
-                return false;
-
-            }
-
-
-            if (
-                desde &&
-                albaran.fecha < desde
-            ) {
-
-                return false;
-
-            }
-
-
-            if (
-                hasta &&
-                albaran.fecha > hasta
-            ) {
-
-                return false;
-
-            }
-
-
-            if (
-                estadoValor !== "Todos" &&
-                albaran.estado !== estadoValor
-            ) {
-
-                return false;
-
-            }
-
-
-            return true;
+            return;
 
         }
-    );
-
-}
 
 
-function renderizarConsultaAlbaranes() {
-
-    const tbody =
-        document.getElementById(
-            "consultaAlbaranesTableBody"
-        );
+        tbody.innerHTML =
+            albaranes
+                .map(crearFilaAlbaran)
+                .join("");
 
 
-    if (!tbody) return;
-
-
-    const resultados =
-        obtenerAlbaranesFiltrados();
-
-
-    const contador =
-        document.getElementById(
-            "consultaContador"
-        );
-
-
-    const texto =
-        document.getElementById(
-            "consultaResultadosTexto"
-        );
-
-
-    if (contador) {
-
-        contador.textContent =
-            `${resultados.length} ${
-                resultados.length === 1
-                    ? "albarán"
-                    : "albaranes"
-            }`;
+        activarAccionesFilas(tbody);
 
     }
 
 
-    if (texto) {
+    /* ============================================================
+       CONSULTA
+    ============================================================ */
 
-        texto.textContent =
-            "Resultados según los filtros seleccionados";
+    function renderConsultaAlbaranes() {
+
+        const tbody =
+            document.getElementById(
+                "consultaAlbaranesTableBody"
+            );
+
+
+        if (!tbody) {
+            return;
+        }
+
+
+        const albaranes =
+            obtenerAlbaranes();
+
+
+        const texto =
+            document.getElementById(
+                "consultaBuscar"
+            )?.value
+            .trim()
+            .toLowerCase() || "";
+
+
+        const fechaDesde =
+            document.getElementById(
+                "consultaFechaDesde"
+            )?.value || "";
+
+
+        const fechaHasta =
+            document.getElementById(
+                "consultaFechaHasta"
+            )?.value || "";
+
+
+        const estado =
+            document.getElementById(
+                "consultaEstado"
+            )?.value || "Todos";
+
+
+        const filtrados =
+            albaranes
+                .filter(function (item) {
+
+                    /* BUSCADOR */
+
+                    if (texto) {
+
+                        const numero =
+                            String(
+                                item.numero || ""
+                            ).toLowerCase();
+
+                        const cliente =
+                            String(
+                                item.cliente || ""
+                            ).toLowerCase();
+
+                        if (
+                            !numero.includes(texto) &&
+                            !cliente.includes(texto)
+                        ) {
+
+                            return false;
+
+                        }
+
+                    }
+
+
+                    /* FECHA DESDE */
+
+                    if (
+                        fechaDesde &&
+                        item.fecha < fechaDesde
+                    ) {
+
+                        return false;
+
+                    }
+
+
+                    /* FECHA HASTA */
+
+                    if (
+                        fechaHasta &&
+                        item.fecha > fechaHasta
+                    ) {
+
+                        return false;
+
+                    }
+
+
+                    /* ESTADO */
+
+                    if (
+                        estado !== "Todos" &&
+                        item.estado !== estado
+                    ) {
+
+                        return false;
+
+                    }
+
+
+                    return true;
+
+                })
+                .sort(
+                    ordenarPorFechaDesc
+                );
+
+
+        /* -----------------------------------------
+           CONTADOR
+        ----------------------------------------- */
+
+        const contador =
+            document.getElementById(
+                "consultaContador"
+            );
+
+
+        if (contador) {
+
+            contador.textContent =
+                filtrados.length +
+                (
+                    filtrados.length === 1
+                        ? " albarán"
+                        : " albaranes"
+                );
+
+        }
+
+
+        /* -----------------------------------------
+           TEXTO
+        ----------------------------------------- */
+
+        const textoResultados =
+            document.getElementById(
+                "consultaResultadosTexto"
+            );
+
+
+        if (textoResultados) {
+
+            if (
+                texto ||
+                fechaDesde ||
+                fechaHasta ||
+                estado !== "Todos"
+            ) {
+
+                textoResultados.textContent =
+                    "Resultados según los filtros aplicados";
+
+            } else {
+
+                textoResultados.textContent =
+                    "Mostrando todos los albaranes";
+
+            }
+
+        }
+
+
+        /* -----------------------------------------
+           TABLA
+        ----------------------------------------- */
+
+        if (!filtrados.length) {
+
+            tbody.innerHTML = `
+
+                <tr class="empty-table-row">
+
+                    <td colspan="5">
+
+                        <div class="empty-table">
+
+                            <i class="fa-solid fa-magnifying-glass"></i>
+
+                            <strong>
+                                No hay albaranes
+                            </strong>
+
+                            <span>
+                                No se han encontrado albaranes con los filtros seleccionados.
+                            </span>
+
+                        </div>
+
+                    </td>
+
+                </tr>
+
+            `;
+
+            return;
+
+        }
+
+
+        tbody.innerHTML =
+            filtrados
+                .map(crearFilaAlbaran)
+                .join("");
+
+
+        activarAccionesFilas(tbody);
 
     }
 
 
-    if (resultados.length === 0) {
+    /* ============================================================
+       FILA DE ALBARÁN
+    ============================================================ */
 
-        tbody.innerHTML = `
+    function crearFilaAlbaran(item) {
 
-            <tr class="empty-table-row">
+        const estado =
+            item.estado || "Pendiente";
 
-                <td colspan="5">
 
-                    <div class="empty-table">
+        const claseEstado =
+            estado === "Firmado"
+                ? "signed"
+                : "pending";
 
-                        <i class="fa-solid fa-magnifying-glass"></i>
 
-                        <strong>
-                            No se encontraron albaranes
-                        </strong>
+        return `
 
-                        <span>
-                            Prueba a cambiar los filtros de búsqueda.
-                        </span>
+            <tr data-albaran-id="${escapeHtml(item.id)}">
+
+                <td>
+
+                    <strong>
+                        ${escapeHtml(item.numero)}
+                    </strong>
+
+                </td>
+
+
+                <td>
+                    ${formatearFecha(item.fecha)}
+                </td>
+
+
+                <td>
+                    ${escapeHtml(item.cliente)}
+                </td>
+
+
+                <td>
+
+                    <span
+                        class="albaran-status ${claseEstado}"
+                    >
+                        ${escapeHtml(estado)}
+                    </span>
+
+                </td>
+
+
+                <td>
+
+                    <div
+                        class="albaran-row-actions"
+                    >
+
+                        <button
+                            type="button"
+                            class="steil-row-button"
+                            data-action="view"
+                            data-id="${escapeHtml(item.id)}"
+                            title="Ver albarán"
+                        >
+                            <i class="fa-regular fa-eye"></i>
+                        </button>
+
+
+                        <button
+                            type="button"
+                            class="steil-row-button"
+                            data-action="edit"
+                            data-id="${escapeHtml(item.id)}"
+                            title="Editar albarán"
+                        >
+                            <i class="fa-regular fa-pen-to-square"></i>
+                        </button>
+
+
+                        <button
+                            type="button"
+                            class="steil-row-button danger"
+                            data-action="delete"
+                            data-id="${escapeHtml(item.id)}"
+                            title="Eliminar albarán"
+                        >
+                            <i class="fa-regular fa-trash-can"></i>
+                        </button>
 
                     </div>
 
@@ -1811,1698 +1392,1399 @@ function renderizarConsultaAlbaranes() {
 
         `;
 
-        return;
-
     }
 
 
-    tbody.innerHTML =
-        resultados
-            .map(
-                albaran =>
-                    filaAlbaranHTML(
-                        albaran
-                    )
-            )
-            .join("");
+    /* ============================================================
+       ACCIONES DE FILA
+    ============================================================ */
 
-}
+    function activarAccionesFilas(container) {
 
+        const botones =
+            container.querySelectorAll(
+                "[data-action]"
+            );
 
-/* =========================================================
-   LIMPIAR CONSULTA
-   ========================================================= */
 
-function limpiarConsultaAlbaranes() {
+        botones.forEach(function (boton) {
 
-    const buscar =
-        document.getElementById(
-            "consultaBuscar"
-        );
+            boton.addEventListener(
+                "click",
+                function () {
 
+                    const action =
+                        boton.dataset.action;
 
-    const desde =
-        document.getElementById(
-            "consultaFechaDesde"
-        );
+                    const id =
+                        boton.dataset.id;
 
 
-    const hasta =
-        document.getElementById(
-            "consultaFechaHasta"
-        );
+                    const albaranes =
+                        obtenerAlbaranes();
 
 
-    const estado =
-        document.getElementById(
-            "consultaEstado"
-        );
+                    const item =
+                        albaranes.find(
+                            function (albaran) {
+                                return albaran.id === id;
+                            }
+                        );
 
 
-    if (buscar) buscar.value = "";
+                    if (!item) {
+                        return;
+                    }
 
-    if (desde) desde.value = "";
 
-    if (hasta) hasta.value = "";
+                    if (action === "view") {
 
-    if (estado) estado.value = "Todos";
-
-
-    renderizarConsultaAlbaranes();
-
-}
-
-
-/* =========================================================
-   VER FICHA DEL ALBARÁN
-   ========================================================= */
-
-function verAlbaran(id) {
-
-    const albaran =
-        albaranes.find(
-            item =>
-                item.id === id
-        );
-
-
-    if (!albaran) return;
-
-
-    cerrarModalAlbaran();
-
-
-    const modal =
-        document.createElement("div");
-
-
-    modal.id =
-        "modalVerAlbaran";
-
-
-    const imagen =
-        albaran.foto
-
-            ? `
-
-                <div style="
-                    position:relative;
-                ">
-
-                    <img
-                        src="${albaran.foto}"
-                        style="
-                            width:100%;
-                            max-height:430px;
-                            object-fit:contain;
-                            border-radius:8px;
-                            background:#f5f7f8;
-                            display:block;
-                        "
-                    >
-
-                </div>
-
-            `
-
-            : `
-
-                <div style="
-                    min-height:200px;
-                    display:flex;
-                    align-items:center;
-                    justify-content:center;
-                    flex-direction:column;
-                    background:#f7f9fa;
-                    border-radius:8px;
-                    color:#7a878e;
-                ">
-
-                    <i
-                        class="fa-solid fa-image"
-                        style="
-                            font-size:30px;
-                            margin-bottom:10px;
-                        "
-                    ></i>
-
-                    <span style="
-                        font-size:11px;
-                    ">
-                        Este albarán no tiene fotografía.
-                    </span>
-
-                </div>
-
-            `;
-
-
-    modal.innerHTML = `
-
-        <div style="
-            position:fixed;
-            inset:0;
-            background:rgba(10,20,25,.55);
-            display:flex;
-            align-items:center;
-            justify-content:center;
-            padding:20px;
-            z-index:9999;
-        ">
-
-
-            <div style="
-                width:100%;
-                max-width:820px;
-                max-height:94vh;
-                overflow:auto;
-                background:#fff;
-                border-radius:14px;
-                box-shadow:0 20px 60px rgba(0,0,0,.25);
-            ">
-
-
-                <div style="
-                    display:flex;
-                    justify-content:space-between;
-                    align-items:center;
-                    padding:20px 24px;
-                    border-bottom:1px solid #e5e9eb;
-                ">
-
-
-                    <div>
-
-                        <div style="
-                            font-size:9px;
-                            letter-spacing:1.2px;
-                            font-weight:700;
-                            color:#176d79;
-                            margin-bottom:5px;
-                        ">
-                            FICHA DE ALBARÁN
-                        </div>
-
-
-                        <h2 style="
-                            margin:0;
-                            font-size:20px;
-                            color:#14222b;
-                        ">
-                            ${escaparHTML(
-                                albaran.numero
-                            )}
-                        </h2>
-
-                    </div>
-
-
-                    <button
-                        type="button"
-                        id="cerrarVerAlbaran"
-                        style="
-                            width:34px;
-                            height:34px;
-                            border:0;
-                            border-radius:50%;
-                            background:#f2f4f5;
-                            color:#52616a;
-                            cursor:pointer;
-                            font-size:18px;
-                        "
-                    >
-                        ×
-                    </button>
-
-                </div>
-
-
-                <div style="
-                    padding:24px;
-                ">
-
-
-                    <!-- DATOS -->
-
-                    <div style="
-                        display:grid;
-                        grid-template-columns:
-                            1fr 1fr 1fr;
-                        gap:12px;
-                        margin-bottom:20px;
-                    ">
-
-
-                        <div style="
-                            padding:14px;
-                            background:#f7f9fa;
-                            border-radius:8px;
-                        ">
-
-                            <small style="
-                                display:block;
-                                font-size:8px;
-                                color:#7a878e;
-                                margin-bottom:6px;
-                            ">
-                                FECHA
-                            </small>
-
-                            <strong style="
-                                font-size:11px;
-                            ">
-                                ${formatearFecha(
-                                    albaran.fecha
-                                )}
-                            </strong>
-
-                        </div>
-
-
-                        <div style="
-                            padding:14px;
-                            background:#f7f9fa;
-                            border-radius:8px;
-                        ">
-
-                            <small style="
-                                display:block;
-                                font-size:8px;
-                                color:#7a878e;
-                                margin-bottom:6px;
-                            ">
-                                CLIENTE
-                            </small>
-
-                            <strong style="
-                                font-size:11px;
-                            ">
-                                ${escaparHTML(
-                                    albaran.cliente
-                                )}
-                            </strong>
-
-                        </div>
-
-
-                        <div style="
-                            padding:14px;
-                            background:#f7f9fa;
-                            border-radius:8px;
-                        ">
-
-                            <small style="
-                                display:block;
-                                font-size:8px;
-                                color:#7a878e;
-                                margin-bottom:6px;
-                            ">
-                                ESTADO
-                            </small>
-
-                            ${estadoHTML(
-                                albaran.estado
-                            )}
-
-                        </div>
-
-
-                    </div>
-
-
-                    <!-- FOTO -->
-
-                    <div style="
-                        margin-bottom:18px;
-                    ">
-
-                        <div style="
-                            font-size:9px;
-                            font-weight:700;
-                            color:#52616a;
-                            margin-bottom:8px;
-                            letter-spacing:.5px;
-                        ">
-                            FOTOGRAFÍA DEL ALBARÁN
-                        </div>
-
-                        ${imagen}
-
-                    </div>
-
-
-                    <!-- OBSERVACIONES -->
-
-                    ${
-                        albaran.observaciones
-
-                            ? `
-
-                                <div style="
-                                    padding:14px;
-                                    background:#f7f9fa;
-                                    border-radius:8px;
-                                    margin-bottom:20px;
-                                ">
-
-                                    <small style="
-                                        display:block;
-                                        font-size:8px;
-                                        color:#7a878e;
-                                        margin-bottom:6px;
-                                    ">
-                                        OBSERVACIONES
-                                    </small>
-
-                                    <div style="
-                                        font-size:11px;
-                                        color:#35434b;
-                                        line-height:1.5;
-                                    ">
-                                        ${escaparHTML(
-                                            albaran.observaciones
-                                        )}
-                                    </div>
-
-                                </div>
-
-                            `
-
-                            : ""
+                        verAlbaran(item);
 
                     }
 
 
-                    <!-- ACCIONES -->
+                    if (action === "edit") {
 
-                    <div style="
-                        display:flex;
-                        justify-content:flex-end;
-                        gap:9px;
-                        padding-top:18px;
-                        border-top:1px solid #e5e9eb;
-                    ">
+                        editarAlbaran(item);
 
+                    }
 
-                        <button
-                            type="button"
-                            id="editarAlbaran"
-                            style="
-                                border:1px solid #d5dde0;
-                                background:#fff;
-                                color:#176d79;
-                                padding:10px 16px;
-                                border-radius:7px;
-                                font-size:11px;
-                                font-weight:700;
-                                cursor:pointer;
-                            "
-                        >
 
-                            <i class="fa-solid fa-pen"></i>
+                    if (action === "delete") {
 
-                            Editar
-
-                        </button>
-
-
-                        <button
-                            type="button"
-                            id="cambiarEstadoAlbaran"
-                            style="
-                                border:1px solid #d5dde0;
-                                background:#fff;
-                                color:#52616a;
-                                padding:10px 16px;
-                                border-radius:7px;
-                                font-size:11px;
-                                font-weight:700;
-                                cursor:pointer;
-                            "
-                        >
-
-                            <i class="fa-solid fa-rotate"></i>
-
-                            ${
-                                albaran.estado === "Firmado"
-                                    ? "Marcar pendiente"
-                                    : "Marcar firmado"
-                            }
-
-                        </button>
-
-
-                        <button
-                            type="button"
-                            id="cerrarFichaAlbaran"
-                            style="
-                                border:0;
-                                background:#176d79;
-                                color:#fff;
-                                padding:10px 18px;
-                                border-radius:7px;
-                                font-size:11px;
-                                font-weight:700;
-                                cursor:pointer;
-                            "
-                        >
-                            Cerrar
-                        </button>
-
-
-                    </div>
-
-
-                </div>
-
-
-            </div>
-
-
-        </div>
-
-    `;
-
-
-    document.body.appendChild(
-        modal
-    );
-
-
-    document
-        .getElementById(
-            "cerrarVerAlbaran"
-        )
-        .addEventListener(
-            "click",
-            () => modal.remove()
-        );
-
-
-    document
-        .getElementById(
-            "cerrarFichaAlbaran"
-        )
-        .addEventListener(
-            "click",
-            () => modal.remove()
-        );
-
-
-    document
-        .getElementById(
-            "editarAlbaran"
-        )
-        .addEventListener(
-            "click",
-            function() {
-
-                modal.remove();
-
-                abrirEdicionAlbaran(
-                    albaran.id
-                );
-
-            }
-        );
-
-
-    document
-        .getElementById(
-            "cambiarEstadoAlbaran"
-        )
-        .addEventListener(
-            "click",
-            function() {
-
-                cambiarEstadoAlbaran(
-                    albaran.id
-                );
-
-                modal.remove();
-
-            }
-        );
-
-
-    modal.addEventListener(
-        "click",
-        function(event) {
-
-            if (
-                event.target ===
-                modal.firstElementChild
-            ) {
-
-                modal.remove();
-
-            }
-
-        }
-    );
-
-}
-
-
-/* =========================================================
-   EDITAR ALBARÁN
-   ========================================================= */
-
-function abrirEdicionAlbaran(id) {
-
-    const albaran =
-        albaranes.find(
-            item =>
-                item.id === id
-        );
-
-
-    if (!albaran) return;
-
-
-    albaranEditandoId =
-        id;
-
-
-    fotografiaActual =
-        albaran.foto || "";
-
-
-    cerrarModalAlbaran();
-
-
-    const modal =
-        document.createElement("div");
-
-
-    modal.id =
-        "modalAlbaran";
-
-
-    modal.innerHTML = `
-
-        <div style="
-            position:fixed;
-            inset:0;
-            background:rgba(10,20,25,.55);
-            display:flex;
-            align-items:center;
-            justify-content:center;
-            padding:20px;
-            z-index:9999;
-        ">
-
-            <div style="
-                width:100%;
-                max-width:720px;
-                max-height:92vh;
-                overflow:auto;
-                background:#fff;
-                border-radius:14px;
-                box-shadow:0 20px 60px rgba(0,0,0,.25);
-            ">
-
-
-                <div style="
-                    display:flex;
-                    justify-content:space-between;
-                    align-items:center;
-                    padding:20px 24px;
-                    border-bottom:1px solid #e5e9eb;
-                ">
-
-
-                    <div>
-
-                        <div style="
-                            font-size:9px;
-                            letter-spacing:1.2px;
-                            font-weight:700;
-                            color:#176d79;
-                            margin-bottom:5px;
-                        ">
-                            GESTIÓN DE ALBARANES
-                        </div>
-
-
-                        <h2 style="
-                            margin:0;
-                            font-size:20px;
-                            color:#14222b;
-                        ">
-                            Editar albarán
-                        </h2>
-
-                    </div>
-
-
-                    <button
-                        type="button"
-                        id="cerrarModalAlbaran"
-                        style="
-                            width:34px;
-                            height:34px;
-                            border:0;
-                            border-radius:50%;
-                            background:#f2f4f5;
-                            color:#52616a;
-                            cursor:pointer;
-                            font-size:18px;
-                        "
-                    >
-                        ×
-                    </button>
-
-
-                </div>
-
-
-                <form
-                    id="formAlbaran"
-                    style="padding:24px;"
-                >
-
-
-                    <div style="
-                        display:grid;
-                        grid-template-columns:1fr 1fr;
-                        gap:16px;
-                    ">
-
-
-                        <div>
-
-                            <label style="
-                                display:block;
-                                font-size:11px;
-                                font-weight:700;
-                                margin-bottom:7px;
-                            ">
-                                Nº DE ALBARÁN *
-                            </label>
-
-
-                            <input
-                                type="text"
-                                id="numeroAlbaran"
-                                required
-                                value="${escaparHTML(
-                                    albaran.numero
-                                )}"
-                                style="
-                                    width:100%;
-                                    box-sizing:border-box;
-                                    padding:11px 12px;
-                                    border:1px solid #d8dfe2;
-                                    border-radius:7px;
-                                    font-size:12px;
-                                "
-                            >
-
-                        </div>
-
-
-                        <div>
-
-                            <label style="
-                                display:block;
-                                font-size:11px;
-                                font-weight:700;
-                                margin-bottom:7px;
-                            ">
-                                FECHA *
-                            </label>
-
-
-                            <input
-                                type="date"
-                                id="fechaAlbaran"
-                                required
-                                value="${albaran.fecha}"
-                                style="
-                                    width:100%;
-                                    box-sizing:border-box;
-                                    padding:11px 12px;
-                                    border:1px solid #d8dfe2;
-                                    border-radius:7px;
-                                    font-size:12px;
-                                "
-                            >
-
-                        </div>
-
-
-                    </div>
-
-
-                    <div style="
-                        margin-top:16px;
-                    ">
-
-                        <label style="
-                            display:block;
-                            font-size:11px;
-                            font-weight:700;
-                            margin-bottom:7px;
-                        ">
-                            CLIENTE *
-                        </label>
-
-
-                        <input
-                            type="text"
-                            id="clienteAlbaran"
-                            required
-                            value="${escaparHTML(
-                                albaran.cliente
-                            )}"
-                            style="
-                                width:100%;
-                                box-sizing:border-box;
-                                padding:11px 12px;
-                                border:1px solid #d8dfe2;
-                                border-radius:7px;
-                                font-size:12px;
-                            "
-                        >
-
-                    </div>
-
-
-                    <div style="
-                        margin-top:18px;
-                    ">
-
-                        <label style="
-                            display:block;
-                            font-size:11px;
-                            font-weight:700;
-                            margin-bottom:8px;
-                        ">
-                            FOTOGRAFÍA
-                        </label>
-
-
-                        <label
-                            for="fotoAlbaran"
-                            style="
-                                display:flex;
-                                flex-direction:column;
-                                align-items:center;
-                                justify-content:center;
-                                min-height:120px;
-                                border:2px dashed #cbd8dc;
-                                border-radius:10px;
-                                background:#f8fafb;
-                                cursor:pointer;
-                                text-align:center;
-                                padding:20px;
-                                box-sizing:border-box;
-                            "
-                        >
-
-                            <i
-                                class="fa-solid fa-camera"
-                                style="
-                                    font-size:25px;
-                                    color:#176d79;
-                                    margin-bottom:8px;
-                                "
-                            ></i>
-
-
-                            <strong style="
-                                font-size:11px;
-                            ">
-                                Cambiar fotografía
-                            </strong>
-
-
-                            <span style="
-                                font-size:9px;
-                                color:#7a878e;
-                                margin-top:4px;
-                            ">
-                                Pulsa aquí para seleccionar una nueva
-                            </span>
-
-                        </label>
-
-
-                        <input
-                            type="file"
-                            id="fotoAlbaran"
-                            accept="image/*"
-                            capture="environment"
-                            style="display:none;"
-                        >
-
-
-                        <div
-                            id="previewFotoAlbaran"
-                            style="
-                                margin-top:12px;
-                            "
-                        ></div>
-
-
-                    </div>
-
-
-                    <div style="
-                        margin-top:18px;
-                    ">
-
-                        <label style="
-                            display:block;
-                            font-size:11px;
-                            font-weight:700;
-                            margin-bottom:8px;
-                        ">
-                            ESTADO
-                        </label>
-
-
-                        <div style="
-                            display:flex;
-                            gap:10px;
-                        ">
-
-
-                            <label style="
-                                flex:1;
-                                cursor:pointer;
-                            ">
-
-                                <input
-                                    type="radio"
-                                    name="estadoAlbaran"
-                                    value="Pendiente"
-                                    ${
-                                        albaran.estado === "Pendiente"
-                                            ? "checked"
-                                            : ""
-                                    }
-                                    style="display:none;"
-                                >
-
-
-                                <span
-                                    class="estado-option"
-                                    style="
-                                        display:block;
-                                        padding:11px;
-                                        text-align:center;
-                                        border:1px solid #d8dfe2;
-                                        border-radius:7px;
-                                        font-size:11px;
-                                        font-weight:600;
-                                    "
-                                >
-                                    Pendiente
-                                </span>
-
-                            </label>
-
-
-                            <label style="
-                                flex:1;
-                                cursor:pointer;
-                            ">
-
-                                <input
-                                    type="radio"
-                                    name="estadoAlbaran"
-                                    value="Firmado"
-                                    ${
-                                        albaran.estado === "Firmado"
-                                            ? "checked"
-                                            : ""
-                                    }
-                                    style="display:none;"
-                                >
-
-
-                                <span
-                                    class="estado-option"
-                                    style="
-                                        display:block;
-                                        padding:11px;
-                                        text-align:center;
-                                        border:1px solid #d8dfe2;
-                                        border-radius:7px;
-                                        font-size:11px;
-                                        font-weight:600;
-                                    "
-                                >
-                                    Firmado
-                                </span>
-
-                            </label>
-
-
-                        </div>
-
-
-                    </div>
-
-
-                    <div style="
-                        margin-top:18px;
-                    ">
-
-                        <label style="
-                            display:block;
-                            font-size:11px;
-                            font-weight:700;
-                            margin-bottom:7px;
-                        ">
-                            OBSERVACIONES
-                        </label>
-
-
-                        <textarea
-                            id="observacionesAlbaran"
-                            rows="3"
-                            style="
-                                width:100%;
-                                box-sizing:border-box;
-                                padding:11px 12px;
-                                border:1px solid #d8dfe2;
-                                border-radius:7px;
-                                font-size:12px;
-                                resize:vertical;
-                            "
-                        >${escaparHTML(
-                            albaran.observaciones || ""
-                        )}</textarea>
-
-                    </div>
-
-
-                    <div style="
-                        display:flex;
-                        justify-content:flex-end;
-                        gap:10px;
-                        margin-top:24px;
-                        padding-top:18px;
-                        border-top:1px solid #e5e9eb;
-                    ">
-
-
-                        <button
-                            type="button"
-                            id="cancelarAlbaran"
-                            style="
-                                border:1px solid #d5dde0;
-                                background:#fff;
-                                color:#52616a;
-                                padding:10px 18px;
-                                border-radius:7px;
-                                font-size:11px;
-                                font-weight:600;
-                                cursor:pointer;
-                            "
-                        >
-                            Cancelar
-                        </button>
-
-
-                        <button
-                            type="submit"
-                            style="
-                                border:0;
-                                background:#176d79;
-                                color:#fff;
-                                padding:10px 20px;
-                                border-radius:7px;
-                                font-size:11px;
-                                font-weight:700;
-                                cursor:pointer;
-                            "
-                        >
-
-                            <i class="fa-solid fa-floppy-disk"></i>
-
-                            Guardar cambios
-
-                        </button>
-
-
-                    </div>
-
-
-                </form>
-
-
-            </div>
-
-        </div>
-
-    `;
-
-
-    document.body.appendChild(
-        modal
-    );
-
-
-    if (albaran.foto) {
-
-        mostrarPreviewFotografia(
-            albaran.foto
-        );
-
-    }
-
-
-    configurarFormularioEdicion(
-        albaran.id
-    );
-
-}
-
-
-/* =========================================================
-   CONFIGURAR EDICIÓN
-   ========================================================= */
-
-function configurarFormularioEdicion(id) {
-
-    const cerrar =
-        document.getElementById(
-            "cerrarModalAlbaran"
-        );
-
-
-    const cancelar =
-        document.getElementById(
-            "cancelarAlbaran"
-        );
-
-
-    const foto =
-        document.getElementById(
-            "fotoAlbaran"
-        );
-
-
-    const formulario =
-        document.getElementById(
-            "formAlbaran"
-        );
-
-
-    if (cerrar) {
-
-        cerrar.addEventListener(
-            "click",
-            cerrarModalAlbaran
-        );
-
-    }
-
-
-    if (cancelar) {
-
-        cancelar.addEventListener(
-            "click",
-            cerrarModalAlbaran
-        );
-
-    }
-
-
-    if (foto) {
-
-        foto.addEventListener(
-            "change",
-            procesarFotografia
-        );
-
-    }
-
-
-    document
-        .querySelectorAll(
-            'input[name="estadoAlbaran"]'
-        )
-        .forEach(
-            radio => {
-
-                radio.addEventListener(
-                    "change",
-                    actualizarEstadoVisual
-                );
-
-            }
-        );
-
-
-    actualizarEstadoVisual();
-
-
-    if (formulario) {
-
-        formulario.addEventListener(
-            "submit",
-            function(event) {
-
-                guardarEdicionAlbaran(
-                    event,
-                    id
-                );
-
-            }
-        );
-
-    }
-
-}
-
-
-/* =========================================================
-   GUARDAR EDICIÓN
-   ========================================================= */
-
-function guardarEdicionAlbaran(
-    event,
-    id
-) {
-
-    event.preventDefault();
-
-
-    const indice =
-        albaranes.findIndex(
-            item =>
-                item.id === id
-        );
-
-
-    if (indice === -1) return;
-
-
-    const numero =
-        document
-            .getElementById(
-                "numeroAlbaran"
-            )
-            .value
-            .trim();
-
-
-    const fecha =
-        document
-            .getElementById(
-                "fechaAlbaran"
-            )
-            .value;
-
-
-    const cliente =
-        document
-            .getElementById(
-                "clienteAlbaran"
-            )
-            .value
-            .trim();
-
-
-    const observaciones =
-        document
-            .getElementById(
-                "observacionesAlbaran"
-            )
-            .value
-            .trim();
-
-
-    const estadoElement =
-        document.querySelector(
-            'input[name="estadoAlbaran"]:checked'
-        );
-
-
-    const estado =
-        estadoElement
-            ? estadoElement.value
-            : "Pendiente";
-
-
-    if (
-        !numero ||
-        !fecha ||
-        !cliente
-    ) {
-
-        alert(
-            "Completa los campos obligatorios."
-        );
-
-        return;
-
-    }
-
-
-    const anterior =
-        { ...albaranes[indice] };
-
-
-    albaranes[indice] = {
-
-        ...albaranes[indice],
-
-        numero:
-            numero,
-
-        fecha:
-            fecha,
-
-        cliente:
-            cliente,
-
-        estado:
-            estado,
-
-        observaciones:
-            observaciones,
-
-        foto:
-            fotografiaActual || ""
-
-    };
-
-
-    if (!guardarAlbaranes()) {
-
-        albaranes[indice] =
-            anterior;
-
-        return;
-
-    }
-
-
-    renderizarAlbaranes();
-
-    actualizarResumenAlbaranes();
-
-    renderizarConsultaAlbaranes();
-
-
-    cerrarModalAlbaran();
-
-
-    fotografiaActual =
-        "";
-
-
-    albaranEditandoId =
-        null;
-
-
-    alert(
-        "Albarán actualizado correctamente."
-    );
-
-}
-
-
-/* =========================================================
-   CAMBIAR ESTADO
-   ========================================================= */
-
-function cambiarEstadoAlbaran(id) {
-
-    const indice =
-        albaranes.findIndex(
-            item =>
-                item.id === id
-        );
-
-
-    if (indice === -1) return;
-
-
-    const albaran =
-        albaranes[indice];
-
-
-    const nuevoEstado =
-        albaran.estado === "Firmado"
-            ? "Pendiente"
-            : "Firmado";
-
-
-    albaranes[indice] = {
-
-        ...albaran,
-
-        estado:
-            nuevoEstado
-
-    };
-
-
-    guardarAlbaranes();
-
-
-    renderizarAlbaranes();
-
-    actualizarResumenAlbaranes();
-
-    renderizarConsultaAlbaranes();
-
-
-    alert(
-        `Albarán marcado como ${nuevoEstado}.`
-    );
-
-}
-
-
-/* =========================================================
-   ELIMINAR ALBARÁN
-   ========================================================= */
-
-function eliminarAlbaran(id) {
-
-    const albaran =
-        albaranes.find(
-            item =>
-                item.id === id
-        );
-
-
-    if (!albaran) return;
-
-
-    const confirmar =
-        confirm(
-            `¿Quieres eliminar el albarán ${albaran.numero}?`
-        );
-
-
-    if (!confirmar) return;
-
-
-    albaranes =
-        albaranes.filter(
-            item =>
-                item.id !== id
-        );
-
-
-    guardarAlbaranes();
-
-
-    renderizarAlbaranes();
-
-    actualizarResumenAlbaranes();
-
-    renderizarConsultaAlbaranes();
-
-}
-
-
-/* =========================================================
-   BOTONES DEL MÓDULO ALBARANES
-   ========================================================= */
-
-function inicializarBotonesAlbaranes() {
-
-    const btnNuevo =
-        document.getElementById(
-            "btnNuevoAlbaran"
-        );
-
-
-    const optionEscanear =
-        document.getElementById(
-            "optionEscanear"
-        );
-
-
-    const optionConsultar =
-        document.getElementById(
-            "optionConsultar"
-        );
-
-
-    const verTodos =
-        document.getElementById(
-            "verTodosAlbaranes"
-        );
-
-
-    const btnVolver =
-        document.getElementById(
-            "btnVolverAlbaranes"
-        );
-
-
-    const btnNuevoConsulta =
-        document.getElementById(
-            "btnNuevoAlbaranConsulta"
-        );
-
-
-    const btnBuscar =
-        document.getElementById(
-            "btnBuscarAlbaranes"
-        );
-
-
-    const btnLimpiar =
-        document.getElementById(
-            "btnLimpiarConsulta"
-        );
-
-
-    if (btnNuevo) {
-
-        btnNuevo.addEventListener(
-            "click",
-            abrirFormularioAlbaran
-        );
-
-    }
-
-
-    if (optionEscanear) {
-
-        optionEscanear.addEventListener(
-            "click",
-            abrirFormularioAlbaran
-        );
-
-    }
-
-
-    if (optionConsultar) {
-
-        optionConsultar.addEventListener(
-            "click",
-            abrirConsultaAlbaranes
-        );
-
-    }
-
-
-    if (verTodos) {
-
-        verTodos.addEventListener(
-            "click",
-            abrirConsultaAlbaranes
-        );
-
-    }
-
-
-    if (btnVolver) {
-
-        btnVolver.addEventListener(
-            "click",
-            function() {
-
-                openPage(
-                    "albaranes"
-                );
-
-            }
-        );
-
-    }
-
-
-    if (btnNuevoConsulta) {
-
-        btnNuevoConsulta.addEventListener(
-            "click",
-            abrirFormularioAlbaran
-        );
-
-    }
-
-
-    if (btnBuscar) {
-
-        btnBuscar.addEventListener(
-            "click",
-            renderizarConsultaAlbaranes
-        );
-
-    }
-
-
-    if (btnLimpiar) {
-
-        btnLimpiar.addEventListener(
-            "click",
-            limpiarConsultaAlbaranes
-        );
-
-    }
-
-
-    const campos =
-        document.querySelectorAll(
-            "#consultaBuscar, #consultaFechaDesde, #consultaFechaHasta"
-        );
-
-
-    campos.forEach(
-        campo => {
-
-            campo.addEventListener(
-                "keydown",
-                function(event) {
-
-                    if (
-                        event.key === "Enter"
-                    ) {
-
-                        event.preventDefault();
-
-                        renderizarConsultaAlbaranes();
+                        eliminarAlbaran(item);
 
                     }
 
                 }
             );
 
+        });
+
+    }
+
+
+    /* ============================================================
+       VER ALBARÁN
+    ============================================================ */
+
+    function verAlbaran(item) {
+
+        cerrarModal();
+
+
+        const modal =
+            document.createElement("div");
+
+
+        modal.id =
+            "steilAlbaranModal";
+
+
+        modal.innerHTML = `
+
+            <div class="steil-modal-overlay">
+
+                <div class="steil-modal">
+
+                    <div class="steil-modal-header">
+
+                        <div>
+
+                            <span class="steil-modal-kicker">
+                                ALBARÁN
+                            </span>
+
+                            <h2>
+                                ${escapeHtml(item.numero)}
+                            </h2>
+
+                        </div>
+
+
+                        <button
+                            type="button"
+                            class="steil-modal-close"
+                            id="steilCerrarModal"
+                        >
+                            <i class="fa-solid fa-xmark"></i>
+                        </button>
+
+                    </div>
+
+
+                    <div class="steil-modal-body">
+
+                        <div class="steil-detail-grid">
+
+                            <div>
+                                <span>
+                                    Nº ALBARÁN
+                                </span>
+
+                                <strong>
+                                    ${escapeHtml(item.numero)}
+                                </strong>
+                            </div>
+
+
+                            <div>
+                                <span>
+                                    FECHA
+                                </span>
+
+                                <strong>
+                                    ${formatearFecha(item.fecha)}
+                                </strong>
+                            </div>
+
+
+                            <div>
+                                <span>
+                                    CLIENTE
+                                </span>
+
+                                <strong>
+                                    ${escapeHtml(item.cliente)}
+                                </strong>
+                            </div>
+
+
+                            <div>
+                                <span>
+                                    ESTADO
+                                </span>
+
+                                <strong>
+                                    ${escapeHtml(item.estado || "Pendiente")}
+                                </strong>
+                            </div>
+
+                        </div>
+
+
+                        <div class="steil-detail-observaciones">
+
+                            <span>
+                                OBSERVACIONES
+                            </span>
+
+                            <p>
+                                ${
+                                    escapeHtml(
+                                        item.observaciones ||
+                                        "Sin observaciones."
+                                    )
+                                }
+                            </p>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="steil-modal-footer">
+
+                        <button
+                            type="button"
+                            class="btn btn-secondary"
+                            id="steilCerrarDetalle"
+                        >
+                            Cerrar
+                        </button>
+
+
+                        <button
+                            type="button"
+                            class="btn btn-primary"
+                            id="steilEditarDesdeDetalle"
+                        >
+                            <i class="fa-regular fa-pen-to-square"></i>
+                            Editar
+                        </button>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        `;
+
+
+        document.body.appendChild(modal);
+
+
+        document
+            .getElementById(
+                "steilCerrarModal"
+            )
+            ?.addEventListener(
+                "click",
+                cerrarModal
+            );
+
+
+        document
+            .getElementById(
+                "steilCerrarDetalle"
+            )
+            ?.addEventListener(
+                "click",
+                cerrarModal
+            );
+
+
+        document
+            .getElementById(
+                "steilEditarDesdeDetalle"
+            )
+            ?.addEventListener(
+                "click",
+                function () {
+
+                    editarAlbaran(item);
+
+                }
+            );
+
+    }
+
+
+    /* ============================================================
+       EDITAR
+    ============================================================ */
+
+    function editarAlbaran(item) {
+
+        abrirModalAlbaran(item);
+
+
+        const guardar =
+            document.getElementById(
+                "steilGuardarAlbaran"
+            );
+
+
+        if (!guardar) {
+            return;
         }
-    );
 
 
-    const estado =
-        document.getElementById(
-            "consultaEstado"
-        );
+        guardar.innerHTML = `
+
+            <i class="fa-solid fa-check"></i>
+            Guardar cambios
+
+        `;
 
 
-    if (estado) {
+        guardar.onclick =
+            function () {
 
-        estado.addEventListener(
-            "change",
-            renderizarConsultaAlbaranes
+                const numero =
+                    document.getElementById(
+                        "steilNumeroAlbaran"
+                    )?.value.trim();
+
+
+                const fecha =
+                    document.getElementById(
+                        "steilFechaAlbaran"
+                    )?.value;
+
+
+                const cliente =
+                    document.getElementById(
+                        "steilClienteAlbaran"
+                    )?.value.trim();
+
+
+                const estado =
+                    document.getElementById(
+                        "steilEstadoAlbaran"
+                    )?.value;
+
+
+                const observaciones =
+                    document.getElementById(
+                        "steilObservacionesAlbaran"
+                    )?.value.trim();
+
+
+                if (!numero || !fecha || !cliente) {
+
+                    mostrarAviso(
+                        "Completa los campos obligatorios."
+                    );
+
+                    return;
+
+                }
+
+
+                const albaranes =
+                    obtenerAlbaranes();
+
+
+                const indice =
+                    albaranes.findIndex(
+                        function (albaran) {
+                            return albaran.id === item.id;
+                        }
+                    );
+
+
+                if (indice === -1) {
+                    return;
+                }
+
+
+                const duplicado =
+                    albaranes.some(
+                        function (albaran) {
+
+                            return (
+                                albaran.id !== item.id &&
+                                String(albaran.numero)
+                                    .toLowerCase() ===
+                                numero.toLowerCase()
+                            );
+
+                        }
+                    );
+
+
+                if (duplicado) {
+
+                    mostrarAviso(
+                        "Ya existe otro albarán con ese número."
+                    );
+
+                    return;
+
+                }
+
+
+                albaranes[indice] = {
+
+                    ...albaranes[indice],
+
+                    numero: numero,
+
+                    fecha: fecha,
+
+                    cliente: cliente,
+
+                    estado:
+                        estado ||
+                        "Pendiente",
+
+                    observaciones:
+                        observaciones || ""
+
+                };
+
+
+                guardarAlbaranes(albaranes);
+
+
+                cerrarModal();
+
+
+                actualizarResumenAlbaranes();
+                renderAlbaranesRecientes();
+                renderConsultaAlbaranes();
+
+
+                mostrarAviso(
+                    "Albarán actualizado correctamente.",
+                    "success"
+                );
+
+            };
+
+    }
+
+
+    /* ============================================================
+       ELIMINAR
+    ============================================================ */
+
+    function eliminarAlbaran(item) {
+
+        const confirmar =
+            window.confirm(
+                "¿Quieres eliminar el albarán " +
+                item.numero +
+                "?"
+            );
+
+
+        if (!confirmar) {
+            return;
+        }
+
+
+        const albaranes =
+            obtenerAlbaranes()
+                .filter(function (albaran) {
+
+                    return albaran.id !== item.id;
+
+                });
+
+
+        guardarAlbaranes(albaranes);
+
+
+        actualizarResumenAlbaranes();
+        renderAlbaranesRecientes();
+        renderConsultaAlbaranes();
+
+
+        mostrarAviso(
+            "Albarán eliminado.",
+            "success"
         );
 
     }
 
-}
+
+    /* ============================================================
+       BUSCADOR GLOBAL
+    ============================================================ */
+
+    function iniciarBuscadorGlobal() {
+
+        const input =
+            document.getElementById(
+                "globalSearch"
+            );
 
 
-/* =========================================================
-   BOTONES GENERALES
-   ========================================================= */
-
-const textButtons =
-    document.querySelectorAll(
-        ".text-button"
-    );
-
-
-textButtons.forEach(
-    button => {
-
-        if (
-            button.id ===
-            "verTodosAlbaranes"
-        ) {
-
+        if (!input) {
             return;
-
         }
 
 
-        button.addEventListener(
-            "click",
-            function() {
+        input.addEventListener(
+            "keydown",
+            function (event) {
 
-                console.log(
-                    "Operación general"
+                if (event.key !== "Enter") {
+                    return;
+                }
+
+
+                const texto =
+                    input.value.trim();
+
+
+                if (!texto) {
+                    return;
+                }
+
+
+                /* Buscar albaranes */
+
+                const albaranes =
+                    obtenerAlbaranes();
+
+
+                const coincidencias =
+                    albaranes.filter(
+                        function (item) {
+
+                            return (
+
+                                String(
+                                    item.numero || ""
+                                )
+                                .toLowerCase()
+                                .includes(
+                                    texto.toLowerCase()
+                                )
+
+                                ||
+
+                                String(
+                                    item.cliente || ""
+                                )
+                                .toLowerCase()
+                                .includes(
+                                    texto.toLowerCase()
+                                )
+
+                            );
+
+                        }
+                    );
+
+
+                if (coincidencias.length) {
+
+                    const consulta =
+                        document.getElementById(
+                            "consultaBuscar"
+                        );
+
+
+                    if (consulta) {
+                        consulta.value = texto;
+                    }
+
+
+                    mostrarConsultaAlbaranes();
+
+
+                    return;
+
+                }
+
+
+                mostrarAviso(
+                    "No se han encontrado resultados para: " +
+                    texto
+                );
+
+            }
+        );
+
+
+        /* CTRL + K */
+
+        document.addEventListener(
+            "keydown",
+            function (event) {
+
+                if (
+                    (event.ctrlKey || event.metaKey) &&
+                    event.key.toLowerCase() === "k"
+                ) {
+
+                    event.preventDefault();
+
+                    input.focus();
+
+                    input.select();
+
+                }
+
+            }
+        );
+
+    }
+
+
+    /* ============================================================
+       MENÚ
+    ============================================================ */
+
+    function iniciarMenu() {
+
+        const menuToggle =
+            document.getElementById(
+                "menuToggle"
+            );
+
+
+        const sidebar =
+            document.querySelector(
+                ".sidebar"
+            );
+
+
+        if (!menuToggle || !sidebar) {
+            return;
+        }
+
+
+        menuToggle.addEventListener(
+            "click",
+            function () {
+
+                sidebar.classList.toggle(
+                    "open"
                 );
 
             }
         );
 
     }
-);
 
 
-/* =========================================================
-   NOTIFICACIONES
-   ========================================================= */
+    /* ============================================================
+       MODAL
+    ============================================================ */
 
-const notificationButton =
-    document.querySelector(
-        ".notifications"
-    );
+    function cerrarModal() {
 
-
-if (notificationButton) {
-
-    notificationButton.addEventListener(
-        "click",
-        function() {
-
-            console.log(
-                "Centro de notificaciones"
+        const modal =
+            document.getElementById(
+                "steilAlbaranModal"
             );
 
+
+        if (modal) {
+            modal.remove();
         }
-    );
 
-}
+    }
 
 
-/* =========================================================
-   INICIO
-   ========================================================= */
+    function manejarEscapeModal(event) {
 
-document.addEventListener(
-    "DOMContentLoaded",
-    function() {
+        if (event.key === "Escape") {
+            cerrarModal();
+        }
 
-        cargarAlbaranes();
+    }
 
-        openPage(
-            "dashboard"
+
+    /* ============================================================
+       AVISOS
+    ============================================================ */
+
+    function mostrarAviso(
+        mensaje,
+        tipo
+    ) {
+
+        const anterior =
+            document.querySelector(
+                ".steil-toast"
+            );
+
+
+        if (anterior) {
+            anterior.remove();
+        }
+
+
+        const toast =
+            document.createElement(
+                "div"
+            );
+
+
+        toast.className =
+            "steil-toast " +
+            (
+                tipo === "success"
+                    ? "success"
+                    : ""
+            );
+
+
+        toast.innerHTML = `
+
+            <i class="fa-solid ${
+                tipo === "success"
+                    ? "fa-circle-check"
+                    : "fa-circle-info"
+            }"></i>
+
+            <span>
+                ${escapeHtml(mensaje)}
+            </span>
+
+        `;
+
+
+        document.body.appendChild(
+            toast
         );
 
-        renderizarAlbaranes();
 
-        actualizarResumenAlbaranes();
+        setTimeout(
+            function () {
 
-        renderizarConsultaAlbaranes();
+                toast.classList.add(
+                    "hide"
+                );
 
-        inicializarBotonesAlbaranes();
 
-        console.log(
-            "STEIL · Gestión Interna iniciada correctamente."
+                setTimeout(
+                    function () {
+
+                        toast.remove();
+
+                    },
+                    250
+                );
+
+            },
+            2800
         );
 
     }
-);
+
+
+    /* ============================================================
+       UTILIDADES
+    ============================================================ */
+
+    function ponerTexto(
+        id,
+        valor
+    ) {
+
+        const elemento =
+            document.getElementById(id);
+
+
+        if (elemento) {
+            elemento.textContent = valor;
+        }
+
+    }
+
+
+    function obtenerFechaHoy() {
+
+        const fecha =
+            new Date();
+
+
+        const ano =
+            fecha.getFullYear();
+
+
+        const mes =
+            String(
+                fecha.getMonth() + 1
+            ).padStart(2, "0");
+
+
+        const dia =
+            String(
+                fecha.getDate()
+            ).padStart(2, "0");
+
+
+        return (
+            ano +
+            "-" +
+            mes +
+            "-" +
+            dia
+        );
+
+    }
+
+
+    function formatearFecha(fecha) {
+
+        if (!fecha) {
+            return "—";
+        }
+
+
+        const partes =
+            String(fecha).split("-");
+
+
+        if (partes.length !== 3) {
+            return fecha;
+        }
+
+
+        return (
+            partes[2] +
+            "/" +
+            partes[1] +
+            "/" +
+            partes[0]
+        );
+
+    }
+
+
+    function ordenarPorFechaDesc(
+        a,
+        b
+    ) {
+
+        const fechaA =
+            String(
+                a.fecha || ""
+            );
+
+
+        const fechaB =
+            String(
+                b.fecha || ""
+            );
+
+
+        if (fechaA === fechaB) {
+
+            return String(
+                b.creado || ""
+            ).localeCompare(
+                String(
+                    a.creado || ""
+                )
+            );
+
+        }
+
+
+        return fechaB.localeCompare(
+            fechaA
+        );
+
+    }
+
+
+    function escapeHtml(valor) {
+
+        return String(
+            valor ?? ""
+        )
+        .replace(
+            /&/g,
+            "&amp;"
+        )
+        .replace(
+            /</g,
+            "&lt;"
+        )
+        .replace(
+            />/g,
+            "&gt;"
+        )
+        .replace(
+            /"/g,
+            "&quot;"
+        )
+        .replace(
+            /'/g,
+            "&#039;"
+        );
+
+    }
+
+
+    /* ============================================================
+       ESTILOS FUNCIONALES DEL APP.JS
+       No sustituye css/style.css
+    ============================================================ */
+
+    const style =
+        document.createElement(
+            "style"
+        );
+
+
+    style.textContent = `
+
+        /* MODAL */
+
+        .steil-modal-overlay {
+
+            position:fixed;
+            inset:0;
+            z-index:99999;
+
+            display:flex;
+            align-items:center;
+            justify-content:center;
+
+            padding:20px;
+
+            background:rgba(
+                20,
+                28,
+                32,
+                .48
+            );
+
+            backdrop-filter:blur(2px);
+
+        }
+
+
+        .steil-modal {
+
+            width:min(
+                620px,
+                100%
+            );
+
+            max-height:90vh;
+
+            overflow:auto;
+
+            background:#fff;
+
+            border-radius:12px;
+
+            box-shadow:
+                0 25px 70px
+                rgba(
+                    0,
+                    0,
+                    0,
+                    .22
+                );
+
+        }
+
+
+        .steil-modal-header {
+
+            display:flex;
+
+            align-items:center;
+
+            justify-content:space-between;
+
+            padding:22px 24px;
+
+            border-bottom:
+                1px solid #e4e8ea;
+
+        }
+
+
+        .steil-modal-kicker {
+
+            display:block;
+
+            margin-bottom:5px;
+
+            font-size:9px;
+
+            font-weight:800;
+
+            letter-spacing:1px;
+
+            color:#176d79;
+
+        }
+
+
+        .steil-modal-header h2 {
+
+            margin:0;
+
+            font-size:22px;
+
+            color:#26343a;
+
+        }
+
+
+        .steil-modal-close {
+
+            width:36px;
+
+            height:36px;
+
+            border:0;
+
+            border-radius:7px;
+
+            background:#f2f4f5;
+
+            color:#52616a;
+
+            cursor:pointer;
+
+        }
+
+
+        .steil-modal-close:hover {
+
+            background:#e8ecee;
+
+        }
+
+
+        .steil-modal-body {
+
+            padding:24px;
+
+        }
+
+
+        .steil-form-grid {
+
+            display:grid;
+
+            grid-template-columns:
+                1fr
+                1fr;
+
+            gap:16px;
+
+        }
+
+
+        .steil-form-group {
+
+            display:flex;
+
+            flex-direction:column;
+
+        }
+
+
+        .steil-form-group label {
+
+            margin-bottom:7px;
+
+            font-size:9px;
+
+            font-weight:800;
+
+            letter-spacing:.5px;
+
+            color:#52616a;
+
+        }
+
+
+        .steil-form-group input,
+        .steil-form-group select,
+        .steil-form-group textarea {
+
+            width:100%;
+
+            box-sizing:border-box;
+
+            border:
+                1px solid #d8dfe2;
+
+            border-radius:7px;
+
+            padding:
+                10px 11px;
+
+            font-family:inherit;
+
+            font-size:12px;
+
+            color:#35434b;
+
+            background:#fff;
+
+            outline:none;
+
+        }
+
+
+        .steil-form-group input:focus,
+        .steil-form-group select:focus,
+        .steil-form-group textarea:focus {
+
+            border-color:#176d79;
+
+            box-shadow:
+                0 0 0 2px
+                rgba(
+                    23,
+                    109,
+                    121,
+                    .08
+                );
+
+        }
+
+
+        .steil-modal-footer {
+
+            display:flex;
+
+            justify-content:flex-end;
+
+            gap:10px;
+
+            padding:18px 24px;
+
+            border-top:
+                1px solid #e4e8ea;
+
+        }
+
+
+        /* ESTADO */
+
+        .albaran-status {
+
+            display:inline-flex;
+
+            align-items:center;
+
+            padding:
+                5px 9px;
+
+            border-radius:20px;
+
+            font-size:9px;
+
+            font-weight:800;
+
+        }
+
+
+        .albaran-status.pending {
+
+            background:#fff4dd;
+
+            color:#996900;
+
+        }
+
+
+        .albaran-status.signed {
+
+            background:#e6f5ee;
+
+            color:#237451;
+
+        }
+
+
+        /* ACCIONES */
+
+        .albaran-row-actions {
+
+            display:flex;
+
+            gap:5px;
+
+        }
+
+
+        .steil-row-button {
+
+            width:30px;
+
+            height:30px;
+
+            border:
+                1px solid #dce2e4;
+
+            border-radius:6px;
+
+            background:#fff;
+
+            color:#52616a;
+
+            cursor:pointer;
+
+        }
+
+
+        .steil-row-button:hover {
+
+            background:#f2f5f6;
+
+            color:#176d79;
+
+        }
+
+
+        .steil-row-button.danger:hover {
+
+            color:#b33a3a;
+
+        }
+
+
+        /* DETALLE */
+
+        .steil-detail-grid {
+
+            display:grid;
+
+            grid-template-columns:
+                1fr
+                1fr;
+
+            gap:20px;
+
+        }
+
+
+        .steil-detail-grid > div {
+
+            display:flex;
+
+            flex-direction:column;
+
+            gap:5px;
+
+        }
+
+
+        .steil-detail-grid span,
+        .steil-detail-observaciones span {
+
+            font-size:9px;
+
+            font-weight:800;
+
+            letter-spacing:.5px;
+
+            color:#7a878d;
+
+        }
+
+
+        .steil-detail-grid strong {
+
+            font-size:13px;
+
+            color:#26343a;
+
+        }
+
+
+        .steil-detail-observaciones {
+
+            margin-top:24px;
+
+            padding-top:18px;
+
+            border-top:
+                1px solid #e5e9ea;
+
+        }
+
+
+        .steil-detail-observaciones p {
+
+            margin:
+                8px 0 0;
+
+            color:#52616a;
+
+            font-size:12px;
+
+            line-height:1.6;
+
+        }
+
+
+        /* TOAST */
+
+        .steil-toast {
+
+            position:fixed;
+
+            right:24px;
+
+            bottom:24px;
+
+            z-index:100000;
+
+            display:flex;
+
+            align-items:center;
+
+            gap:10px;
+
+            max-width:420px;
+
+            padding:
+                13px 16px;
+
+            border-radius:9px;
+
+            background:#26343a;
+
+            color:#fff;
+
+            box-shadow:
+                0 10px 35px
+                rgba(
+                    0,
+                    0,
+                    0,
+                    .18
+                );
+
+            font-size:11px;
+
+            opacity:1;
+
+            transform:
+                translateY(0);
+
+            transition:
+                opacity .25s ease,
+                transform .25s ease;
+
+        }
+
+
+        .steil-toast.success {
+
+            background:#176d79;
+
+        }
+
+
+        .steil-toast.hide {
+
+            opacity:0;
+
+            transform:
+                translateY(10px);
+
+        }
+
+
+        /* MÓVIL */
+
+        @media (
+            max-width:700px
+        ) {
+
+            .steil-form-grid,
+            .steil-detail-grid {
+
+                grid-template-columns:
+                    1fr;
+
+            }
+
+            .steil-form-group {
+
+                grid-column:
+                    auto !important;
+
+            }
+
+            .steil-modal {
+
+                max-height:
+                    94vh;
+
+            }
+
+            .steil-modal-header,
+            .steil-modal-body,
+            .steil-modal-footer {
+
+                padding:
+                    16px;
+
+            }
+
+        }
+
+    `;
+
+
+    document.head.appendChild(
+        style
+    );
+
+
+})();
