@@ -180,7 +180,7 @@
 
             optionConsultar.addEventListener("click", function () {
 
-                mostrarConsultaAlbaranes();
+                mostrarPagina("albaranes-consulta");
 
             });
 
@@ -198,7 +198,7 @@
 
             verTodos.addEventListener("click", function () {
 
-                mostrarConsultaAlbaranes();
+                function mostrarPagina();
 
             });
 
@@ -377,7 +377,7 @@
        MOSTRAR CONSULTA
     ============================================================ */
 
-    function mostrarConsultaAlbaranes() {
+    function () {
 
         mostrarPagina("albaranes-consulta");
 
@@ -1936,7 +1936,7 @@
                     }
 
 
-                    mostrarConsultaAlbaranes();
+                    function mostrarPagina();
 
 
                     return;
