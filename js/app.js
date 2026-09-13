@@ -194,17 +194,15 @@
         const verTodos =
             document.getElementById("verTodosAlbaranes");
 
-        if (verTodos) {
+if (verTodos) {
 
     verTodos.addEventListener("click", function () {
 
-    mostrarPagina("albaranes-consulta");
+        mostrarPagina("albaranes-consulta");
 
-});
+    });
 
-            });
-
-        }
+}
 
 
         /* -----------------------------------------
