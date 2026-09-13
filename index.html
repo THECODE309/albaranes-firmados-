@@ -1,2011 +1,861 @@
 <!DOCTYPE html>
 <html lang="es">
-
 <head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>STEIL · Consultar albaranes</title>
 
-    <meta charset="UTF-8">
+<style>
+* {
+    box-sizing: border-box;
+}
 
-    <meta
-        name="viewport"
-        content="width=device-width, initial-scale=1.0"
-    >
+body {
+    margin: 0;
+    background: #f4f5f6;
+    color: #16354a;
+    font-family: Arial, Helvetica, sans-serif;
+}
 
-    <title>STEIL · Gestión Interna</title>
+/* CABECERA */
+.top {
+    height: 56px;
+    background: #ffffff;
+    border-bottom: 1px solid #dfe4e7;
+    padding: 0 28px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
 
-    <meta
-        name="description"
-        content="Sistema interno de gestión STEIL"
-    >
+.top-search {
+    color: #7b8790;
+    font-size: 13px;
+}
 
-    <!-- CSS PRINCIPAL -->
-    <link
-        rel="stylesheet"
-        href="css/style.css?v=2"
-    >
+/* CONTENIDO */
+.main {
+    padding: 32px 18px;
+    max-width: 1650px;
+    margin: auto;
+}
 
-    <!-- FONT AWESOME -->
-    <link
-        rel="stylesheet"
-        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
-    >
+.eyebrow {
+    font-size: 11px;
+    font-weight: bold;
+    letter-spacing: 1px;
+    color: #176b77;
+}
 
+h1 {
+    font-size: 29px;
+    margin: 7px 0;
+    color: #102f45;
+}
+
+.sub {
+    font-size: 14px;
+    color: #6d7880;
+}
+
+/* BOTONES SUPERIORES */
+.topbuttons {
+    float: right;
+    margin-top: -42px;
+}
+
+button {
+    cursor: pointer;
+    font: inherit;
+}
+
+.btn {
+    border: 1px solid #d8e0e4;
+    background: #ffffff;
+    border-radius: 8px;
+    padding: 10px 16px;
+    font-weight: bold;
+    color: #17364b;
+}
+
+.btn.primary {
+    background: #20737c;
+    color: #ffffff;
+    border-color: #20737c;
+}
+
+/* FILTROS */
+.box {
+    background: #ffffff;
+    border: 1px solid #dfe4e7;
+    border-radius: 11px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+}
+
+.filters {
+    margin-top: 28px;
+    padding: 22px;
+    display: grid;
+    grid-template-columns: 1.2fr 1.2fr .8fr .8fr auto;
+    gap: 12px;
+    align-items: end;
+}
+
+label {
+    display: block;
+    font-size: 10px;
+    font-weight: bold;
+    letter-spacing: .7px;
+    color: #61727c;
+    margin-bottom: 8px;
+}
+
+input,
+select,
+textarea {
+    width: 100%;
+    padding: 11px 12px;
+    border: 1px solid #cfd9de;
+    border-radius: 7px;
+    background: #ffffff;
+    color: #29485b;
+    font-size: 13px;
+    outline: none;
+}
+
+input:focus,
+select:focus,
+textarea:focus {
+    border-color: #20737c;
+    box-shadow: 0 0 0 2px rgba(32,115,124,.10);
+}
+
+/* RESULTADOS */
+.results {
+    margin-top: 21px;
+    overflow: hidden;
+}
+
+.rhead {
+    padding: 22px 20px;
+    border-bottom: 1px solid #e1e5e7;
+    display: flex;
+    justify-content: space-between;
+}
+
+.rhead small {
+    display: block;
+    color: #74818a;
+    margin-top: 5px;
+    font-size: 10px;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+th {
+    font-size: 9px;
+    letter-spacing: 1px;
+    color: #61747e;
+    text-align: left;
+    padding: 14px 18px;
+    border-bottom: 1px solid #dfe4e7;
+}
+
+td {
+    font-size: 11px;
+    padding: 14px 18px;
+    border-bottom: 1px solid #edf0f1;
+}
+
+/* ESTADO */
+.status {
+    display: inline-block;
+    background: #e8f4ed;
+    color: #16804d;
+    padding: 6px 10px;
+    border-radius: 14px;
+    font-weight: bold;
+}
+
+/* ACCIONES */
+.actions {
+    display: flex;
+    gap: 7px;
+    flex-wrap: wrap;
+}
+
+.action {
+    border: 0;
+    border-radius: 7px;
+    padding: 8px 10px;
+    background: #eef6f6;
+    color: #176d76;
+    font-weight: bold;
+    font-size: 11px;
+}
+
+.action:hover {
+    background: #dceeee;
+}
+
+.action.delete {
+    background: #f8eeee;
+    color: #a95757;
+}
+
+/* MODAL */
+.modalbg {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(16,43,59,.40);
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    z-index: 1000;
+}
+
+.modal {
+    width: min(650px, 100%);
+    background: #ffffff;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 20px 60px rgba(0,0,0,.20);
+}
+
+.mhead {
+    padding: 18px 22px;
+    border-bottom: 1px solid #e2e7e9;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.mhead h2 {
+    margin: 0;
+    font-size: 19px;
+    color: #16354a;
+}
+
+.close {
+    border: 0;
+    background: none;
+    font-size: 23px;
+    color: #667780;
+}
+
+.body {
+    padding: 22px;
+}
+
+.grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 14px;
+}
+
+.full {
+    margin-top: 14px;
+}
+
+textarea {
+    min-height: 125px;
+    resize: vertical;
+    line-height: 1.45;
+}
+
+.notice {
+    display: block;
+    color: #74818a;
+    margin-top: 8px;
+    font-size: 11px;
+}
+
+.mfoot {
+    padding: 16px 22px;
+    border-top: 1px solid #e2e7e9;
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+}
+
+/* RESPONSIVE */
+@media(max-width:900px) {
+
+    .filters {
+        grid-template-columns: 1fr 1fr;
+    }
+
+    .topbuttons {
+        float: none;
+        margin: 20px 0;
+    }
+
+    .grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media(max-width:600px) {
+
+    .filters {
+        grid-template-columns: 1fr;
+    }
+
+    table {
+        min-width: 850px;
+    }
+
+    .results {
+        overflow-x: auto;
+    }
+}
+</style>
 </head>
-
 
 <body>
 
-
-<div class="app">
-
-
-    <!-- =====================================================
-         SIDEBAR
-    ====================================================== -->
-
-    <aside class="sidebar">
-
-
-        <div class="sidebar-header">
-
-            <div class="logo">
-
-                <span class="logo-steil">
-                    STEIL
-                </span>
-
-                <span class="logo-subtitle">
-                    GESTIÓN INTERNA
-                </span>
-
-            </div>
-
-        </div>
-
-
-        <!-- =================================================
-             NAVEGACIÓN
-        ================================================== -->
-
-        <nav class="main-nav">
-
-
-            <!-- PRINCIPAL -->
-
-            <div class="nav-section-title">
-                PRINCIPAL
-            </div>
-
-
-            <a
-                href="#"
-                class="nav-item active"
-                data-page="dashboard"
-            >
-
-                <i class="fa-solid fa-house"></i>
-
-                <span>
-                    Dashboard
-                </span>
-
-            </a>
-
-
-
-            <!-- GESTIÓN COMERCIAL -->
-
-            <div class="nav-section-title">
-                GESTIÓN COMERCIAL
-            </div>
-
-
-            <a
-                href="#"
-                class="nav-item"
-                data-page="clientes"
-            >
-
-                <i class="fa-solid fa-users"></i>
-
-                <span>
-                    Clientes
-                </span>
-
-            </a>
-
-
-            <a
-                href="#"
-                class="nav-item"
-                data-page="proveedores"
-            >
-
-                <i class="fa-solid fa-truck-field"></i>
-
-                <span>
-                    Proveedores
-                </span>
-
-            </a>
-
-
-            <a
-                href="#"
-                class="nav-item"
-                data-page="ofertas"
-            >
-
-                <i class="fa-solid fa-file-invoice-dollar"></i>
-
-                <span>
-                    Ofertas
-                </span>
-
-            </a>
-
-
-            <a
-                href="#"
-                class="nav-item"
-                data-page="pedidos"
-            >
-
-                <i class="fa-solid fa-cart-shopping"></i>
-
-                <span>
-                    Pedidos
-                </span>
-
-            </a>
-
-
-            <a
-                href="#"
-                class="nav-item"
-                data-page="albaranes"
-            >
-
-                <i class="fa-solid fa-file-lines"></i>
-
-                <span>
-                    Albaranes
-                </span>
-
-            </a>
-
-
-            <a
-                href="#"
-                class="nav-item"
-                data-page="facturas"
-            >
-
-                <i class="fa-solid fa-file-invoice"></i>
-
-                <span>
-                    Facturas
-                </span>
-
-            </a>
-
-
-
-            <!-- PRODUCTOS Y ALMACÉN -->
-
-            <div class="nav-section-title">
-                PRODUCTOS Y ALMACÉN
-            </div>
-
-
-            <a
-                href="#"
-                class="nav-item"
-                data-page="productos"
-            >
-
-                <i class="fa-solid fa-box"></i>
-
-                <span>
-                    Productos
-                </span>
-
-            </a>
-
-
-            <a
-                href="#"
-                class="nav-item"
-                data-page="almacen"
-            >
-
-                <i class="fa-solid fa-warehouse"></i>
-
-                <span>
-                    Almacén
-                </span>
-
-            </a>
-
-
-            <a
-                href="#"
-                class="nav-item"
-                data-page="inventario"
-            >
-
-                <i class="fa-solid fa-boxes-stacked"></i>
-
-                <span>
-                    Inventario
-                </span>
-
-            </a>
-
-
-
-            <!-- COMUNICACIÓN -->
-
-            <div class="nav-section-title">
-                COMUNICACIÓN
-            </div>
-
-
-            <a
-                href="#"
-                class="nav-item"
-                data-page="whatsapp"
-            >
-
-                <i class="fa-brands fa-whatsapp"></i>
-
-                <span>
-                    WhatsApp
-                </span>
-
-            </a>
-
-
-            <a
-                href="#"
-                class="nav-item"
-                data-page="emails"
-            >
-
-                <i class="fa-solid fa-envelope"></i>
-
-                <span>
-                    Correos
-                </span>
-
-            </a>
-
-
-
-            <!-- ADMINISTRACIÓN -->
-
-            <div class="nav-section-title">
-                ADMINISTRACIÓN
-            </div>
-
-
-            <a
-                href="#"
-                class="nav-item"
-                data-page="compras"
-            >
-
-                <i class="fa-solid fa-bag-shopping"></i>
-
-                <span>
-                    Compras
-                </span>
-
-            </a>
-
-
-            <a
-                href="#"
-                class="nav-item"
-                data-page="gastos"
-            >
-
-                <i class="fa-solid fa-euro-sign"></i>
-
-                <span>
-                    Gastos
-                </span>
-
-            </a>
-
-
-            <a
-                href="#"
-                class="nav-item"
-                data-page="informes"
-            >
-
-                <i class="fa-solid fa-chart-column"></i>
-
-                <span>
-                    Informes
-                </span>
-
-            </a>
-
-
-
-            <!-- SISTEMA -->
-
-            <div class="nav-section-title">
-                SISTEMA
-            </div>
-
-
-            <a
-                href="#"
-                class="nav-item"
-                data-page="configuracion"
-            >
-
-                <i class="fa-solid fa-gear"></i>
-
-                <span>
-                    Configuración
-                </span>
-
-            </a>
-
-
-        </nav>
-
-
-        <!-- =================================================
-             USUARIO
-        ================================================== -->
-
-        <div class="sidebar-user">
-
-
-            <div class="user-avatar">
-                PA
-            </div>
-
-
-            <div class="user-info">
-
-                <strong>
-                    Administrador
-                </strong>
-
-                <span>
-                    STEIL
-                </span>
-
-            </div>
-
-
-            <button class="user-menu">
-
-                <i class="fa-solid fa-ellipsis-vertical"></i>
-
-            </button>
-
-
-        </div>
-
-
-    </aside>
-
-
-
-    <!-- =====================================================
-         CONTENIDO PRINCIPAL
-    ====================================================== -->
-
-    <main class="main-content">
-
-
-        <!-- =================================================
-             TOPBAR
-        ================================================== -->
-
-        <header class="topbar">
-
-
-            <div class="topbar-left">
-
-
-                <button
-                    class="menu-toggle"
-                    id="menuToggle"
-                >
-
-                    <i class="fa-solid fa-bars"></i>
-
-                </button>
-
-
-                <div class="breadcrumb">
-
-                    <span>
-                        STEIL
-                    </span>
-
-                    <i class="fa-solid fa-chevron-right"></i>
-
-                    <strong>
-                        Dashboard
-                    </strong>
-
-                </div>
-
-
-            </div>
-
-
-
-            <div class="topbar-right">
-
-
-                <!-- BUSCADOR -->
-
-                <div class="global-search">
-
-                    <i class="fa-solid fa-magnifying-glass"></i>
-
-                    <input
-                        type="text"
-                        id="globalSearch"
-                        placeholder="Buscar cliente, producto, albarán..."
-                    >
-
-                    <span class="search-shortcut">
-                        CTRL K
-                    </span>
-
-                </div>
-
-
-                <!-- NOTIFICACIONES -->
-
-                <button class="topbar-button notifications">
-
-                    <i class="fa-regular fa-bell"></i>
-
-                    <span class="notification-badge">
-                        3
-                    </span>
-
-                </button>
-
-
-                <!-- AYUDA -->
-
-                <button class="topbar-button">
-
-                    <i class="fa-regular fa-circle-question"></i>
-
-                </button>
-
-
-            </div>
-
-
-        </header>
-
-
-
-        <!-- =================================================
-             CONTENEDOR DE PÁGINAS
-        ================================================== -->
-
-        <section
-            class="page-container"
-            id="pageContainer"
-        >
-
-
-
-            <!-- =================================================
-                 DASHBOARD
-            ================================================== -->
-
-            <div
-                class="page active"
-                id="page-dashboard"
-            >
-
-
-                <div class="page-header">
-
-
-                    <div>
-
-                        <span class="page-kicker">
-                            GESTIÓN INTERNA
-                        </span>
-
-                        <h1>
-                            Dashboard
-                        </h1>
-
-                        <p>
-                            Resumen general de la actividad de STEIL.
-                        </p>
-
-                    </div>
-
-
-                    <div class="page-actions">
-
-                        <button class="btn btn-secondary">
-
-                            <i class="fa-solid fa-download"></i>
-
-                            Exportar
-
-                        </button>
-
-
-                        <button class="btn btn-primary">
-
-                            <i class="fa-solid fa-plus"></i>
-
-                            Nueva operación
-
-                        </button>
-
-                    </div>
-
-
-                </div>
-
-
-
-                <!-- KPI -->
-
-                <div class="kpi-grid">
-
-
-                    <div class="kpi-card">
-
-                        <div class="kpi-icon">
-
-                            <i class="fa-solid fa-file-lines"></i>
-
-                        </div>
-
-                        <div class="kpi-content">
-
-                            <span>
-                                Albaranes pendientes
-                            </span>
-
-                            <strong>
-                                12
-                            </strong>
-
-                            <small class="positive">
-                                +8,4% este mes
-                            </small>
-
-                        </div>
-
-                    </div>
-
-
-
-                    <div class="kpi-card">
-
-                        <div class="kpi-icon">
-
-                            <i class="fa-solid fa-cart-shopping"></i>
-
-                        </div>
-
-                        <div class="kpi-content">
-
-                            <span>
-                                Pedidos pendientes
-                            </span>
-
-                            <strong>
-                                24
-                            </strong>
-
-                            <small>
-                                6 para hoy
-                            </small>
-
-                        </div>
-
-                    </div>
-
-
-
-                    <div class="kpi-card">
-
-                        <div class="kpi-icon">
-
-                            <i class="fa-solid fa-truck"></i>
-
-                        </div>
-
-                        <div class="kpi-content">
-
-                            <span>
-                                Compras pendientes
-                            </span>
-
-                            <strong>
-                                8
-                            </strong>
-
-                            <small>
-                                3 urgentes
-                            </small>
-
-                        </div>
-
-                    </div>
-
-
-
-                    <div class="kpi-card">
-
-                        <div class="kpi-icon">
-
-                            <i class="fa-solid fa-euro-sign"></i>
-
-                        </div>
-
-                        <div class="kpi-content">
-
-                            <span>
-                                Ventas del mes
-                            </span>
-
-                            <strong>
-                                48.620 €
-                            </strong>
-
-                            <small class="positive">
-                                +12,6%
-                            </small>
-
-                        </div>
-
-                    </div>
-
-
-                </div>
-
-
-
-                <!-- ACTIVIDAD Y ALERTAS -->
-
-                <div class="dashboard-grid">
-
-
-                    <div class="panel">
-
-
-                        <div class="panel-header">
-
-                            <div>
-
-                                <h2>
-                                    Actividad reciente
-                                </h2>
-
-                                <span>
-                                    Últimas operaciones
-                                </span>
-
-                            </div>
-
-                            <button class="text-button">
-                                Ver todo
-                            </button>
-
-                        </div>
-
-
-
-                        <div class="activity-list">
-
-
-                            <div class="activity-item">
-
-                                <div class="activity-icon">
-
-                                    <i class="fa-solid fa-file-lines"></i>
-
-                                </div>
-
-                                <div class="activity-info">
-
-                                    <strong>
-                                        Albarán ALB-2026-0148
-                                    </strong>
-
-                                    <span>
-                                        Cliente pendiente de facturación
-                                    </span>
-
-                                </div>
-
-                                <time>
-                                    Hace 12 min
-                                </time>
-
-                            </div>
-
-
-
-                            <div class="activity-item">
-
-                                <div class="activity-icon">
-
-                                    <i class="fa-solid fa-cart-shopping"></i>
-
-                                </div>
-
-                                <div class="activity-info">
-
-                                    <strong>
-                                        Pedido PED-2026-083
-                                    </strong>
-
-                                    <span>
-                                        Pedido recibido
-                                    </span>
-
-                                </div>
-
-                                <time>
-                                    Hace 34 min
-                                </time>
-
-                            </div>
-
-
-
-                            <div class="activity-item">
-
-                                <div class="activity-icon">
-
-                                    <i class="fa-brands fa-whatsapp"></i>
-
-                                </div>
-
-                                <div class="activity-info">
-
-                                    <strong>
-                                        Nuevo contacto WhatsApp
-                                    </strong>
-
-                                    <span>
-                                        Consulta de material eléctrico
-                                    </span>
-
-                                </div>
-
-                                <time>
-                                    Hace 1 h
-                                </time>
-
-                            </div>
-
-
-                        </div>
-
-
-                    </div>
-
-
-
-                    <div class="panel">
-
-
-                        <div class="panel-header">
-
-                            <div>
-
-                                <h2>
-                                    Alertas
-                                </h2>
-
-                                <span>
-                                    Requieren atención
-                                </span>
-
-                            </div>
-
-                        </div>
-
-
-                        <div class="alerts-list">
-
-
-                            <div class="alert-item warning">
-
-                                <i class="fa-solid fa-triangle-exclamation"></i>
-
-                                <div>
-
-                                    <strong>
-                                        Stock bajo
-                                    </strong>
-
-                                    <span>
-                                        7 referencias necesitan reposición
-                                    </span>
-
-                                </div>
-
-                            </div>
-
-
-                            <div class="alert-item danger">
-
-                                <i class="fa-solid fa-clock"></i>
-
-                                <div>
-
-                                    <strong>
-                                        Pedidos atrasados
-                                    </strong>
-
-                                    <span>
-                                        3 pedidos superan la fecha prevista
-                                    </span>
-
-                                </div>
-
-                            </div>
-
-
-                            <div class="alert-item info">
-
-                                <i class="fa-solid fa-file-invoice"></i>
-
-                                <div>
-
-                                    <strong>
-                                        Albaranes sin facturar
-                                    </strong>
-
-                                    <span>
-                                        12 albaranes pendientes
-                                    </span>
-
-                                </div>
-
-                            </div>
-
-
-                        </div>
-
-
-                    </div>
-
-
-                </div>
-
-
-            </div>
-
-
-
-            <!-- =================================================
-                 CLIENTES
-            ================================================== -->
-
-            <div
-                class="page"
-                id="page-clientes"
-            >
-
-                <div class="empty-page">
-
-                    <h1>
-                        Clientes
-                    </h1>
-
-                    <p>
-                        Módulo en desarrollo.
-                    </p>
-
-                </div>
-
-            </div>
-
-
-
-            <!-- =================================================
-                 PROVEEDORES
-            ================================================== -->
-
-            <div
-                class="page"
-                id="page-proveedores"
-            >
-
-                <div class="empty-page">
-
-                    <h1>
-                        Proveedores
-                    </h1>
-
-                    <p>
-                        Módulo en desarrollo.
-                    </p>
-
-                </div>
-
-            </div>
-
-
-
-            <!-- =================================================
-                 OFERTAS
-            ================================================== -->
-
-            <div
-                class="page"
-                id="page-ofertas"
-            >
-
-                <div class="empty-page">
-
-                    <h1>
-                        Ofertas
-                    </h1>
-
-                    <p>
-                        Módulo en desarrollo.
-                    </p>
-
-                </div>
-
-            </div>
-
-
-
-            <!-- =================================================
-                 PEDIDOS
-            ================================================== -->
-
-            <div
-                class="page"
-                id="page-pedidos"
-            >
-
-                <div class="empty-page">
-
-                    <h1>
-                        Pedidos
-                    </h1>
-
-                    <p>
-                        Módulo en desarrollo.
-                    </p>
-
-                </div>
-
-            </div>
-
-
-
-            <!-- =================================================
-                 ALBARANES
-            ================================================== -->
-
-            <div
-                class="page"
-                id="page-albaranes"
-            >
-
-
-                <div class="page-header">
-
-
-                    <div>
-
-                        <span class="page-kicker">
-                            GESTIÓN DE ALBARANES
-                        </span>
-
-                        <h1>
-                            Albaranes
-                        </h1>
-
-                        <p>
-                            Escanea, guarda y consulta los albaranes de STEIL.
-                        </p>
-
-                    </div>
-
-
-                    <div class="page-actions">
-
-                        <button
-                            class="btn btn-primary"
-                            id="btnNuevoAlbaran"
-                        >
-
-                            <i class="fa-solid fa-plus"></i>
-
-                            Nuevo albarán
-
-                        </button>
-
-                    </div>
-
-
-                </div>
-
-
-
-                <!-- OPCIONES -->
-
-                <div class="albaranes-options">
-
-
-                    <!-- ESCANEAR -->
-
-                    <div
-                        class="albaran-option-card"
-                        id="optionEscanear"
-                    >
-
-                        <div class="albaran-option-icon">
-
-                            <i class="fa-solid fa-camera"></i>
-
-                        </div>
-
-
-                        <div class="albaran-option-content">
-
-                            <h2>
-                                Escanear albarán
-                            </h2>
-
-                            <p>
-                                Haz una fotografía del albarán y guarda sus datos.
-                            </p>
-
-                        </div>
-
-
-                        <div class="albaran-option-arrow">
-
-                            <i class="fa-solid fa-chevron-right"></i>
-
-                        </div>
-
-                    </div>
-
-
-
-                    <!-- CONSULTAR -->
-
-                    <div
-                        class="albaran-option-card"
-                        id="optionConsultar"
-                    >
-
-                        <div class="albaran-option-icon">
-
-                            <i class="fa-solid fa-folder-open"></i>
-
-                        </div>
-
-
-                        <div class="albaran-option-content">
-
-                            <h2>
-                                Consultar albaranes
-                            </h2>
-
-                            <p>
-                                Busca y consulta los albaranes guardados.
-                            </p>
-
-                        </div>
-
-
-                        <div class="albaran-option-arrow">
-
-                            <i class="fa-solid fa-chevron-right"></i>
-
-                        </div>
-
-                    </div>
-
-
-                </div>
-
-
-
-                <!-- RESUMEN -->
-
-                <div class="albaranes-summary">
-
-
-                    <div class="summary-card">
-
-                        <span>
-                            Total albaranes
-                        </span>
-
-                        <strong id="totalAlbaranes">
-                            0
-                        </strong>
-
-                    </div>
-
-
-                    <div class="summary-card">
-
-                        <span>
-                            Pendientes
-                        </span>
-
-                        <strong id="albaranesPendientes">
-                            0
-                        </strong>
-
-                    </div>
-
-
-                    <div class="summary-card">
-
-                        <span>
-                            Firmados
-                        </span>
-
-                        <strong id="albaranesFirmados">
-                            0
-                        </strong>
-
-                    </div>
-
-
-                    <div class="summary-card">
-
-                        <span>
-                            Este mes
-                        </span>
-
-                        <strong id="albaranesMes">
-                            0
-                        </strong>
-
-                    </div>
-
-
-                </div>
-
-
-
-                <!-- ÚLTIMOS ALBARANES -->
-
-                <div class="panel albaranes-recent-panel">
-
-
-                    <div class="panel-header">
-
-                        <div>
-
-                            <h2>
-                                Últimos albaranes
-                            </h2>
-
-                            <span>
-                                Albaranes registrados recientemente
-                            </span>
-
-                        </div>
-
-
-                        <button
-                            class="text-button"
-                            id="verTodosAlbaranes"
-                        >
-                            Ver todos
-                        </button>
-
-                    </div>
-
-
-
-                    <div class="albaranes-table-container">
-
-                        <table class="albaranes-table">
-
-
-                            <thead>
-
-                                <tr>
-
-                                    <th>
-                                        ALBARÁN
-                                    </th>
-
-                                    <th>
-                                        FECHA
-                                    </th>
-
-                                    <th>
-                                        CLIENTE
-                                    </th>
-
-                                    <th>
-                                        ESTADO
-                                    </th>
-
-                                    <th>
-                                        ACCIONES
-                                    </th>
-
-                                </tr>
-
-                            </thead>
-
-
-                            <tbody id="albaranesTableBody">
-
-
-                                <tr class="empty-table-row">
-
-                                    <td colspan="5">
-
-
-                                        <div class="empty-table">
-
-                                            <i class="fa-solid fa-file-circle-plus"></i>
-
-                                            <strong>
-                                                Todavía no hay albaranes
-                                            </strong>
-
-                                            <span>
-                                                Los albaranes que registres aparecerán aquí.
-                                            </span>
-
-                                        </div>
-
-
-                                    </td>
-
-                                </tr>
-
-
-                            </tbody>
-
-
-                        </table>
-
-                    </div>
-
-
-                </div>
-
-
-            </div>
-
-
-
-            <!-- =================================================
-                 CONSULTA DE ALBARANES
-            ================================================== -->
-
-            <div
-                class="page"
-                id="page-albaranes-consulta"
-            >
-
-
-                <!-- CABECERA -->
-
-                <div class="page-header">
-
-
-                    <div>
-
-                        <span class="page-kicker">
-                            GESTIÓN DE ALBARANES
-                        </span>
-
-                        <h1>
-                            Consultar albaranes
-                        </h1>
-
-                        <p>
-                            Busca, filtra y consulta los albaranes registrados.
-                        </p>
-
-                    </div>
-
-
-                    <div class="page-actions">
-
-                        <button
-                            class="btn btn-secondary"
-                            id="btnVolverAlbaranes"
-                        >
-
-                            <i class="fa-solid fa-arrow-left"></i>
-
-                            Volver
-
-                        </button>
-
-
-                        <button
-                            class="btn btn-primary"
-                            id="btnNuevoAlbaranConsulta"
-                        >
-
-                            <i class="fa-solid fa-plus"></i>
-
-                            Nuevo albarán
-
-                        </button>
-
-                    </div>
-
-
-                </div>
-
-
-
-                <!-- FILTROS -->
-
-                <div
-                    class="panel"
-                    style="
-                        margin-bottom:20px;
-                        padding:20px;
-                    "
-                >
-
-
-                    <div
-                        style="
-                            display:grid;
-                            grid-template-columns:
-                                1.5fr
-                                1.5fr
-                                1fr
-                                1fr
-                                1fr;
-                            gap:12px;
-                            align-items:end;
-                        "
-                    >
-
-
-                        <!-- BUSCAR -->
-
-                        <div>
-
-                            <label
-                                style="
-                                    display:block;
-                                    font-size:9px;
-                                    font-weight:700;
-                                    color:#52616a;
-                                    margin-bottom:7px;
-                                    letter-spacing:.4px;
-                                "
-                            >
-                                BUSCAR
-                            </label>
-
-                            <div
-                                style="
-                                    position:relative;
-                                "
-                            >
-
-                                <i
-                                    class="fa-solid fa-magnifying-glass"
-                                    style="
-                                        position:absolute;
-                                        left:11px;
-                                        top:50%;
-                                        transform:translateY(-50%);
-                                        color:#8b969b;
-                                        font-size:11px;
-                                    "
-                                ></i>
-
-                                <input
-                                    type="text"
-                                    id="consultaBuscar"
-                                    placeholder="Nº albarán o cliente"
-                                    style="
-                                        width:100%;
-                                        box-sizing:border-box;
-                                        height:38px;
-                                        padding:0 12px 0 31px;
-                                        border:1px solid #d8dfe2;
-                                        border-radius:7px;
-                                        font-size:11px;
-                                        outline:none;
-                                        background:#fff;
-                                    "
-                                >
-
-                            </div>
-
-                        </div>
-
-
-
-                        <!-- FECHA DESDE -->
-
-                        <div>
-
-                            <label
-                                style="
-                                    display:block;
-                                    font-size:9px;
-                                    font-weight:700;
-                                    color:#52616a;
-                                    margin-bottom:7px;
-                                    letter-spacing:.4px;
-                                "
-                            >
-                                FECHA DESDE
-                            </label>
-
-                            <input
-                                type="date"
-                                id="consultaFechaDesde"
-                                style="
-                                    width:100%;
-                                    box-sizing:border-box;
-                                    height:38px;
-                                    padding:0 10px;
-                                    border:1px solid #d8dfe2;
-                                    border-radius:7px;
-                                    font-size:11px;
-                                    outline:none;
-                                    background:#fff;
-                                "
-                            >
-
-                        </div>
-
-
-
-                        <!-- FECHA HASTA -->
-
-                        <div>
-
-                            <label
-                                style="
-                                    display:block;
-                                    font-size:9px;
-                                    font-weight:700;
-                                    color:#52616a;
-                                    margin-bottom:7px;
-                                    letter-spacing:.4px;
-                                "
-                            >
-                                FECHA HASTA
-                            </label>
-
-                            <input
-                                type="date"
-                                id="consultaFechaHasta"
-                                style="
-                                    width:100%;
-                                    box-sizing:border-box;
-                                    height:38px;
-                                    padding:0 10px;
-                                    border:1px solid #d8dfe2;
-                                    border-radius:7px;
-                                    font-size:11px;
-                                    outline:none;
-                                    background:#fff;
-                                "
-                            >
-
-                        </div>
-
-
-
-                        <!-- ESTADO -->
-
-                        <div>
-
-                            <label
-                                style="
-                                    display:block;
-                                    font-size:9px;
-                                    font-weight:700;
-                                    color:#52616a;
-                                    margin-bottom:7px;
-                                    letter-spacing:.4px;
-                                "
-                            >
-                                ESTADO
-                            </label>
-
-                            <select
-                                id="consultaEstado"
-                                style="
-                                    width:100%;
-                                    box-sizing:border-box;
-                                    height:38px;
-                                    padding:0 10px;
-                                    border:1px solid #d8dfe2;
-                                    border-radius:7px;
-                                    font-size:11px;
-                                    outline:none;
-                                    background:#fff;
-                                    color:#35434b;
-                                "
-                            >
-
-                                <option value="Todos">
-                                    Todos
-                                </option>
-
-                                <option value="Pendiente">
-                                    Pendientes
-                                </option>
-
-                                <option value="Firmado">
-                                    Firmados
-                                </option>
-
-                            </select>
-
-                        </div>
-
-
-
-                        <!-- BOTONES -->
-
-                        <div
-                            style="
-                                display:flex;
-                                gap:8px;
-                            "
-                        >
-
-                            <button
-                                type="button"
-                                id="btnBuscarAlbaranes"
-                                class="btn btn-primary"
-                                style="
-                                    height:38px;
-                                    flex:1;
-                                "
-                            >
-
-                                <i class="fa-solid fa-magnifying-glass"></i>
-
-                                Buscar
-
-                            </button>
-
-
-                            <button
-                                type="button"
-                                id="btnLimpiarConsulta"
-                                class="btn btn-secondary"
-                                style="
-                                    height:38px;
-                                    width:42px;
-                                    padding:0;
-                                "
-                                title="Limpiar filtros"
-                            >
-
-                                <i class="fa-solid fa-rotate-left"></i>
-
-                            </button>
-
-                        </div>
-
-
-                    </div>
-
-
-                </div>
-
-
-
-                <!-- RESULTADOS -->
-
-                <div class="panel">
-
-
-                    <div class="panel-header">
-
-
-                        <div>
-
-                            <h2>
-                                Resultados
-                            </h2>
-
-                            <span id="consultaResultadosTexto">
-                                Mostrando todos los albaranes
-                            </span>
-
-                        </div>
-
-
-                        <div
-                            id="consultaContador"
-                            style="
-                                font-size:10px;
-                                font-weight:700;
-                                color:#176d79;
-                            "
-                        >
-                            0 albaranes
-                        </div>
-
-
-                    </div>
-
-
-
-                    <div class="albaranes-table-container">
-
-
-                        <table class="albaranes-table">
-
-
-                            <thead>
-
-                                <tr>
-
-                                    <th>
-                                        ALBARÁN
-                                    </th>
-
-                                    <th>
-                                        FECHA
-                                    </th>
-
-                                    <th>
-                                        CLIENTE
-                                    </th>
-
-                                    <th>
-                                        ESTADO
-                                    </th>
-
-                                    <th>
-                                        ACCIONES
-                                    </th>
-
-                                </tr>
-
-                            </thead>
-
-
-                            <tbody id="consultaAlbaranesTableBody">
-
-
-                                <tr class="empty-table-row">
-
-                                    <td colspan="5">
-
-
-                                        <div class="empty-table">
-
-                                            <i class="fa-solid fa-magnifying-glass"></i>
-
-                                            <strong>
-                                                No hay albaranes
-                                            </strong>
-
-                                            <span>
-                                                Los resultados de la búsqueda aparecerán aquí.
-                                            </span>
-
-                                        </div>
-
-
-                                    </td>
-
-                                </tr>
-
-
-                            </tbody>
-
-
-                        </table>
-
-
-                    </div>
-
-
-                </div>
-
-
-            </div>
-
-
-
-            <!-- =================================================
-                 FACTURAS
-            ================================================== -->
-
-            <div
-                class="page"
-                id="page-facturas"
-            >
-
-                <div class="empty-page">
-
-                    <h1>
-                        Facturas
-                    </h1>
-
-                    <p>
-                        Módulo en desarrollo.
-                    </p>
-
-                </div>
-
-            </div>
-
-
-
-            <!-- =================================================
-                 PRODUCTOS
-            ================================================== -->
-
-            <div
-                class="page"
-                id="page-productos"
-            >
-
-                <div class="empty-page">
-
-                    <h1>
-                        Productos
-                    </h1>
-
-                    <p>
-                        Módulo en desarrollo.
-                    </p>
-
-                </div>
-
-            </div>
-
-
-
-            <!-- =================================================
-                 ALMACÉN
-            ================================================== -->
-
-            <div
-                class="page"
-                id="page-almacen"
-            >
-
-                <div class="empty-page">
-
-                    <h1>
-                        Almacén
-                    </h1>
-
-                    <p>
-                        Módulo en desarrollo.
-                    </p>
-
-                </div>
-
-            </div>
-
-
-
-            <!-- =================================================
-                 INVENTARIO
-            ================================================== -->
-
-            <div
-                class="page"
-                id="page-inventario"
-            >
-
-                <div class="empty-page">
-
-                    <h1>
-                        Inventario
-                    </h1>
-
-                    <p>
-                        Módulo en desarrollo.
-                    </p>
-
-                </div>
-
-            </div>
-
-
-
-            <!-- =================================================
-                 WHATSAPP
-            ================================================== -->
-
-            <div
-                class="page"
-                id="page-whatsapp"
-            >
-
-                <div class="empty-page">
-
-                    <h1>
-                        WhatsApp
-                    </h1>
-
-                    <p>
-                        Módulo en desarrollo.
-                    </p>
-
-                </div>
-
-            </div>
-
-
-
-            <!-- =================================================
-                 CORREOS
-            ================================================== -->
-
-            <div
-                class="page"
-                id="page-emails"
-            >
-
-                <div class="empty-page">
-
-                    <h1>
-                        Correos
-                    </h1>
-
-                    <p>
-                        Módulo en desarrollo.
-                    </p>
-
-                </div>
-
-            </div>
-
-
-
-            <!-- =================================================
-                 COMPRAS
-            ================================================== -->
-
-            <div
-                class="page"
-                id="page-compras"
-            >
-
-                <div class="empty-page">
-
-                    <h1>
-                        Compras
-                    </h1>
-
-                    <p>
-                        Módulo en desarrollo.
-                    </p>
-
-                </div>
-
-            </div>
-
-
-
-            <!-- =================================================
-                 GASTOS
-            ================================================== -->
-
-            <div
-                class="page"
-                id="page-gastos"
-            >
-
-                <div class="empty-page">
-
-                    <h1>
-                        Gastos
-                    </h1>
-
-                    <p>
-                        Módulo en desarrollo.
-                    </p>
-
-                </div>
-
-            </div>
-
-
-
-            <!-- =================================================
-                 INFORMES
-            ================================================== -->
-
-            <div
-                class="page"
-                id="page-informes"
-            >
-
-                <div class="empty-page">
-
-                    <h1>
-                        Informes
-                    </h1>
-
-                    <p>
-                        Módulo en desarrollo.
-                    </p>
-
-                </div>
-
-            </div>
-
-
-
-            <!-- =================================================
-                 CONFIGURACIÓN
-            ================================================== -->
-
-            <div
-                class="page"
-                id="page-configuracion"
-            >
-
-                <div class="empty-page">
-
-                    <h1>
-                        Configuración
-                    </h1>
-
-                    <p>
-                        Módulo en desarrollo.
-                    </p>
-
-                </div>
-
-            </div>
-
-
-        </section>
-
-
-    </main>
-
+<!-- CABECERA -->
+<div class="top">
+
+    <div>
+        <span style="color:#71808a;">STEIL</span>
+        &nbsp;›&nbsp;
+        <strong>Consultar albaranes</strong>
+    </div>
+
+    <div class="top-search">
+        🔍 Buscar cliente, producto, albarán...
+    </div>
 
 </div>
 
 
+<!-- CONTENIDO -->
+<main class="main">
 
-<!-- =========================================================
-     JAVASCRIPT
-========================================================== -->
+    <div class="eyebrow">
+        GESTIÓN DE ALBARANES
+    </div>
 
-<script src="js/app.js"></script>
+    <h1>
+        Consultar albaranes
+    </h1>
 
+    <p class="sub">
+        Busca, filtra y consulta los albaranes registrados.
+    </p>
+
+
+    <!-- BOTONES SUPERIORES -->
+    <div class="topbuttons">
+
+        <button class="btn">
+            ← Volver
+        </button>
+
+        <button class="btn primary">
+            ＋ Nuevo albarán
+        </button>
+
+    </div>
+
+
+    <!-- FILTROS -->
+    <div class="box filters">
+
+        <div>
+            <label>BUSCAR</label>
+            <input
+                type="text"
+                placeholder="Nº albarán o cliente">
+        </div>
+
+        <div>
+            <label>FECHA DESDE</label>
+            <input type="date">
+        </div>
+
+        <div>
+            <label>FECHA HASTA</label>
+            <input type="date">
+        </div>
+
+        <div>
+            <label>ESTADO</label>
+
+            <select>
+                <option>Todos</option>
+                <option>Firmado</option>
+                <option>Pendiente</option>
+            </select>
+
+        </div>
+
+        <button class="btn primary">
+            🔍 Buscar
+        </button>
+
+    </div>
+
+
+    <!-- RESULTADOS -->
+    <div class="box results">
+
+        <div class="rhead">
+
+            <div>
+
+                <strong>Resultados</strong>
+
+                <small>
+                    Resultados según los filtros seleccionados
+                </small>
+
+            </div>
+
+            <strong>
+                1 albarán
+            </strong>
+
+        </div>
+
+
+        <table>
+
+            <thead>
+
+                <tr>
+
+                    <th>ALBARÁN</th>
+
+                    <th>FECHA</th>
+
+                    <th>CLIENTE</th>
+
+                    <th>ESTADO</th>
+
+                    <th>ACCIONES</th>
+
+                </tr>
+
+            </thead>
+
+
+            <tbody>
+
+                <tr>
+
+                    <td>
+                        <strong>aln-test-001</strong>
+                    </td>
+
+                    <td>
+                        09/09/2026
+                    </td>
+
+                    <td>
+                        CLIENTE STEIL
+                    </td>
+
+                    <td>
+
+                        <span class="status">
+                            Firmado
+                        </span>
+
+                    </td>
+
+                    <td>
+
+                        <div class="actions">
+
+                            <!-- CONSULTAR -->
+                            <button
+                                class="action"
+                                title="Consultar albarán">
+                                👁
+                            </button>
+
+
+                            <!-- WHATSAPP -->
+                            <button
+                                class="action"
+                                onclick="openSend('whatsapp')">
+                                WhatsApp
+                            </button>
+
+
+                            <!-- CORREO -->
+                            <button
+                                class="action"
+                                onclick="openSend('email')">
+                                ✉ Correo
+                            </button>
+
+
+                            <!-- ELIMINAR -->
+                            <button
+                                class="action delete">
+                                Eliminar
+                            </button>
+
+                        </div>
+
+                    </td>
+
+                </tr>
+
+            </tbody>
+
+        </table>
+
+    </div>
+
+</main>
+
+
+<!-- ========================================================= -->
+<!-- MODAL DE ENVÍO -->
+<!-- ========================================================= -->
+
+<div
+    class="modalbg"
+    id="modalbg"
+    onclick="if(event.target===this) closeModal()">
+
+    <div class="modal">
+
+        <!-- CABECERA MODAL -->
+        <div class="mhead">
+
+            <h2 id="title">
+                Enviar albarán
+            </h2>
+
+            <button
+                class="close"
+                onclick="closeModal()">
+                ×
+            </button>
+
+        </div>
+
+
+        <!-- CUERPO -->
+        <div class="body">
+
+            <div class="grid">
+
+                <div>
+
+                    <label>
+                        ALBARÁN
+                    </label>
+
+                    <input
+                        id="alb"
+                        value="aln-test-001"
+                        readonly>
+
+                </div>
+
+
+                <div>
+
+                    <label>
+                        CLIENTE
+                    </label>
+
+                    <input
+                        id="client"
+                        value="CLIENTE STEIL">
+
+                </div>
+
+            </div>
+
+
+            <!-- TELÉFONO -->
+            <div
+                class="full"
+                id="phonebox">
+
+                <label>
+                    TELÉFONO WHATSAPP
+                </label>
+
+                <input
+                    id="phone"
+                    type="text"
+                    placeholder="+34 600 000 000">
+
+            </div>
+
+
+            <!-- EMAIL -->
+            <div
+                class="full"
+                id="emailbox"
+                style="display:none;">
+
+                <label>
+                    CORREO ELECTRÓNICO
+                </label>
+
+                <input
+                    id="email"
+                    type="email"
+                    placeholder="cliente@empresa.es">
+
+            </div>
+
+
+            <!-- MENSAJE -->
+            <div class="full">
+
+                <label>
+                    MENSAJE / CONSULTA
+                </label>
+
+                <textarea
+                    id="message"></textarea>
+
+                <span class="notice">
+                    El teléfono o correo se puede modificar antes del envío.
+                </span>
+
+            </div>
+
+        </div>
+
+
+        <!-- PIE -->
+        <div class="mfoot">
+
+            <button
+                class="btn"
+                onclick="closeModal()">
+
+                Cancelar
+
+            </button>
+
+
+            <button
+                class="btn primary"
+                id="send"
+                onclick="send()">
+
+                Enviar
+
+            </button>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- ========================================================= -->
+<!-- JAVASCRIPT -->
+<!-- ========================================================= -->
+
+<script>
+
+let mode = "whatsapp";
+
+
+/* ABRIR MODAL */
+
+function openSend(tipo) {
+
+    mode = tipo;
+
+    const modal =
+        document.getElementById("modalbg");
+
+    const phoneBox =
+        document.getElementById("phonebox");
+
+    const emailBox =
+        document.getElementById("emailbox");
+
+    const title =
+        document.getElementById("title");
+
+    const sendButton =
+        document.getElementById("send");
+
+    const message =
+        document.getElementById("message");
+
+    const alb =
+        document.getElementById("alb").value;
+
+
+    modal.style.display = "flex";
+
+
+    /* WHATSAPP */
+
+    if (tipo === "whatsapp") {
+
+        phoneBox.style.display = "block";
+
+        emailBox.style.display = "none";
+
+        title.textContent =
+            "Enviar albarán por WhatsApp";
+
+        sendButton.textContent =
+            "Abrir WhatsApp";
+
+
+        message.value =
+            "Hola, te enviamos la consulta correspondiente al albarán "
+            + alb
+            + " de STEIL. Quedamos a tu disposición. Gracias.";
+
+    }
+
+
+    /* CORREO */
+
+    else {
+
+        phoneBox.style.display = "none";
+
+        emailBox.style.display = "block";
+
+        title.textContent =
+            "Enviar albarán por correo electrónico";
+
+        sendButton.textContent =
+            "Abrir correo";
+
+
+        message.value =
+            "Hola,\n\n"
+            + "Te enviamos la consulta correspondiente al albarán "
+            + alb
+            + " de STEIL.\n\n"
+            + "Quedamos a tu disposición.\n\n"
+            + "Gracias.";
+
+    }
+
+}
+
+
+/* CERRAR MODAL */
+
+function closeModal() {
+
+    document.getElementById("modalbg")
+        .style.display = "none";
+
+}
+
+
+/* ENVIAR */
+
+function send() {
+
+    const message =
+        document.getElementById("message").value;
+
+    const alb =
+        document.getElementById("alb").value;
+
+    const client =
+        document.getElementById("client").value;
+
+
+    /* WHATSAPP */
+
+    if (mode === "whatsapp") {
+
+        let phone =
+            document.getElementById("phone")
+            .value
+            .trim()
+            .replace(/[^0-9]/g, "");
+
+
+        if (!phone) {
+
+            alert(
+                "Introduce un teléfono de WhatsApp."
+            );
+
+            return;
+        }
+
+
+        const url =
+            "https://wa.me/"
+            + phone
+            + "?text="
+            + encodeURIComponent(message);
+
+
+        window.open(
+            url,
+            "_blank"
+        );
+
+    }
+
+
+    /* CORREO */
+
+    else {
+
+        let email =
+            document.getElementById("email")
+            .value
+            .trim();
+
+
+        if (!email) {
+
+            alert(
+                "Introduce un correo electrónico."
+            );
+
+            return;
+        }
+
+
+        const subject =
+            "STEIL · Consulta albarán "
+            + alb
+            + " · "
+            + client;
+
+
+        const mailto =
+            "mailto:"
+            + email
+            + "?subject="
+            + encodeURIComponent(subject)
+            + "&body="
+            + encodeURIComponent(message);
+
+
+        window.location.href =
+            mailto;
+
+    }
+
+}
+
+</script>
 
 </body>
-
 </html>
