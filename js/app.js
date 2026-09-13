@@ -196,9 +196,11 @@
 
         if (verTodos) {
 
-            verTodos.addEventListener("click", function () {
+    verTodos.addEventListener("click", function () {
 
-                function mostrarPagina();
+    mostrarPagina("albaranes-consulta");
+
+});
 
             });
 
