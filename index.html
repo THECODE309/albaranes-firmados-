@@ -603,24 +603,559 @@
                  CLIENTES
             ================================================== -->
 
-            <div
-                class="page"
-                id="page-clientes"
-            >
+<!-- =================================================
+     CLIENTES · BASE DE 294 CLIENTES STEIL
+================================================== -->
 
-                <div class="empty-page">
+<div class="page" id="page-clientes">
 
-                    <h1>
-                        Clientes
-                    </h1>
+    <style>
+        #page-clientes .clientes-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 20px;
+            margin-bottom: 22px;
+            flex-wrap: wrap;
+        }
 
-                    <p>
-                        Módulo en desarrollo.
-                    </p>
+        #page-clientes .clientes-header h1 {
+            margin: 0;
+            font-size: 28px;
+        }
 
-                </div>
+        #page-clientes .clientes-header p {
+            margin: 5px 0 0;
+            color: #777;
+            font-size: 14px;
+        }
 
-            </div>
+        #page-clientes .clientes-contador {
+            background: #f3f4f6;
+            border-radius: 8px;
+            padding: 10px 15px;
+            font-size: 13px;
+            font-weight: 600;
+        }
+
+        #page-clientes .clientes-toolbar {
+            background: #fff;
+            border: 1px solid #e5e7eb;
+            border-radius: 10px;
+            padding: 16px;
+            margin-bottom: 18px;
+        }
+
+        #page-clientes .clientes-buscador {
+            width: 100%;
+            box-sizing: border-box;
+            border: 1px solid #d1d5db;
+            border-radius: 7px;
+            padding: 11px 13px;
+            font-size: 14px;
+            outline: none;
+        }
+
+        #page-clientes .clientes-buscador:focus {
+            border-color: #888;
+        }
+
+        #page-clientes .clientes-tabla-wrap {
+            background: #fff;
+            border: 1px solid #e5e7eb;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        #page-clientes table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        #page-clientes thead {
+            background: #f7f7f7;
+        }
+
+        #page-clientes th {
+            text-align: left;
+            padding: 13px 16px;
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: .4px;
+            color: #666;
+            border-bottom: 1px solid #e5e7eb;
+        }
+
+        #page-clientes td {
+            padding: 12px 16px;
+            border-bottom: 1px solid #eeeeee;
+            font-size: 14px;
+        }
+
+        #page-clientes tbody tr:hover {
+            background: #fafafa;
+        }
+
+        #page-clientes .cliente-codigo {
+            width: 90px;
+            font-weight: 700;
+            color: #777;
+        }
+
+        #page-clientes .cliente-nombre {
+            font-weight: 600;
+        }
+
+        #page-clientes .clientes-vacio {
+            padding: 35px;
+            text-align: center;
+            color: #777;
+        }
+    </style>
+
+    <div class="clientes-header">
+
+        <div>
+            <h1>Clientes</h1>
+            <p>Base de clientes STEIL</p>
+        </div>
+
+        <div class="clientes-contador" id="clientesContador">
+            294 clientes
+        </div>
+
+    </div>
+
+    <div class="clientes-toolbar">
+
+        <input
+            type="text"
+            id="clientesBuscar"
+            class="clientes-buscador"
+            placeholder="Buscar cliente por nombre..."
+            autocomplete="off"
+        >
+
+    </div>
+
+    <div class="clientes-tabla-wrap">
+
+        <table>
+
+            <thead>
+                <tr>
+                    <th style="width:90px;">Código</th>
+                    <th>Cliente</th>
+                </tr>
+            </thead>
+
+            <tbody id="clientesTableBody"></tbody>
+
+        </table>
+
+        <div
+            id="clientesVacio"
+            class="clientes-vacio"
+            style="display:none;"
+        >
+            No se han encontrado clientes.
+        </div>
+
+    </div>
+
+    <script>
+
+        /* =================================================
+           BASE OFICIAL STEIL · 294 CLIENTES
+           Orden original conservado
+        ================================================== */
+
+        const CLIENTES_STEIL = [
+            "FRANCISCO JAVIER ANDREU PERIS",
+            "OCA GLOBAL PREVENTION SERVICES, S.A.",
+            "NATRA CACAO, S.L.",
+            "PLAYMUSIC GLOBAL PRO, S.L.U.",
+            "FERNANDO ROMERO CALONGE",
+            "ROSAURA CAMPOS ÁLVAREZ",
+            "MIGUEL ÁNGEL PÉREZ PUIG",
+            "CARLOS DABAUZA NAVARRO",
+            "SILVIA LÓPEZ MONZO",
+            "SUMINISTROS MORENTÍN SERRANO, S.L.",
+            "PRODISEI TECHNOLOGIES, S.L.",
+            "IMASD ELECTRIC, S.L.U.",
+            "TALLERES RAFAEL CUBELLS BALLESTER, S.L.U.",
+            "ROLY CORTEZ CUELLAR",
+            "B&M ASESORES ENERGÉTICOS, S.L.",
+            "REFORMAXIS VALENCIA, S.L.",
+            "EXCAVACIONES MENESES, S.L.",
+            "LLUM I PÓLVORA EVENTS, S.L.",
+            "CARLOS RAMÍREZ SÁIZ",
+            "CARLOS BALANZÁ PASCUAL",
+            "ALGOCEL TEXTIL, S.L.",
+            "MANUELA RODRÍGUEZ RÍSQUEZ",
+            "DIEGO SORLÍ HUERTA",
+            "GIOMAR 77, S.L.",
+            "FABRICACIONES E INSTALACIONES PEPITO GUIÑÓN, S.L.U.",
+            "CALDERERÍA CAPILLA, S.A.",
+            "CRISTINA GARCÍA LUJÁN",
+            "SECURE VIAJES, S.L.",
+            "PETUG GUTEP, S.L.",
+            "VARA-TRUCK, S.L.",
+            "INGENIERIA Y MONTAJES BELENGUER, S.L.",
+            "MANUEL REDONDO TINACO",
+            "ARCHITECTURE SUSTAINABILITY RESPONSABILITY, S.L.",
+            "BV CARGO DE MERCANCÍAS Y LOGÍSTICA, S.L.",
+            "TALLERES GABARDA, S.L.",
+            "TENTS AND EVENTS, S.L.",
+            "NUEVA ESTUDI PATRIMONIAL, S.L.",
+            "PLÁSTICOS GAMÓN, S.A.",
+            "STUDIO QBICO, S.L.",
+            "CESYR ESTUDIOS Y CONSTRUCCIONES, S.L.",
+            "CREACIONES METÁLICAS SORIANO, S.L.",
+            "JC GAIBOR MONTAJES Y ELECTRICIDAD, S.L.",
+            "IDEAS SYROKO EVENTS, S.L.",
+            "CARPINTERÍA DE ALUMINIO PRADAS, S.L.",
+            "TORNS COILS ESPAÑA, S.L.",
+            "JOMIVAL SUMINISTROS, S.L.",
+            "SONDEOS AFOROS INSTALACIONES LEVANTE, S.L.",
+            "DAVID GRANELL ORTS",
+            "LONAS Y TOLDOS NAVARRO, S.L.",
+            "INMAPLAS, S.L.",
+            "TOLDOS Y PERSIANAS GUIÑÓN, S.L.",
+            "RESISTENCIAS Y CONTROL TÉRMICO RESGÓN, S.L.",
+            "DUPONT INSTALACIONES, S.L.",
+            "MULTISERVICIOS MURVIEDRO, S.L.",
+            "METALBORAYA, S.L.",
+            "CABAÑERO, S.L.",
+            "TOLDOS Y PERSIANAS LA FÁBRICA, S.L.",
+            "SERVANDO SÁNCHEZ PRIETO",
+            "CERRAJERÍA CALVO, S.L.",
+            "IMAGINE CREATIVE PROJECTS, S.L.",
+            "JOSÉ ANTONIO TAMARIT NAVARRO",
+            "RODAMIENTOS Y TRANSMISIONES, S.L.",
+            "VIDAL AUTOMATIZACIÓN Y CONTROL, S.L.",
+            "MOLINS E HIJOS, S.L.",
+            "GARCÍA CÁMARA, S.L.",
+            "CENTRE D'ENTRENAMENT PARC PATERNA, S.L.",
+            "GRUPO LOHA 2025, S.L.",
+            "NURIA ALEIXOS BORRÁS",
+            "ARCOTECTURA, S.L.",
+            "GASCONFORTVAL, S.L.",
+            "RAMÓN HERNÁNDEZ VILLALBA",
+            "PETAR KIRILOV PETROV",
+            "FRANCISCO ARNAL BOLEA",
+            "ANDRÉS PRIMA COLL",
+            "WATTUSSI PRODUCCIONES, S.L.",
+            "EMYRA CERRAMIENTOS, S.L.U.",
+            "FALLA PLAZA LEPANTO",
+            "FRANCISCO JAVIER ESTEVE HONZO",
+            "MOVILFRÍO, S.L.",
+            "BIENESTAR ADMINISTRACIÓN DE FINCAS Y ASESORÍA JURÍDICA",
+            "ANDRÉS SEDEÑO MARTÍN",
+            "ALEJANDRO ROIG VIÑAS",
+            "RICOLFE CONSTRUCCIÓN Y ARQUITECTURA, S.L.",
+            "ANYEER ÁLEX ROSALES ZUSKOWSKY",
+            "INSTALACIONES XÁTIVA, S.L.",
+            "MARUNTELU, S.L.",
+            "ADMINISTRACIONES JIMÉNEZ LOZANO, S.L.",
+            "NOVES MARCO, S.L.",
+            "CONSTRUMAR 1800, S.L.",
+            "FAMILIA FN4, C.B.",
+            "HAMID YERROU HERRERO",
+            "ALMUDENA LINARES VALERA",
+            "FERNANDO SÁNCHEZ GIL",
+            "FERNANDO FRANCIA PEÑALVER",
+            "CAMPUS LYCEUM, S.L.",
+            "ASZENDE, S.L.U.",
+            "ROBERTO JULIÁN CASTAÑEDA CALVO",
+            "AMARA MEGAFONÍA CCTV VOZ DATOS, S.L.",
+            "MARIO TORRES ORIOLA",
+            "ENRIQUE TEJEDOR HARGAIX",
+            "CARRIÓN BERLANGA, O.E.",
+            "MYKHAYLIV ANDRIY",
+            "JOSÉ MARÍA SEGURA VIZCAÍNO",
+            "COHERMA SEMIRREMOLQUES, S.L.",
+            "COLORBAN DESIGN 20115, S.L.",
+            "GLOBALKLEE, S.L.",
+            "PARKING AVENIDA VALENCIA, S.L.U.",
+            "CLEOP, S.A.",
+            "NOVAEDAT CULLERA, S.L.",
+            "NOVAEDAT MUTXAMEL, S.L.",
+            "NOVAEDAT VALL D´UIXÓ, S.L.",
+            "STURM 2000, S.L.",
+            "GEROCLEOP, S.L.",
+            "NOVAEDAT BENESTAR, S.L.",
+            "NOVAEDAT SEDAVÍ, S.L.",
+            "MIGUEL ÁNGEL ALBALAT MARTÍ",
+            "FRANCISCO JOSÉ JUAN BALLESTER",
+            "FEBOLEC, S.L.",
+            "JOSÉ ADRIÁ ORTIZ",
+            "VICENT DURÀ ESTEVE",
+            "FALLA EL BARRIET",
+            "COMUNIDAD DE PROPIETARIOS C/ ESCULTOR AIXA Nº 12",
+            "CLIENTES MOSTRADOR",
+            "ESPERANZA SANZ BRAVO",
+            "L SAMYS ENERGÍA, S.L.",
+            "JOSÉ MARTÍNEZ HUGUET",
+            "ESPACIOS DEL ESTE, S.L.",
+            "REFRIGERACIÓN RICOR, S.L.",
+            "VALERO YAGÜE CONSTRUCCIONES, S.L.U.",
+            "RHERNANDEZ STUDIO, S.L.",
+            "U.V.E., S.A.",
+            "I.E.S. ENRIQUE TIERNO GALVÁN",
+            "OBO BETTERMANN, S.A.",
+            "ONLY ELÉCTRICA, S.L.",
+            "JUAN LUÍS PAREDES TORTOSA",
+            "TERMOGAMA, S.L.",
+            "TECNOLOGÍA EN INSTALACIÓN Y MANTENIMIENTO PARA EMPRESAS, S.L.",
+            "REPRESENTACIONES ROSARIO SOLSONA, S.L.",
+            "REYMA HOUSE, S.L.",
+            "ÁNGEL PUCHOL GARCÍA",
+            "ELIT INFRAESTRUCTURAS Y CANALIZACIONES, S.L.",
+            "JAVIER CLAUDIO URQUIZA OLAY",
+            "ELECTRICIDAD Y SERVICIOS BERDÚN, S.L.",
+            "SALVADOR CONDE GARCÍA",
+            "EL CHURRO PRODUCCIONES, S.L.",
+            "COELSER SERVICIOS, S.L.",
+            "PRODUCCIONES LA COMPETENCIA, S.L.",
+            "VICENTE SANTOS PÉREZ PALLARÉS",
+            "MARIANO MARTÍNEZ RECALDE",
+            "ELECTRICIDAD TRES FORQUES, S.L.",
+            "ESCUELA INFANTIL SAN RAFAEL",
+            "JAVIER MIL MÁÑEZ",
+            "VÍCTOR MANUEL TANGARIFE MEDINA",
+            "XUFES PASTOR, S.L.",
+            "TANTOMONTA VALENCIA, S.L.",
+            "SUMINISTROS INDUSTRIALES SERVOFLUID, S.L.",
+            "REMOLQUES 2020, S.L.",
+            "SERVICIOS FUNERARIOS TANATORIO AUÑÓN",
+            "DIPTIKA, C.B.",
+            "AYUNTAMIENTO DE BONREPÒS I MIRAMBELL",
+            "DYMSA INGENIERÍA, S.L.",
+            "MANUEL MANSILLA LÓPEZ",
+            "ACTIO LUMINIS, S.L.",
+            "SOL FOTOVOLTAICA ELECTRICIDAD, S.L.",
+            "HUMARFLOW, S.L.",
+            "DANIEL MÁRQUEZ RODRÍGUEZ",
+            "AREFORMARTE, S.L.",
+            "GASOLWIN, S.L.",
+            "CREMALLERAS ARNAU, S.L.",
+            "ANA MARÍA COLL DOMINGO",
+            "MIGUEL DOÑATE GÓMEZ",
+            "AYUNTAMIENTO DE TAVERNES BLANQUES",
+            "MANUEL VALENTÍN GALINDO LÓPEZ Y CIA, C.B.",
+            "VICENTE BURGOS MARTÍNEZ",
+            "JUAN MANUEL BLANCO FURIÓ",
+            "JESÚS BAREA MILARA",
+            "FRIAVI, S.L.",
+            "LUÍS FERNELLY LÓPEZ TORO",
+            "OCTANFUEL, S.L.",
+            "JOSÉ SEPÚLVEDA PASCUAL",
+            "INSTITUTO VALENCIANO DE INVESTIGACIONES AGRARIAS",
+            "TECNO 3 AUTOMOCIÓN, S.L.",
+            "FRANCISCO MANUEL VALERO MOLES",
+            "JOSÉ VICENTE FERRANDO IZQUIERDO",
+            "TOR-MOL, S.L.",
+            "DAVID GARCÍA PALACIOS",
+            "ASUNCIÓN LÓPEZ FLORES",
+            "MERCADONA, S.A.",
+            "COMUNIDAD DE PROPIETARIOS C/ ALACANT Nº 10",
+            "SALVIVAL INSTALACIONES, S.L.",
+            "OPTIMIZA TECNOLOGÍA, S.L.",
+            "NUTRIAGRO NOVATERRA, S.L.",
+            "SOGESER FACILITY SERVICES, S.L.",
+            "JUAN GARCÍA MORATALLA",
+            "DELPLAS, S.L.",
+            "NOSTRUM CONSULTORES, S.L.",
+            "GERMINAR AGRICULTURA, S.L.U.",
+            "SEGETEMA, S.L.",
+            "LAURIA, S.L.",
+            "ANTONIO FRANCISCO MARTÍNEZ OLIVER",
+            "COMUNIDAD DE PROPIETARIOS C/ MARIANO BENLLIURE Nº 11",
+            "RUGAR, S.L.",
+            "HORCHATAS JUANJO, S.L.",
+            "JUAN MANUEL LLOPIS BADÍA",
+            "ANTONIO SEGOVIA GARCÍA",
+            "IDEAS Y PROYECTOS VIDREGLASS, S.L.",
+            "BM VALGRAP, S.L.",
+            "NEOTEK INGENIERÍA CREATIVA, S.L.",
+            "CHELO AGRAMUNT PELUQUEROS, S.L.",
+            "SCOMYTEC SEGURIDAD, S.L.",
+            "VICENTE JOSÉ MACHI GONZÁLEZ",
+            "TELECOMUNICACIONES SILLA PEIRÓ, S.L.",
+            "TALLERES USO MAXCOLOR, S.L.",
+            "JOSÉ IBORRA TORRES",
+            "PARROQUIA DE SAN JUAN Y SAN VICENTE",
+            "SINALCO, S.A.",
+            "TOT LLUM LA PLANA, S.L.U.",
+            "ATENEO MERCANTIL DE VALENCIA",
+            "SUMINISTROS ELÉCTRICOS MATELSAN, S.L.",
+            "ÓSCAR APARICIO CELADA",
+            "AUTO TABER, S.L.",
+            "JOSÉ RAMÓN GARABATO QUINTANS",
+            "JOSÉ LUÍS MIRANDA MARTÍN",
+            "JUAN JOSÉ ÁLVAREZ GARCÍA",
+            "NOVA INSTAN BCN, S.L.",
+            "INSTARUÍZ, S.L.",
+            "OBRA NUEVA Y REFORMAS LOHA, S.L.",
+            "CREATIVE CABLES IBÉRICA, S.L.",
+            "DAVISAN SUMINISTROS INDUSTRIALES, S.L.",
+            "REFORMAS Y CONSTRUCCIONES ARALU, S.L.",
+            "VILLARREAL C.F. S.A.D.",
+            "SADAFRUIT, S.L.",
+            "DUTTILE PLASTICA, S.L.",
+            "TECNOLOGÍAS ELÉCTRICAS SANES, S.L",
+            "BD ENTERPRISE, S.L.",
+            "ELECTRICIDAD MARAL, S.L.",
+            "KH VIVES, S.L.",
+            "ENRIQUE GÁLVEZ Y ASOCIADOS, S.L.",
+            "NOU ZIEL INVESTMENT, S.L.",
+            "URBEM, S.A.",
+            "TURISME COMUNITAT VALENCIANA",
+            "ILUNION HOTELS, S.A.",
+            "CONSTRUCCIONES MECÁNICAS CASTELLÓ, S.L.",
+            "EMPRESA DE TRANSFORMACIÓN AGRARIA, S.A. S.M.E. M.P.",
+            "HOTEL MADEIRA CENTRO",
+            "CATMAN FRESH, S.A.",
+            "NASCAPERS, C.B.",
+            "LEGUA CARRIÓN INSTALACIONES, S.L.",
+            "3F LABORATORIO FOTOGRÁFICO Y ENCUADERNACIÓN, S.L.",
+            "INSTALACIONES ELÉCTRICAS FRAMA, S.L.",
+            "INSTALACIONES ELÉCTRICAS VICENT PANACH, S.L.",
+            "CLUB DE TENIS ALTEA",
+            "ILUNION TURISMO RESPONSABLE, S.L.",
+            "CREASINERGIAS, S.L.",
+            "CALDERERÍA LÓPEZ HERMANOS, S.L.",
+            "ARCOHABITAT SERVICIOS INMOBILIARIOS, S.L.",
+            "SISTEMAS DE ENVASADO FILL PACK, S.L.U.",
+            "MOSTRADOR",
+            "LAC MAQUINARIA, S.L.",
+            "ILUMINACIÓN TÉCNICA DECORATIVA DEL MEDITERRÁNEO, S.L.",
+            "ARSPOTENTIA COOPERATIVA VALENCIANA",
+            "MATRICERÍA MAUTEC, S.L.",
+            "DAVID OLMOS BOSCÁ",
+            "TEJAS BORJA, S.A.U.",
+            "ATELIER HOSPITALITY OPERATIONS, S.A.U.",
+            "COGOLLOS ASOCIADOS MEDITERRÁNEO CONTRUCCIONES, S.L.",
+            "KEOPS CONSTRUCCIONES Y REFORMAS, S.L.",
+            "REMOLQUES Y VOLQUETES, S.L.",
+            "ARCOTECTURA ESPACIO CREATIVO, S.L.",
+            "JUAN DANIEL ASÍS GIMENO",
+            "DCM INGENIERÍA MECÁNICA, S.L.",
+            "PANAROLA, S.L.",
+            "FERNANDO TORRES BUENO",
+            "AGOLAR GESTIÓN, S.L.",
+            "FRIGICOLL VALENCIA, S.A.",
+            "SOLUCIONES TÉCNICAS REALES, S.L.",
+            "RESTITUBO OBRAS Y SERVICIOS, S.L.U.",
+            "CONSTRUCCIONES Y VARADEROS, S.L.",
+            "TRUSS 30, S.L.",
+            "ASCENSORES DOMINGO, S.A.",
+            "INDUSTRIAS MECÁNICAS SEGUÍ, S.L",
+            "GRUPO SADA P.A., S.A.",
+            "INSTALACIONES HERRANZ ESTEBAN, S.C.P.",
+            "ARTURO MORENO SEGUÍ",
+            "HOTEL PRIMUS VALENCIA, S.L.U.",
+            "INSTAL.LACIONS ELÉCTRIQUES HUSAL, S.L.",
+            "SALVAPLAST, S.A.",
+            "MAPANVA, S.L.",
+            "VENTURA ORTS, S.A.",
+            "VAPREL, S.L.",
+            "ULTRASONIDOS LOVER, S.A.",
+            "CÉSAR FRANCISCO OLIVA ALCAÑÍZ",
+            "EQUILIBRIO URBANO, S.L.",
+            "REAL CLUB NÁUTICO DE VALENCIA"
+        ];
+
+        const clientesBody =
+            document.getElementById("clientesTableBody");
+
+        const clientesBuscar =
+            document.getElementById("clientesBuscar");
+
+        const clientesContador =
+            document.getElementById("clientesContador");
+
+        const clientesVacio =
+            document.getElementById("clientesVacio");
+
+
+        function pintarClientes(filtro = "") {
+
+            const texto = filtro
+                .trim()
+                .toUpperCase();
+
+            const resultados =
+                CLIENTES_STEIL.filter(cliente =>
+                    cliente.toUpperCase().includes(texto)
+                );
+
+            clientesBody.innerHTML = "";
+
+            resultados.forEach((cliente, indice) => {
+
+                const posicion =
+                    CLIENTES_STEIL.indexOf(cliente);
+
+                const codigo =
+                    String(
+                        CLIENTES_STEIL.length - posicion
+                    ).padStart(3, "0");
+
+                const fila =
+                    document.createElement("tr");
+
+                fila.innerHTML = `
+                    <td class="cliente-codigo">
+                        ${codigo}
+                    </td>
+
+                    <td class="cliente-nombre">
+                        ${escaparCliente(cliente)}
+                    </td>
+                `;
+
+                clientesBody.appendChild(fila);
+
+            });
+
+            clientesContador.textContent =
+                resultados.length === CLIENTES_STEIL.length
+                    ? CLIENTES_STEIL.length + " clientes"
+                    : resultados.length + " encontrados";
+
+            clientesVacio.style.display =
+                resultados.length
+                    ? "none"
+                    : "block";
+        }
+
+
+        function escaparCliente(texto) {
+
+            return String(texto)
+                .replace(/&/g, "&amp;")
+                .replace(/</g, "&lt;")
+                .replace(/>/g, "&gt;")
+                .replace(/"/g, "&quot;")
+                .replace(/'/g, "&#039;");
+        }
+
+
+        clientesBuscar.addEventListener(
+            "input",
+            function () {
+                pintarClientes(this.value);
+            }
+        );
+
+
+        pintarClientes();
+
+    </script>
+
+</div>
 
 
             <!-- =================================================
