@@ -7903,10 +7903,2594 @@
                  PEDIDOS
             ================================================== -->
 
-            <div
-                class="page"
-                id="page-pedidos"
+<!-- =========================================================
+     STEIL · PEDIDOS V1
+     Bandeja de pedidos procedentes de WhatsApp
+========================================================== -->
+
+<div
+    class="page"
+    id="page-pedidos"
+>
+
+<style>
+
+    /* =====================================================
+       STEIL · PEDIDOS V1
+    ====================================================== */
+
+    #page-pedidos {
+        padding-bottom: 40px;
+    }
+
+    #page-pedidos * {
+        box-sizing: border-box;
+    }
+
+    #page-pedidos .ped-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-end;
+        gap: 20px;
+        margin-bottom: 22px;
+    }
+
+    #page-pedidos .ped-kicker {
+        display: block;
+        font-size: 11px;
+        font-weight: 700;
+        letter-spacing: 1.4px;
+        color: #777;
+        margin-bottom: 5px;
+    }
+
+    #page-pedidos .ped-header h1 {
+        margin: 0;
+    }
+
+    #page-pedidos .ped-header p {
+        margin: 7px 0 0;
+        color: #777;
+    }
+
+    #page-pedidos .ped-actions {
+        display: flex;
+        gap: 8px;
+        flex-wrap: wrap;
+    }
+
+
+    /* =====================================================
+       INDICADORES
+    ====================================================== */
+
+    #page-pedidos .ped-stats {
+        display: grid;
+        grid-template-columns:
+            repeat(5, minmax(0,1fr));
+        gap: 12px;
+        margin-bottom: 20px;
+    }
+
+    #page-pedidos .ped-stat {
+        background: #fff;
+        border: 1px solid #e5e5e5;
+        border-radius: 11px;
+        padding: 16px 17px;
+        cursor: pointer;
+        transition: .15s;
+    }
+
+    #page-pedidos .ped-stat:hover {
+        border-color: #bbb;
+        transform: translateY(-1px);
+    }
+
+    #page-pedidos .ped-stat-label {
+        font-size: 10px;
+        font-weight: 700;
+        color: #777;
+        text-transform: uppercase;
+        letter-spacing: .7px;
+    }
+
+    #page-pedidos .ped-stat-number {
+        font-size: 27px;
+        font-weight: 800;
+        margin-top: 6px;
+    }
+
+    #page-pedidos .ped-stat small {
+        color: #999;
+        font-size: 10px;
+    }
+
+
+    /* =====================================================
+       TARJETA PRINCIPAL
+    ====================================================== */
+
+    #page-pedidos .ped-card {
+        background: #fff;
+        border: 1px solid #e5e5e5;
+        border-radius: 12px;
+        overflow: hidden;
+    }
+
+    #page-pedidos .ped-toolbar {
+        padding: 15px 17px;
+        border-bottom: 1px solid #e8e8e8;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+        flex-wrap: wrap;
+    }
+
+    #page-pedidos .ped-search {
+        min-width: 260px;
+        flex: 1;
+        padding: 10px 12px;
+        border: 1px solid #d8d8d8;
+        border-radius: 7px;
+        font: inherit;
+        outline: none;
+    }
+
+    #page-pedidos .ped-search:focus {
+        border-color: #777;
+        box-shadow: 0 0 0 2px rgba(0,0,0,.05);
+    }
+
+    #page-pedidos .ped-filters {
+        display: flex;
+        gap: 7px;
+        flex-wrap: wrap;
+    }
+
+    #page-pedidos .ped-filter {
+        border: 1px solid #ddd;
+        background: #fff;
+        border-radius: 7px;
+        padding: 8px 11px;
+        cursor: pointer;
+        font-size: 11px;
+    }
+
+    #page-pedidos .ped-filter.active {
+        background: #222;
+        color: #fff;
+        border-color: #222;
+    }
+
+
+    /* =====================================================
+       TABLA
+    ====================================================== */
+
+    #page-pedidos .ped-table-wrap {
+        overflow-x: auto;
+    }
+
+    #page-pedidos .ped-table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+
+    #page-pedidos .ped-table th {
+        padding: 12px 14px;
+        text-align: left;
+        background: #fafafa;
+        border-bottom: 1px solid #e5e5e5;
+        color: #777;
+        font-size: 10px;
+        text-transform: uppercase;
+        letter-spacing: .5px;
+        white-space: nowrap;
+    }
+
+    #page-pedidos .ped-table td {
+        padding: 13px 14px;
+        border-bottom: 1px solid #eee;
+        font-size: 12px;
+        vertical-align: middle;
+    }
+
+    #page-pedidos .ped-table tr.ped-row {
+        cursor: pointer;
+    }
+
+    #page-pedidos .ped-table tr.ped-row:hover {
+        background: #fafafa;
+    }
+
+    #page-pedidos .ped-number {
+        font-weight: 800;
+    }
+
+    #page-pedidos .ped-origin {
+        display: inline-flex;
+        align-items: center;
+        gap: 5px;
+        font-size: 10px;
+        font-weight: 700;
+    }
+
+    #page-pedidos .ped-origin i {
+        font-size: 14px;
+    }
+
+    #page-pedidos .ped-client {
+        font-weight: 700;
+    }
+
+    #page-pedidos .ped-contact {
+        font-size: 10px;
+        color: #888;
+        margin-top: 3px;
+    }
+
+    #page-pedidos .ped-lines-count {
+        font-size: 11px;
+        color: #666;
+    }
+
+
+    /* =====================================================
+       ESTADOS
+    ====================================================== */
+
+    #page-pedidos .ped-status {
+        display: inline-flex;
+        align-items: center;
+        padding: 5px 9px;
+        border-radius: 20px;
+        font-size: 10px;
+        font-weight: 800;
+        white-space: nowrap;
+    }
+
+    #page-pedidos .status-pendiente {
+        background: #fff1d9;
+        color: #956000;
+    }
+
+    #page-pedidos .status-leido {
+        background: #e7f0ff;
+        color: #315d99;
+    }
+
+    #page-pedidos .status-tramitado {
+        background: #fff7d5;
+        color: #856d00;
+    }
+
+    #page-pedidos .status-gestionado {
+        background: #e5f5e8;
+        color: #357243;
+    }
+
+
+    /* =====================================================
+       DETALLE
+    ====================================================== */
+
+    #page-pedidos .ped-detail {
+        display: none;
+        border-top: 1px solid #ddd;
+        background: #fafafa;
+    }
+
+    #page-pedidos .ped-detail.active {
+        display: block;
+    }
+
+    #page-pedidos .ped-detail-head {
+        padding: 20px;
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        gap: 20px;
+        background: #fff;
+        border-bottom: 1px solid #e6e6e6;
+    }
+
+    #page-pedidos .ped-detail-head h2 {
+        margin: 0;
+        font-size: 21px;
+    }
+
+    #page-pedidos .ped-detail-head p {
+        margin: 5px 0 0;
+        color: #888;
+        font-size: 11px;
+    }
+
+    #page-pedidos .ped-detail-actions {
+        display: flex;
+        gap: 7px;
+        flex-wrap: wrap;
+    }
+
+    #page-pedidos .ped-detail-body {
+        padding: 20px;
+    }
+
+    #page-pedidos .ped-info-grid {
+        display: grid;
+        grid-template-columns:
+            repeat(4, minmax(0,1fr));
+        gap: 12px;
+        margin-bottom: 20px;
+    }
+
+    #page-pedidos .ped-info-box {
+        background: #fff;
+        border: 1px solid #e5e5e5;
+        border-radius: 8px;
+        padding: 12px;
+    }
+
+    #page-pedidos .ped-info-label {
+        font-size: 9px;
+        color: #888;
+        text-transform: uppercase;
+        letter-spacing: .5px;
+        margin-bottom: 5px;
+    }
+
+    #page-pedidos .ped-info-value {
+        font-size: 12px;
+        font-weight: 700;
+        overflow-wrap: anywhere;
+    }
+
+
+    /* =====================================================
+       LÍNEAS
+    ====================================================== */
+
+    #page-pedidos .ped-section-title {
+        font-size: 13px;
+        font-weight: 800;
+        margin: 20px 0 10px;
+    }
+
+    #page-pedidos .ped-lines {
+        background: #fff;
+        border: 1px solid #e5e5e5;
+        border-radius: 8px;
+        overflow: hidden;
+    }
+
+    #page-pedidos .ped-line {
+        display: grid;
+        grid-template-columns:
+            1fr 100px 120px;
+        gap: 12px;
+        align-items: center;
+        padding: 12px 14px;
+        border-bottom: 1px solid #eee;
+    }
+
+    #page-pedidos .ped-line:last-child {
+        border-bottom: 0;
+    }
+
+    #page-pedidos .ped-line-head {
+        background: #fafafa;
+        font-size: 9px;
+        font-weight: 800;
+        color: #888;
+        text-transform: uppercase;
+    }
+
+    #page-pedidos .ped-line-name {
+        font-size: 12px;
+        font-weight: 600;
+    }
+
+    #page-pedidos .ped-line-qty,
+    #page-pedidos .ped-line-ref {
+        font-size: 11px;
+    }
+
+
+    /* =====================================================
+       NUEVO PEDIDO
+    ====================================================== */
+
+    #page-pedidos .ped-new {
+        display: none;
+        margin-top: 18px;
+        background: #fff;
+        border: 1px solid #e5e5e5;
+        border-radius: 12px;
+        overflow: hidden;
+    }
+
+    #page-pedidos .ped-new.active {
+        display: block;
+    }
+
+    #page-pedidos .ped-new-head {
+        padding: 16px 18px;
+        border-bottom: 1px solid #e7e7e7;
+        font-weight: 800;
+    }
+
+    #page-pedidos .ped-form {
+        padding: 18px;
+        display: grid;
+        grid-template-columns:
+            repeat(2, minmax(0,1fr));
+        gap: 14px;
+    }
+
+    #page-pedidos .ped-field.full {
+        grid-column: 1 / -1;
+    }
+
+    #page-pedidos .ped-field label {
+        display: block;
+        margin-bottom: 6px;
+        font-size: 10px;
+        font-weight: 800;
+        color: #555;
+        text-transform: uppercase;
+    }
+
+    #page-pedidos .ped-field input,
+    #page-pedidos .ped-field textarea,
+    #page-pedidos .ped-field select {
+        width: 100%;
+        padding: 10px 11px;
+        border: 1px solid #d8d8d8;
+        border-radius: 7px;
+        font: inherit;
+        outline: none;
+        background: #fff;
+    }
+
+    #page-pedidos .ped-field textarea {
+        min-height: 90px;
+        resize: vertical;
+    }
+
+    #page-pedidos .ped-lines-editor {
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        overflow: hidden;
+    }
+
+    #page-pedidos .ped-editor-line {
+        display: grid;
+        grid-template-columns:
+            1fr 100px 40px;
+        gap: 8px;
+        padding: 8px;
+        border-bottom: 1px solid #eee;
+    }
+
+    #page-pedidos .ped-editor-line:last-child {
+        border-bottom: 0;
+    }
+
+    #page-pedidos .ped-editor-line input {
+        width: 100%;
+        padding: 9px;
+        border: 1px solid #ddd;
+        border-radius: 6px;
+    }
+
+    #page-pedidos .ped-delete-line {
+        border: 1px solid #ddd;
+        background: #fff;
+        border-radius: 6px;
+        cursor: pointer;
+    }
+
+    #page-pedidos .ped-new-actions {
+        padding: 15px 18px;
+        border-top: 1px solid #eee;
+        display: flex;
+        justify-content: flex-end;
+        gap: 8px;
+    }
+
+
+    /* =====================================================
+       AVISO
+    ====================================================== */
+
+    #page-pedidos .ped-notice {
+        display: none;
+        padding: 10px 12px;
+        margin-bottom: 14px;
+        border-radius: 7px;
+        background: #edf5ee;
+        color: #32643a;
+        font-size: 12px;
+    }
+
+    #page-pedidos .ped-notice.active {
+        display: block;
+    }
+
+
+    @media (max-width: 1100px) {
+
+        #page-pedidos .ped-stats {
+            grid-template-columns:
+                repeat(3, minmax(0,1fr));
+        }
+
+        #page-pedidos .ped-info-grid {
+            grid-template-columns:
+                repeat(2, minmax(0,1fr));
+        }
+
+    }
+
+
+    @media (max-width: 700px) {
+
+        #page-pedidos .ped-stats {
+            grid-template-columns:
+                repeat(2, minmax(0,1fr));
+        }
+
+        #page-pedidos .ped-form {
+            grid-template-columns: 1fr;
+        }
+
+        #page-pedidos .ped-field.full {
+            grid-column: auto;
+        }
+
+        #page-pedidos .ped-info-grid {
+            grid-template-columns: 1fr;
+        }
+
+        #page-pedidos .ped-detail-head {
+            flex-direction: column;
+        }
+
+    }
+
+</style>
+
+
+<!-- =========================================================
+     CABECERA
+========================================================== -->
+
+<div class="ped-header">
+
+    <div>
+
+        <span class="ped-kicker">
+            BANDEJA DE PEDIDOS
+        </span>
+
+        <h1>
+            Pedidos
+        </h1>
+
+        <p>
+            Pedidos recibidos desde WhatsApp para su gestión comercial.
+        </p>
+
+    </div>
+
+
+    <div class="ped-actions">
+
+        <button
+            type="button"
+            class="btn btn-secondary"
+            id="pedNuevo"
+        >
+            <i class="fa-solid fa-plus"></i>
+            Nuevo pedido
+        </button>
+
+    </div>
+
+</div>
+
+
+<div
+    class="ped-notice"
+    id="pedNotice"
+></div>
+
+
+<!-- =========================================================
+     INDICADORES
+========================================================== -->
+
+<div class="ped-stats">
+
+    <div
+        class="ped-stat"
+        data-status="Pendiente"
+    >
+
+        <div class="ped-stat-label">
+            Pendientes
+        </div>
+
+        <div
+            class="ped-stat-number"
+            id="pedStatPendiente"
+        >
+            0
+        </div>
+
+        <small>
+            Requieren atención
+        </small>
+
+    </div>
+
+
+    <div
+        class="ped-stat"
+        data-status="Leído"
+    >
+
+        <div class="ped-stat-label">
+            Leídos
+        </div>
+
+        <div
+            class="ped-stat-number"
+            id="pedStatLeido"
+        >
+            0
+        </div>
+
+        <small>
+            Revisados
+        </small>
+
+    </div>
+
+
+    <div
+        class="ped-stat"
+        data-status="Tramitado"
+    >
+
+        <div class="ped-stat-label">
+            Tramitados
+        </div>
+
+        <div
+            class="ped-stat-number"
+            id="pedStatTramitado"
+        >
+            0
+        </div>
+
+        <small>
+            Pasados a sistema
+        </small>
+
+    </div>
+
+
+    <div
+        class="ped-stat"
+        data-status="Gestionado"
+    >
+
+        <div class="ped-stat-label">
+            Gestionados
+        </div>
+
+        <div
+            class="ped-stat-number"
+            id="pedStatGestionado"
+        >
+            0
+        </div>
+
+        <small>
+            Finalizados
+        </small>
+
+    </div>
+
+
+    <div
+        class="ped-stat"
+        data-status="Todos"
+    >
+
+        <div class="ped-stat-label">
+            Total
+        </div>
+
+        <div
+            class="ped-stat-number"
+            id="pedStatTotal"
+        >
+            0
+        </div>
+
+        <small>
+            Pedidos registrados
+        </small>
+
+    </div>
+
+</div>
+
+
+<!-- =========================================================
+     LISTADO
+========================================================== -->
+
+<div class="ped-card">
+
+    <div class="ped-toolbar">
+
+        <input
+            type="text"
+            class="ped-search"
+            id="pedBuscar"
+            placeholder="Buscar por cliente, teléfono, pedido..."
+            autocomplete="off"
+        >
+
+
+        <div class="ped-filters">
+
+            <button
+                type="button"
+                class="ped-filter active"
+                data-filter="Todos"
             >
+                Todos
+            </button>
+
+            <button
+                type="button"
+                class="ped-filter"
+                data-filter="Pendiente"
+            >
+                Pendientes
+            </button>
+
+            <button
+                type="button"
+                class="ped-filter"
+                data-filter="Leído"
+            >
+                Leídos
+            </button>
+
+            <button
+                type="button"
+                class="ped-filter"
+                data-filter="Tramitado"
+            >
+                Tramitados
+            </button>
+
+            <button
+                type="button"
+                class="ped-filter"
+                data-filter="Gestionado"
+            >
+                Gestionados
+            </button>
+
+        </div>
+
+    </div>
+
+
+    <div class="ped-table-wrap">
+
+        <table class="ped-table">
+
+            <thead>
+
+                <tr>
+
+                    <th>
+                        Pedido
+                    </th>
+
+                    <th>
+                        Fecha
+                    </th>
+
+                    <th>
+                        Origen
+                    </th>
+
+                    <th>
+                        Cliente
+                    </th>
+
+                    <th>
+                        Teléfono
+                    </th>
+
+                    <th>
+                        Líneas
+                    </th>
+
+                    <th>
+                        Situación
+                    </th>
+
+                </tr>
+
+            </thead>
+
+            <tbody
+                id="pedTabla"
+            ></tbody>
+
+        </table>
+
+    </div>
+
+
+    <!-- =====================================================
+         DETALLE
+    ====================================================== -->
+
+    <div
+        class="ped-detail"
+        id="pedDetalle"
+    >
+
+        <div class="ped-detail-head">
+
+            <div>
+
+                <h2 id="pedDetalleTitulo">
+                    Pedido
+                </h2>
+
+                <p id="pedDetalleFecha">
+                    —
+                </p>
+
+            </div>
+
+
+            <div class="ped-detail-actions">
+
+                <button
+                    type="button"
+                    class="btn btn-secondary"
+                    id="pedEmail"
+                >
+                    <i class="fa-solid fa-envelope"></i>
+                    Reenviar al equipo comercial
+                </button>
+
+
+                <button
+                    type="button"
+                    class="btn btn-secondary"
+                    id="pedLeido"
+                >
+                    Marcar leído
+                </button>
+
+
+                <button
+                    type="button"
+                    class="btn btn-secondary"
+                    id="pedTramitado"
+                >
+                    Marcar tramitado
+                </button>
+
+
+                <button
+                    type="button"
+                    class="btn btn-primary"
+                    id="pedGestionado"
+                >
+                    Marcar gestionado
+                </button>
+
+            </div>
+
+        </div>
+
+
+        <div class="ped-detail-body">
+
+
+            <div class="ped-info-grid">
+
+                <div class="ped-info-box">
+
+                    <div class="ped-info-label">
+                        Cliente
+                    </div>
+
+                    <div
+                        class="ped-info-value"
+                        id="pedInfoCliente"
+                    >
+                        —
+                    </div>
+
+                </div>
+
+
+                <div class="ped-info-box">
+
+                    <div class="ped-info-label">
+                        Persona de contacto
+                    </div>
+
+                    <div
+                        class="ped-info-value"
+                        id="pedInfoContacto"
+                    >
+                        —
+                    </div>
+
+                </div>
+
+
+                <div class="ped-info-box">
+
+                    <div class="ped-info-label">
+                        Teléfono
+                    </div>
+
+                    <div
+                        class="ped-info-value"
+                        id="pedInfoTelefono"
+                    >
+                        —
+                    </div>
+
+                </div>
+
+
+                <div class="ped-info-box">
+
+                    <div class="ped-info-label">
+                        Origen
+                    </div>
+
+                    <div
+                        class="ped-info-value"
+                        id="pedInfoOrigen"
+                    >
+                        WhatsApp
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <div class="ped-section-title">
+                Líneas de pedido
+            </div>
+
+
+            <div
+                class="ped-lines"
+                id="pedDetalleLineas"
+            ></div>
+
+
+            <div class="ped-section-title">
+                Observaciones
+            </div>
+
+
+            <div
+                class="ped-info-box"
+                id="pedInfoObservaciones"
+            >
+                —
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- =========================================================
+     NUEVO PEDIDO
+========================================================== -->
+
+<div
+    class="ped-new"
+    id="pedNuevoPanel"
+>
+
+    <div class="ped-new-head">
+        Registrar pedido
+    </div>
+
+
+    <div class="ped-form">
+
+
+        <div class="ped-field">
+
+            <label>
+                Cliente
+            </label>
+
+            <input
+                type="text"
+                id="pedNuevoCliente"
+                placeholder="Cliente"
+            >
+
+        </div>
+
+
+        <div class="ped-field">
+
+            <label>
+                Persona de contacto
+            </label>
+
+            <input
+                type="text"
+                id="pedNuevoContacto"
+                placeholder="Persona de contacto"
+            >
+
+        </div>
+
+
+        <div class="ped-field">
+
+            <label>
+                Teléfono
+            </label>
+
+            <input
+                type="text"
+                id="pedNuevoTelefono"
+                placeholder="Teléfono"
+            >
+
+        </div>
+
+
+        <div class="ped-field">
+
+            <label>
+                Origen
+            </label>
+
+            <select id="pedNuevoOrigen">
+
+                <option value="WhatsApp">
+                    WhatsApp
+                </option>
+
+                <option value="Teléfono">
+                    Teléfono
+                </option>
+
+                <option value="Email">
+                    Email
+                </option>
+
+                <option value="Otro">
+                    Otro
+                </option>
+
+            </select>
+
+        </div>
+
+
+        <div class="ped-field full">
+
+            <label>
+                Líneas de pedido
+            </label>
+
+
+            <div
+                class="ped-lines-editor"
+                id="pedEditorLineas"
+            >
+
+                <div class="ped-editor-line">
+
+                    <input
+                        type="text"
+                        class="ped-line-producto"
+                        placeholder="Producto / descripción"
+                    >
+
+                    <input
+                        type="text"
+                        class="ped-line-cantidad"
+                        placeholder="Cantidad"
+                    >
+
+                    <button
+                        type="button"
+                        class="ped-delete-line"
+                        title="Eliminar línea"
+                    >
+                        ×
+                    </button>
+
+                </div>
+
+            </div>
+
+
+            <button
+                type="button"
+                class="btn btn-secondary"
+                id="pedAgregarLinea"
+                style="margin-top:9px;"
+            >
+                <i class="fa-solid fa-plus"></i>
+                Añadir línea
+            </button>
+
+        </div>
+
+
+        <div class="ped-field full">
+
+            <label>
+                Observaciones
+            </label>
+
+            <textarea
+                id="pedNuevoObservaciones"
+                placeholder="Observaciones del cliente o del pedido..."
+            ></textarea>
+
+        </div>
+
+    </div>
+
+
+    <div class="ped-new-actions">
+
+        <button
+            type="button"
+            class="btn btn-secondary"
+            id="pedCancelarNuevo"
+        >
+            Cancelar
+        </button>
+
+        <button
+            type="button"
+            class="btn btn-primary"
+            id="pedGuardarNuevo"
+        >
+            <i class="fa-solid fa-floppy-disk"></i>
+            Registrar pedido
+        </button>
+
+    </div>
+
+</div>
+
+
+<!-- =========================================================
+     JAVASCRIPT
+========================================================== -->
+
+<script>
+
+(function () {
+
+    if (window.__STEIL_PEDIDOS_V1__) {
+        return;
+    }
+
+    window.__STEIL_PEDIDOS_V1__ = true;
+
+
+    const STORAGE_KEY =
+        "STEIL_PEDIDOS_V1";
+
+
+    let pedidos = [];
+
+    let pedidoActual = null;
+
+    let filtroActual = "Todos";
+
+
+    /* =====================================================
+       UTILIDADES
+    ====================================================== */
+
+    function idNuevo() {
+
+        return (
+            Date.now().toString(36) +
+            Math.random()
+                .toString(36)
+                .substring(2,8)
+        );
+
+    }
+
+
+    function escapar(texto) {
+
+        return String(texto ?? "")
+            .replace(/&/g, "&amp;")
+            .replace(/</g, "&lt;")
+            .replace(/>/g, "&gt;")
+            .replace(/"/g, "&quot;")
+            .replace(/'/g, "&#039;");
+
+    }
+
+
+    function normalizar(texto) {
+
+        return String(texto || "")
+            .normalize("NFD")
+            .replace(/[\u0300-\u036f]/g, "")
+            .toLowerCase();
+
+    }
+
+
+    function aviso(texto) {
+
+        const elemento =
+            document.getElementById(
+                "pedNotice"
+            );
+
+        elemento.textContent = texto;
+
+        elemento.classList.add(
+            "active"
+        );
+
+        clearTimeout(
+            window.__STEIL_PED_AVISO__
+        );
+
+        window.__STEIL_PED_AVISO__ =
+            setTimeout(function () {
+
+                elemento.classList.remove(
+                    "active"
+                );
+
+            }, 3000);
+
+    }
+
+
+    /* =====================================================
+       GUARDADO
+    ====================================================== */
+
+    function cargar() {
+
+        try {
+
+            pedidos =
+                JSON.parse(
+                    localStorage.getItem(
+                        STORAGE_KEY
+                    ) || "[]"
+                );
+
+            if (!Array.isArray(pedidos)) {
+                pedidos = [];
+            }
+
+        } catch (e) {
+
+            pedidos = [];
+
+        }
+
+    }
+
+
+    function guardar() {
+
+        localStorage.setItem(
+            STORAGE_KEY,
+            JSON.stringify(
+                pedidos
+            )
+        );
+
+    }
+
+
+    /* =====================================================
+       NUMERACIÓN
+    ====================================================== */
+
+    function siguienteNumero() {
+
+        let mayor = 0;
+
+        pedidos.forEach(
+            function (pedido) {
+
+                const numero =
+                    parseInt(
+                        String(
+                            pedido.numero || ""
+                        )
+                        .replace(
+                            /\D/g,
+                            ""
+                        ),
+                        10
+                    );
+
+                if (
+                    !isNaN(numero) &&
+                    numero > mayor
+                ) {
+
+                    mayor = numero;
+
+                }
+
+            }
+        );
+
+
+        return (
+            "PED-" +
+            new Date().getFullYear() +
+            "-" +
+            String(
+                mayor + 1
+            ).padStart(3,"0")
+        );
+
+    }
+
+
+    /* =====================================================
+       ESTADOS
+    ====================================================== */
+
+    function claseEstado(
+        estado
+    ) {
+
+        return (
+            "status-" +
+            normalizar(
+                estado
+            )
+        );
+
+    }
+
+
+    /* =====================================================
+       INDICADORES
+    ====================================================== */
+
+    function pintarStats() {
+
+        const contar =
+            function (estado) {
+
+                return pedidos.filter(
+                    function (pedido) {
+
+                        return pedido.estado ===
+                            estado;
+
+                    }
+                ).length;
+
+            };
+
+
+        document.getElementById(
+            "pedStatPendiente"
+        ).textContent =
+            contar("Pendiente");
+
+
+        document.getElementById(
+            "pedStatLeido"
+        ).textContent =
+            contar("Leído");
+
+
+        document.getElementById(
+            "pedStatTramitado"
+        ).textContent =
+            contar("Tramitado");
+
+
+        document.getElementById(
+            "pedStatGestionado"
+        ).textContent =
+            contar("Gestionado");
+
+
+        document.getElementById(
+            "pedStatTotal"
+        ).textContent =
+            pedidos.length;
+
+    }
+
+
+    /* =====================================================
+       TABLA
+    ====================================================== */
+
+    function pintarTabla() {
+
+        const tbody =
+            document.getElementById(
+                "pedTabla"
+            );
+
+
+        const texto =
+            normalizar(
+                document.getElementById(
+                    "pedBuscar"
+                ).value
+            );
+
+
+        const resultados =
+            pedidos.filter(
+                function (pedido) {
+
+                    const coincideEstado =
+                        filtroActual ===
+                        "Todos" ||
+                        pedido.estado ===
+                        filtroActual;
+
+
+                    const textoPedido =
+                        normalizar(
+                            [
+                                pedido.numero,
+                                pedido.cliente,
+                                pedido.contacto,
+                                pedido.telefono,
+                                pedido.origen
+                            ].join(" ")
+                        );
+
+
+                    const coincideTexto =
+                        !texto ||
+                        textoPedido.includes(
+                            texto
+                        );
+
+
+                    return (
+                        coincideEstado &&
+                        coincideTexto
+                    );
+
+                }
+            );
+
+
+        if (!resultados.length) {
+
+            tbody.innerHTML =
+
+                '<tr>' +
+
+                    '<td colspan="7" ' +
+                        'style="text-align:center;padding:35px;color:#888;">' +
+
+                        "No hay pedidos que mostrar." +
+
+                    '</td>' +
+
+                '</tr>';
+
+            return;
+
+        }
+
+
+        tbody.innerHTML =
+            resultados.map(
+                function (pedido) {
+
+                    const fecha =
+                        pedido.fecha
+                            ? new Date(
+                                pedido.fecha
+                              ).toLocaleString(
+                                "es-ES",
+                                {
+                                    day: "2-digit",
+                                    month: "2-digit",
+                                    year: "numeric",
+                                    hour: "2-digit",
+                                    minute: "2-digit"
+                                }
+                              )
+                            : "—";
+
+
+                    const lineas =
+                        pedido.lineas || [];
+
+
+                    return (
+
+                        '<tr ' +
+                            'class="ped-row" ' +
+                            'data-id="' +
+                            escapar(
+                                pedido.id
+                            ) +
+                        '">' +
+
+
+                            '<td>' +
+
+                                '<div class="ped-number">' +
+                                    escapar(
+                                        pedido.numero
+                                    ) +
+                                '</div>' +
+
+                            '</td>' +
+
+
+                            '<td>' +
+                                fecha +
+                            '</td>' +
+
+
+                            '<td>' +
+
+                                '<span class="ped-origin">' +
+
+                                    '<i class="fa-brands fa-whatsapp"></i>' +
+
+                                    escapar(
+                                        pedido.origen
+                                    ) +
+
+                                '</span>' +
+
+                            '</td>' +
+
+
+                            '<td>' +
+
+                                '<div class="ped-client">' +
+                                    escapar(
+                                        pedido.cliente ||
+                                        "Sin cliente"
+                                    ) +
+                                '</div>' +
+
+                                '<div class="ped-contact">' +
+                                    escapar(
+                                        pedido.contacto ||
+                                        ""
+                                    ) +
+                                '</div>' +
+
+                            '</td>' +
+
+
+                            '<td>' +
+                                escapar(
+                                    pedido.telefono ||
+                                    "—"
+                                ) +
+                            '</td>' +
+
+
+                            '<td>' +
+
+                                '<span class="ped-lines-count">' +
+                                    lineas.length +
+                                    (
+                                        lineas.length === 1
+                                            ? " línea"
+                                            : " líneas"
+                                    ) +
+                                '</span>' +
+
+                            '</td>' +
+
+
+                            '<td>' +
+
+                                '<span class="ped-status ' +
+                                    claseEstado(
+                                        pedido.estado
+                                    ) +
+                                '">' +
+
+                                    escapar(
+                                        pedido.estado
+                                    ) +
+
+                                '</span>' +
+
+                            '</td>' +
+
+
+                        '</tr>'
+
+                    );
+
+                }
+            ).join("");
+
+
+        tbody
+            .querySelectorAll(
+                ".ped-row"
+            )
+            .forEach(
+                function (fila) {
+
+                    fila.addEventListener(
+                        "click",
+                        function () {
+
+                            abrirPedido(
+                                fila.getAttribute(
+                                    "data-id"
+                                )
+                            );
+
+                        }
+                    );
+
+                }
+            );
+
+    }
+
+
+    /* =====================================================
+       DETALLE
+    ====================================================== */
+
+    function abrirPedido(id) {
+
+        pedidoActual =
+            pedidos.find(
+                function (pedido) {
+
+                    return pedido.id ===
+                        id;
+
+                }
+            );
+
+
+        if (!pedidoActual) {
+            return;
+        }
+
+
+        document.getElementById(
+            "pedDetalle"
+        ).classList.add(
+            "active"
+        );
+
+
+        document.getElementById(
+            "pedDetalleTitulo"
+        ).textContent =
+            pedidoActual.numero;
+
+
+        document.getElementById(
+            "pedDetalleFecha"
+        ).textContent =
+            pedidoActual.fecha
+                ? new Date(
+                    pedidoActual.fecha
+                  ).toLocaleString(
+                    "es-ES"
+                  )
+                : "—";
+
+
+        document.getElementById(
+            "pedInfoCliente"
+        ).textContent =
+            pedidoActual.cliente ||
+            "—";
+
+
+        document.getElementById(
+            "pedInfoContacto"
+        ).textContent =
+            pedidoActual.contacto ||
+            "—";
+
+
+        document.getElementById(
+            "pedInfoTelefono"
+        ).textContent =
+            pedidoActual.telefono ||
+            "—";
+
+
+        document.getElementById(
+            "pedInfoOrigen"
+        ).textContent =
+            pedidoActual.origen ||
+            "WhatsApp";
+
+
+        document.getElementById(
+            "pedInfoObservaciones"
+        ).textContent =
+            pedidoActual.observaciones ||
+            "Sin observaciones";
+
+
+        const contenedor =
+            document.getElementById(
+                "pedDetalleLineas"
+            );
+
+
+        const lineas =
+            pedidoActual.lineas || [];
+
+
+        if (!lineas.length) {
+
+            contenedor.innerHTML =
+                '<div style="padding:20px;color:#888;">' +
+                "Sin líneas de pedido." +
+                '</div>';
+
+        } else {
+
+            contenedor.innerHTML =
+
+                '<div class="ped-line ped-line-head">' +
+
+                    '<div>Producto / descripción</div>' +
+
+                    '<div>Cantidad</div>' +
+
+                    '<div>Referencia</div>' +
+
+                '</div>' +
+
+
+                lineas.map(
+                    function (linea) {
+
+                        return (
+
+                            '<div class="ped-line">' +
+
+                                '<div class="ped-line-name">' +
+                                    escapar(
+                                        linea.producto
+                                    ) +
+                                '</div>' +
+
+                                '<div class="ped-line-qty">' +
+                                    escapar(
+                                        linea.cantidad ||
+                                        "—"
+                                    ) +
+                                '</div>' +
+
+                                '<div class="ped-line-ref">' +
+                                    escapar(
+                                        linea.referencia ||
+                                        "—"
+                                    ) +
+                                '</div>' +
+
+                            '</div>'
+
+                        );
+
+                    }
+                ).join("");
+
+        }
+
+
+        /*
+
+            Al abrir un pedido pendiente por primera vez
+            lo consideramos leído.
+
+        */
+
+        if (
+            pedidoActual.estado ===
+            "Pendiente"
+        ) {
+
+            cambiarEstado(
+                "Leído",
+                false
+            );
+
+        }
+
+    }
+
+
+    /* =====================================================
+       CAMBIO DE ESTADO
+    ====================================================== */
+
+    function cambiarEstado(
+        nuevoEstado,
+        mostrarAviso = true
+    ) {
+
+        if (!pedidoActual) {
+            return;
+        }
+
+
+        const posicion =
+            pedidos.findIndex(
+                function (pedido) {
+
+                    return pedido.id ===
+                        pedidoActual.id;
+
+                }
+            );
+
+
+        if (posicion < 0) {
+            return;
+        }
+
+
+        pedidos[posicion].estado =
+            nuevoEstado;
+
+
+        pedidoActual =
+            pedidos[posicion];
+
+
+        guardar();
+
+        pintarStats();
+
+        pintarTabla();
+
+
+        if (mostrarAviso) {
+
+            aviso(
+                "Pedido " +
+                pedidoActual.numero +
+                " marcado como " +
+                nuevoEstado +
+                "."
+            );
+
+        }
+
+    }
+
+
+    /* =====================================================
+       EMAIL
+    ====================================================== */
+
+    function prepararEmail() {
+
+        if (!pedidoActual) {
+            return;
+        }
+
+
+        const lineas =
+            pedidoActual.lineas || [];
+
+
+        let cuerpo =
+
+            "PEDIDO " +
+            pedidoActual.numero +
+            "\n\n" +
+
+            "Origen: " +
+            (pedidoActual.origen || "WhatsApp") +
+            "\n" +
+
+            "Cliente: " +
+            (pedidoActual.cliente || "") +
+            "\n" +
+
+            "Persona de contacto: " +
+            (pedidoActual.contacto || "") +
+            "\n" +
+
+            "Teléfono: " +
+            (pedidoActual.telefono || "") +
+            "\n\n" +
+
+            "LÍNEAS DE PEDIDO\n" +
+
+            "-------------------------\n";
+
+
+        lineas.forEach(
+            function (linea, indice) {
+
+                cuerpo +=
+
+                    (indice + 1) +
+                    ". " +
+
+                    (linea.producto || "") +
+
+                    " — Cantidad: " +
+
+                    (linea.cantidad || "") +
+
+                    "\n";
+
+            }
+        );
+
+
+        cuerpo +=
+
+            "\nOBSERVACIONES\n" +
+
+            "-------------------------\n" +
+
+            (
+                pedidoActual.observaciones ||
+                "Sin observaciones"
+            ) +
+
+            "\n\n" +
+
+            "Pedido registrado desde STEIL.";
+
+        
+        const asunto =
+            "PEDIDO " +
+            pedidoActual.numero +
+            " · " +
+            (
+                pedidoActual.cliente ||
+                "Cliente"
+            );
+
+
+        window.location.href =
+            "mailto:?subject=" +
+            encodeURIComponent(
+                asunto
+            ) +
+            "&body=" +
+            encodeURIComponent(
+                cuerpo
+            );
+
+
+        /*
+
+            Al reenviar al comercial consideramos
+            que ya ha entrado en circuito.
+
+        */
+
+        if (
+            pedidoActual.estado ===
+            "Leído"
+        ) {
+
+            cambiarEstado(
+                "Tramitado",
+                false
+            );
+
+        }
+
+    }
+
+
+    /* =====================================================
+       NUEVO PEDIDO
+    ====================================================== */
+
+    function mostrarNuevo() {
+
+        document.getElementById(
+            "pedNuevoPanel"
+        ).classList.add(
+            "active"
+        );
+
+
+        document.getElementById(
+            "pedNuevoCliente"
+        ).focus();
+
+    }
+
+
+    function ocultarNuevo() {
+
+        document.getElementById(
+            "pedNuevoPanel"
+        ).classList.remove(
+            "active"
+        );
+
+    }
+
+
+    function añadirLinea() {
+
+        const editor =
+            document.getElementById(
+                "pedEditorLineas"
+            );
+
+
+        const linea =
+            document.createElement(
+                "div"
+            );
+
+
+        linea.className =
+            "ped-editor-line";
+
+
+        linea.innerHTML =
+
+            '<input ' +
+                'type="text" ' +
+                'class="ped-line-producto" ' +
+                'placeholder="Producto / descripción">' +
+
+            '<input ' +
+                'type="text" ' +
+                'class="ped-line-cantidad" ' +
+                'placeholder="Cantidad">' +
+
+            '<button ' +
+                'type="button" ' +
+                'class="ped-delete-line" ' +
+                'title="Eliminar línea">' +
+
+                "×" +
+
+            '</button>';
+
+
+        editor.appendChild(
+            linea
+        );
+
+
+        linea
+            .querySelector(
+                ".ped-delete-line"
+            )
+            .addEventListener(
+                "click",
+                function () {
+
+                    linea.remove();
+
+                }
+            );
+
+    }
+
+
+    function registrarNuevo() {
+
+        const cliente =
+            document.getElementById(
+                "pedNuevoCliente"
+            ).value.trim();
+
+
+        if (!cliente) {
+
+            aviso(
+                "Indica el cliente."
+            );
+
+            return;
+
+        }
+
+
+        const lineas = [];
+
+
+        document
+            .querySelectorAll(
+                "#pedEditorLineas .ped-editor-line"
+            )
+            .forEach(
+                function (elemento) {
+
+                    const producto =
+                        elemento
+                            .querySelector(
+                                ".ped-line-producto"
+                            )
+                            .value.trim();
+
+
+                    const cantidad =
+                        elemento
+                            .querySelector(
+                                ".ped-line-cantidad"
+                            )
+                            .value.trim();
+
+
+                    if (producto) {
+
+                        lineas.push({
+
+                            producto:
+                                producto,
+
+                            cantidad:
+                                cantidad,
+
+                            referencia:
+                                ""
+
+                        });
+
+                    }
+
+                }
+            );
+
+
+        const pedido = {
+
+            id:
+                idNuevo(),
+
+            numero:
+                siguienteNumero(),
+
+            fecha:
+                new Date().toISOString(),
+
+            origen:
+                document.getElementById(
+                    "pedNuevoOrigen"
+                ).value,
+
+            cliente:
+                cliente,
+
+            contacto:
+                document.getElementById(
+                    "pedNuevoContacto"
+                ).value.trim(),
+
+            telefono:
+                document.getElementById(
+                    "pedNuevoTelefono"
+                ).value.trim(),
+
+            lineas:
+                lineas,
+
+            observaciones:
+                document.getElementById(
+                    "pedNuevoObservaciones"
+                ).value.trim(),
+
+            estado:
+                "Pendiente"
+
+        };
+
+
+        pedidos.unshift(
+            pedido
+        );
+
+
+        guardar();
+
+
+        limpiarFormulario();
+
+        ocultarNuevo();
+
+        pintarStats();
+
+        pintarTabla();
+
+
+        abrirPedido(
+            pedido.id
+        );
+
+
+        aviso(
+            "Pedido " +
+            pedido.numero +
+            " registrado correctamente."
+        );
+
+    }
+
+
+    function limpiarFormulario() {
+
+        document.getElementById(
+            "pedNuevoCliente"
+        ).value = "";
+
+
+        document.getElementById(
+            "pedNuevoContacto"
+        ).value = "";
+
+
+        document.getElementById(
+            "pedNuevoTelefono"
+        ).value = "";
+
+
+        document.getElementById(
+            "pedNuevoObservaciones"
+        ).value = "";
+
+
+        document.getElementById(
+            "pedNuevoOrigen"
+        ).value =
+            "WhatsApp";
+
+
+        document.getElementById(
+            "pedEditorLineas"
+        ).innerHTML =
+
+            '<div class="ped-editor-line">' +
+
+                '<input ' +
+                    'type="text" ' +
+                    'class="ped-line-producto" ' +
+                    'placeholder="Producto / descripción">' +
+
+                '<input ' +
+                    'type="text" ' +
+                    'class="ped-line-cantidad" ' +
+                    'placeholder="Cantidad">' +
+
+                '<button ' +
+                    'type="button" ' +
+                    'class="ped-delete-line" ' +
+                    'title="Eliminar línea">' +
+
+                    "×" +
+
+                '</button>' +
+
+            '</div>';
+
+
+        activarBorrarLineas();
+
+    }
+
+
+    function activarBorrarLineas() {
+
+        document
+            .querySelectorAll(
+                "#pedEditorLineas .ped-delete-line"
+            )
+            .forEach(
+                function (boton) {
+
+                    boton.addEventListener(
+                        "click",
+                        function () {
+
+                            const lineas =
+                                document
+                                    .querySelectorAll(
+                                        "#pedEditorLineas .ped-editor-line"
+                                    );
+
+
+                            if (
+                                lineas.length > 1
+                            ) {
+
+                                boton
+                                    .closest(
+                                        ".ped-editor-line"
+                                    )
+                                    .remove();
+
+                            }
+
+                        }
+                    );
+
+                }
+            );
+
+    }
+
+
+    /* =====================================================
+       EVENTOS
+    ====================================================== */
+
+    function eventos() {
+
+
+        document.getElementById(
+            "pedNuevo"
+        ).addEventListener(
+            "click",
+            mostrarNuevo
+        );
+
+
+        document.getElementById(
+            "pedCancelarNuevo"
+        ).addEventListener(
+            "click",
+            ocultarNuevo
+        );
+
+
+        document.getElementById(
+            "pedGuardarNuevo"
+        ).addEventListener(
+            "click",
+            registrarNuevo
+        );
+
+
+        document.getElementById(
+            "pedAgregarLinea"
+        ).addEventListener(
+            "click",
+            añadirLinea
+        );
+
+
+        document.getElementById(
+            "pedBuscar"
+        ).addEventListener(
+            "input",
+            pintarTabla
+        );
+
+
+        document
+            .querySelectorAll(
+                "#page-pedidos .ped-filter"
+            )
+            .forEach(
+                function (boton) {
+
+                    boton.addEventListener(
+                        "click",
+                        function () {
+
+                            document
+                                .querySelectorAll(
+                                    "#page-pedidos .ped-filter"
+                                )
+                                .forEach(
+                                    function (otro) {
+
+                                        otro.classList.remove(
+                                            "active"
+                                        );
+
+                                    }
+                                );
+
+
+                            boton.classList.add(
+                                "active"
+                            );
+
+
+                            filtroActual =
+                                boton.getAttribute(
+                                    "data-filter"
+                                );
+
+
+                            pintarTabla();
+
+                        }
+                    );
+
+                }
+            );
+
+
+        document
+            .querySelectorAll(
+                "#page-pedidos .ped-stat"
+            )
+            .forEach(
+                function (tarjeta) {
+
+                    tarjeta.addEventListener(
+                        "click",
+                        function () {
+
+                            const estado =
+                                tarjeta.getAttribute(
+                                    "data-status"
+                                );
+
+
+                            filtroActual =
+                                estado;
+
+
+                            document
+                                .querySelectorAll(
+                                    "#page-pedidos .ped-filter"
+                                )
+                                .forEach(
+                                    function (boton) {
+
+                                        boton.classList.toggle(
+                                            "active",
+                                            boton.getAttribute(
+                                                "data-filter"
+                                            ) === estado
+                                        );
+
+                                    }
+                                );
+
+
+                            pintarTabla();
+
+                        }
+                    );
+
+                }
+            );
+
+
+        document.getElementById(
+            "pedEmail"
+        ).addEventListener(
+            "click",
+            prepararEmail
+        );
+
+
+        document.getElementById(
+            "pedLeido"
+        ).addEventListener(
+            "click",
+            function () {
+
+                cambiarEstado(
+                    "Leído"
+                );
+
+            }
+        );
+
+
+        document.getElementById(
+            "pedTramitado"
+        ).addEventListener(
+            "click",
+            function () {
+
+                cambiarEstado(
+                    "Tramitado"
+                );
+
+            }
+        );
+
+
+        document.getElementById(
+            "pedGestionado"
+        ).addEventListener(
+            "click",
+            function () {
+
+                cambiarEstado(
+                    "Gestionado"
+                );
+
+            }
+        );
+
+
+        activarBorrarLineas();
+
+    }
+
+
+    /* =====================================================
+       INICIO
+    ====================================================== */
+
+    function iniciar() {
+
+        cargar();
+
+        eventos();
+
+        pintarStats();
+
+        pintarTabla();
+
+    }
+
+
+    iniciar();
+
+})();
+
+</script>
+
+</div>
 
                 <div class="empty-page">
 
