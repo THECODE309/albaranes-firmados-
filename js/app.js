@@ -1924,7 +1924,7 @@ if (verTodos) {
                     }
 
 
-                    function mostrarPagina();
+               mostrarPagina("albaranes-consulta");     
 
 
                     return;
