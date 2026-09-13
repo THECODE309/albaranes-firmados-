@@ -1186,24 +1186,3695 @@
                  OFERTAS
             ================================================== -->
 
-            <div
-                class="page"
-                id="page-ofertas"
+<!-- =================================================
+     OFERTAS · V1
+================================================== -->
+
+<div
+    class="page"
+    id="page-ofertas"
+>
+
+    <style>
+        /* =====================================================
+           STEIL · OFERTAS V1
+        ====================================================== */
+
+        #page-ofertas {
+            padding-bottom: 40px;
+        }
+
+        #page-ofertas .ofertas-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            gap: 20px;
+            margin-bottom: 24px;
+        }
+
+        #page-ofertas .ofertas-kicker {
+            display: block;
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: 1.4px;
+            color: #7a7a7a;
+            margin-bottom: 5px;
+        }
+
+        #page-ofertas .ofertas-header h1 {
+            margin: 0;
+        }
+
+        #page-ofertas .ofertas-header p {
+            margin: 7px 0 0;
+            color: #777;
+        }
+
+        #page-ofertas .ofertas-header-actions {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        #page-ofertas .ofertas-layout {
+            display: grid;
+            grid-template-columns: minmax(0, 1fr) 340px;
+            gap: 20px;
+            align-items: start;
+        }
+
+        #page-ofertas .ofertas-main,
+        #page-ofertas .ofertas-side {
+            min-width: 0;
+        }
+
+        #page-ofertas .oferta-card {
+            background: #fff;
+            border: 1px solid #e7e7e7;
+            border-radius: 12px;
+            margin-bottom: 18px;
+            overflow: hidden;
+        }
+
+        #page-ofertas .oferta-card-header {
+            padding: 17px 20px;
+            border-bottom: 1px solid #ececec;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+        }
+
+        #page-ofertas .oferta-card-header h2 {
+            margin: 0;
+            font-size: 16px;
+        }
+
+        #page-ofertas .oferta-card-header span {
+            color: #888;
+            font-size: 12px;
+        }
+
+        #page-ofertas .oferta-card-body {
+            padding: 20px;
+        }
+
+        #page-ofertas .oferta-grid {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 16px;
+        }
+
+        #page-ofertas .oferta-grid.three {
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+        }
+
+        #page-ofertas .oferta-field {
+            min-width: 0;
+        }
+
+        #page-ofertas .oferta-field.full {
+            grid-column: 1 / -1;
+        }
+
+        #page-ofertas .oferta-field label {
+            display: block;
+            font-size: 12px;
+            font-weight: 700;
+            color: #555;
+            margin-bottom: 7px;
+        }
+
+        #page-ofertas .oferta-field input,
+        #page-ofertas .oferta-field select,
+        #page-ofertas .oferta-field textarea {
+            width: 100%;
+            box-sizing: border-box;
+            border: 1px solid #dcdcdc;
+            border-radius: 7px;
+            background: #fff;
+            padding: 10px 11px;
+            font: inherit;
+            color: #222;
+            outline: none;
+        }
+
+        #page-ofertas .oferta-field input:focus,
+        #page-ofertas .oferta-field select:focus,
+        #page-ofertas .oferta-field textarea:focus {
+            border-color: #777;
+            box-shadow: 0 0 0 2px rgba(0,0,0,.05);
+        }
+
+        #page-ofertas .oferta-field textarea {
+            min-height: 84px;
+            resize: vertical;
+        }
+
+        #page-ofertas .cliente-search-wrap {
+            position: relative;
+        }
+
+        #page-ofertas .cliente-suggestions {
+            position: absolute;
+            z-index: 50;
+            left: 0;
+            right: 0;
+            top: calc(100% + 4px);
+            background: #fff;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            box-shadow: 0 10px 25px rgba(0,0,0,.10);
+            max-height: 250px;
+            overflow-y: auto;
+            display: none;
+        }
+
+        #page-ofertas .cliente-suggestion {
+            padding: 10px 12px;
+            border-bottom: 1px solid #eee;
+            cursor: pointer;
+            font-size: 13px;
+        }
+
+        #page-ofertas .cliente-suggestion:last-child {
+            border-bottom: 0;
+        }
+
+        #page-ofertas .cliente-suggestion:hover {
+            background: #f5f5f5;
+        }
+
+        #page-ofertas .cliente-suggestion strong {
+            display: block;
+        }
+
+        #page-ofertas .cliente-suggestion small {
+            display: block;
+            margin-top: 3px;
+            color: #888;
+        }
+
+        #page-ofertas .destinatario-toggle {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            margin-bottom: 18px;
+        }
+
+        #page-ofertas .destinatario-option {
+            border: 1px solid #d8d8d8;
+            background: #fff;
+            border-radius: 8px;
+            padding: 10px 14px;
+            cursor: pointer;
+            font-size: 13px;
+            font-weight: 600;
+        }
+
+        #page-ofertas .destinatario-option.active {
+            background: #222;
+            color: #fff;
+            border-color: #222;
+        }
+
+        #page-ofertas .massive-box {
+            display: none;
+            border: 1px dashed #bbb;
+            border-radius: 9px;
+            padding: 15px;
+            background: #fafafa;
+        }
+
+        #page-ofertas .massive-box.active {
+            display: block;
+        }
+
+        #page-ofertas .massive-box strong {
+            display: block;
+            margin-bottom: 4px;
+        }
+
+        #page-ofertas .massive-box span {
+            color: #777;
+            font-size: 12px;
+        }
+
+        #page-ofertas .lineas-table-wrap {
+            overflow-x: auto;
+        }
+
+        #page-ofertas .lineas-table {
+            width: 100%;
+            border-collapse: collapse;
+            min-width: 720px;
+        }
+
+        #page-ofertas .lineas-table th {
+            text-align: left;
+            font-size: 11px;
+            color: #777;
+            text-transform: uppercase;
+            letter-spacing: .5px;
+            padding: 9px 8px;
+            border-bottom: 1px solid #ddd;
+        }
+
+        #page-ofertas .lineas-table td {
+            padding: 8px;
+            border-bottom: 1px solid #eee;
+            vertical-align: top;
+        }
+
+        #page-ofertas .lineas-table input {
+            width: 100%;
+            box-sizing: border-box;
+            padding: 9px 8px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+        }
+
+        #page-ofertas .lineas-table .line-desc {
+            min-width: 280px;
+        }
+
+        #page-ofertas .lineas-table .line-cantidad {
+            width: 75px;
+        }
+
+        #page-ofertas .lineas-table .line-precio {
+            width: 105px;
+        }
+
+        #page-ofertas .lineas-table .line-descuento {
+            width: 90px;
+        }
+
+        #page-ofertas .line-sugerencias {
+            position: relative;
+        }
+
+        #page-ofertas .line-suggestions {
+            position: absolute;
+            z-index: 30;
+            left: 8px;
+            right: 8px;
+            top: 45px;
+            background: #fff;
+            border: 1px solid #ddd;
+            border-radius: 7px;
+            box-shadow: 0 8px 20px rgba(0,0,0,.10);
+            max-height: 180px;
+            overflow-y: auto;
+            display: none;
+        }
+
+        #page-ofertas .line-suggestion {
+            padding: 9px 10px;
+            border-bottom: 1px solid #eee;
+            cursor: pointer;
+            font-size: 12px;
+        }
+
+        #page-ofertas .line-suggestion:hover {
+            background: #f5f5f5;
+        }
+
+        #page-ofertas .line-suggestion strong {
+            display: block;
+        }
+
+        #page-ofertas .line-suggestion small {
+            color: #888;
+        }
+
+        #page-ofertas .line-import {
+            white-space: nowrap;
+            font-weight: 700;
+            padding-top: 16px !important;
+        }
+
+        #page-ofertas .btn-add-line {
+            margin-top: 14px;
+        }
+
+        #page-ofertas .btn-remove-line {
+            border: 0;
+            background: transparent;
+            color: #999;
+            cursor: pointer;
+            padding: 8px;
+        }
+
+        #page-ofertas .btn-remove-line:hover {
+            color: #c33;
+        }
+
+        #page-ofertas .totales {
+            margin-left: auto;
+            width: min(100%, 390px);
+        }
+
+        #page-ofertas .total-row {
+            display: flex;
+            justify-content: space-between;
+            gap: 20px;
+            padding: 7px 0;
+            font-size: 13px;
+        }
+
+        #page-ofertas .total-row.total-final {
+            margin-top: 8px;
+            padding-top: 13px;
+            border-top: 2px solid #222;
+            font-size: 18px;
+            font-weight: 800;
+        }
+
+        #page-ofertas .total-input {
+            width: 110px;
+            text-align: right;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+        }
+
+        #page-ofertas .estado-badge {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 5px 9px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 700;
+            white-space: nowrap;
+        }
+
+        #page-ofertas .estado-borrador {
+            background: #eee;
+            color: #555;
+        }
+
+        #page-ofertas .estado-enviada {
+            background: #e8eef8;
+            color: #315d99;
+        }
+
+        #page-ofertas .estado-pendiente {
+            background: #fff2d6;
+            color: #916500;
+        }
+
+        #page-ofertas .estado-aceptada {
+            background: #e3f4e9;
+            color: #287344;
+        }
+
+        #page-ofertas .estado-rechazada {
+            background: #f9e5e5;
+            color: #9b3535;
+        }
+
+        #page-ofertas .estado-caducada {
+            background: #eee8f3;
+            color: #704c84;
+        }
+
+        #page-ofertas .estado-selector {
+            width: 100%;
+            padding: 9px;
+            border: 1px solid #ddd;
+            border-radius: 7px;
+        }
+
+        #page-ofertas .historico-table-wrap {
+            overflow-x: auto;
+        }
+
+        #page-ofertas .historico-table {
+            width: 100%;
+            border-collapse: collapse;
+            min-width: 760px;
+        }
+
+        #page-ofertas .historico-table th {
+            text-align: left;
+            padding: 10px 8px;
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: .5px;
+            color: #777;
+            border-bottom: 1px solid #ddd;
+        }
+
+        #page-ofertas .historico-table td {
+            padding: 11px 8px;
+            border-bottom: 1px solid #eee;
+            font-size: 13px;
+        }
+
+        #page-ofertas .historico-table tr:hover {
+            background: #fafafa;
+        }
+
+        #page-ofertas .historico-actions {
+            display: flex;
+            gap: 5px;
+        }
+
+        #page-ofertas .mini-btn {
+            border: 1px solid #ddd;
+            background: #fff;
+            border-radius: 6px;
+            padding: 6px 8px;
+            cursor: pointer;
+            font-size: 11px;
+        }
+
+        #page-ofertas .mini-btn:hover {
+            background: #f4f4f4;
+        }
+
+        #page-ofertas .side-stat-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+        }
+
+        #page-ofertas .side-stat {
+            padding: 14px;
+            border: 1px solid #eee;
+            border-radius: 9px;
+            background: #fafafa;
+        }
+
+        #page-ofertas .side-stat span {
+            display: block;
+            font-size: 11px;
+            color: #777;
+            margin-bottom: 5px;
+        }
+
+        #page-ofertas .side-stat strong {
+            font-size: 21px;
+        }
+
+        #page-ofertas .preview-box {
+            background: #f7f7f5;
+            border: 1px solid #e4e4e0;
+            border-radius: 9px;
+            padding: 15px;
+        }
+
+        #page-ofertas .preview-brand {
+            font-size: 19px;
+            font-weight: 900;
+            letter-spacing: 1px;
+        }
+
+        #page-ofertas .preview-title {
+            margin-top: 8px;
+            font-size: 13px;
+            font-weight: 800;
+        }
+
+        #page-ofertas .preview-line {
+            display: flex;
+            justify-content: space-between;
+            gap: 12px;
+            padding: 7px 0;
+            border-bottom: 1px solid #ddd;
+            font-size: 11px;
+        }
+
+        #page-ofertas .preview-total {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 12px;
+            font-weight: 900;
+            font-size: 15px;
+        }
+
+        #page-ofertas .oferta-notice {
+            display: none;
+            margin-bottom: 15px;
+            padding: 10px 12px;
+            border-radius: 7px;
+            background: #edf5ee;
+            color: #32643a;
+            font-size: 12px;
+        }
+
+        #page-ofertas .oferta-notice.active {
+            display: block;
+        }
+
+        @media (max-width: 1050px) {
+            #page-ofertas .ofertas-layout {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 700px) {
+            #page-ofertas .ofertas-header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            #page-ofertas .oferta-grid,
+            #page-ofertas .oferta-grid.three {
+                grid-template-columns: 1fr;
+            }
+
+            #page-ofertas .oferta-field.full {
+                grid-column: auto;
+            }
+        }
+    </style>
+
+
+    <!-- =====================================================
+         CABECERA
+    ====================================================== -->
+
+    <div class="ofertas-header">
+
+        <div>
+            <span class="ofertas-kicker">
+                GESTIÓN COMERCIAL
+            </span>
+
+            <h1>
+                Ofertas
+            </h1>
+
+            <p>
+                Crear, enviar y controlar el estado de las ofertas comerciales.
+            </p>
+        </div>
+
+        <div class="ofertas-header-actions">
+
+            <button
+                type="button"
+                class="btn btn-secondary"
+                id="ofertaNueva"
             >
+                <i class="fa-solid fa-plus"></i>
+                Nueva oferta
+            </button>
 
-                <div class="empty-page">
+            <button
+                type="button"
+                class="btn btn-primary"
+                id="ofertaGuardarTop"
+            >
+                <i class="fa-solid fa-floppy-disk"></i>
+                Guardar oferta
+            </button>
 
-                    <h1>
-                        Ofertas
-                    </h1>
+        </div>
 
-                    <p>
-                        Módulo en desarrollo.
-                    </p>
+    </div>
+
+
+    <div
+        class="oferta-notice"
+        id="ofertaNotice"
+    ></div>
+
+
+    <div class="ofertas-layout">
+
+
+        <!-- =================================================
+             COLUMNA PRINCIPAL
+        ================================================== -->
+
+        <div class="ofertas-main">
+
+
+            <!-- DATOS DE LA OFERTA -->
+
+            <div class="oferta-card">
+
+                <div class="oferta-card-header">
+
+                    <div>
+                        <h2>Datos de la oferta</h2>
+                        <span>Identificación y destinatario</span>
+                    </div>
+
+                    <span id="ofertaEstadoBadge">
+                        <span class="estado-badge estado-borrador">
+                            Borrador
+                        </span>
+                    </span>
+
+                </div>
+
+                <div class="oferta-card-body">
+
+                    <div class="oferta-grid three">
+
+                        <div class="oferta-field">
+
+                            <label>
+                                Nº de oferta
+                            </label>
+
+                            <input
+                                type="text"
+                                id="ofertaNumero"
+                                readonly
+                            >
+
+                        </div>
+
+                        <div class="oferta-field">
+
+                            <label>
+                                Fecha
+                            </label>
+
+                            <input
+                                type="date"
+                                id="ofertaFecha"
+                            >
+
+                        </div>
+
+                        <div class="oferta-field">
+
+                            <label>
+                                Estado
+                            </label>
+
+                            <select id="ofertaEstado">
+                                <option value="Borrador">Borrador</option>
+                                <option value="Enviada">Enviada</option>
+                                <option value="Pendiente">Pendiente</option>
+                                <option value="Aceptada">Aceptada</option>
+                                <option value="Rechazada">Rechazada</option>
+                                <option value="Caducada">Caducada</option>
+                            </select>
+
+                        </div>
+
+                    </div>
 
                 </div>
 
             </div>
+
+
+            <!-- DESTINATARIO -->
+
+            <div class="oferta-card">
+
+                <div class="oferta-card-header">
+
+                    <div>
+                        <h2>Destinatario</h2>
+                        <span>Cliente o envío masivo</span>
+                    </div>
+
+                </div>
+
+                <div class="oferta-card-body">
+
+                    <div class="destinatario-toggle">
+
+                        <button
+                            type="button"
+                            class="destinatario-option active"
+                            data-destino="cliente"
+                            id="destinoCliente"
+                        >
+                            <i class="fa-solid fa-user"></i>
+                            Cliente
+                        </button>
+
+                        <button
+                            type="button"
+                            class="destinatario-option"
+                            data-destino="masivo"
+                            id="destinoMasivo"
+                        >
+                            <i class="fa-solid fa-users"></i>
+                            Envío masivo
+                        </button>
+
+                    </div>
+
+
+                    <div id="clienteBox">
+
+                        <div class="oferta-grid">
+
+                            <div class="oferta-field full">
+
+                                <label>
+                                    Buscar cliente
+                                </label>
+
+                                <div class="cliente-search-wrap">
+
+                                    <input
+                                        type="text"
+                                        id="ofertaClienteBuscar"
+                                        placeholder="Escribe el nombre del cliente..."
+                                        autocomplete="off"
+                                    >
+
+                                    <div
+                                        class="cliente-suggestions"
+                                        id="clienteSuggestions"
+                                    ></div>
+
+                                </div>
+
+                            </div>
+
+
+                            <div class="oferta-field full">
+
+                                <label>
+                                    Cliente seleccionado
+                                </label>
+
+                                <input
+                                    type="text"
+                                    id="ofertaCliente"
+                                    placeholder="Selecciona un cliente"
+                                >
+
+                            </div>
+
+
+                            <div class="oferta-field">
+
+                                <label>
+                                    Persona de contacto
+                                </label>
+
+                                <input
+                                    type="text"
+                                    id="ofertaContacto"
+                                    placeholder="Nombre de contacto"
+                                >
+
+                            </div>
+
+
+                            <div class="oferta-field">
+
+                                <label>
+                                    Teléfono
+                                </label>
+
+                                <input
+                                    type="text"
+                                    id="ofertaTelefono"
+                                    placeholder="Teléfono"
+                                >
+
+                            </div>
+
+
+                            <div class="oferta-field full">
+
+                                <label>
+                                    Email
+                                </label>
+
+                                <input
+                                    type="email"
+                                    id="ofertaEmail"
+                                    placeholder="correo@empresa.com"
+                                >
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+
+                    <div
+                        class="massive-box"
+                        id="massiveBox"
+                    >
+
+                        <strong>
+                            Oferta para envío masivo
+                        </strong>
+
+                        <span>
+                            La oferta quedará preparada para enviarse a todos los clientes disponibles.
+                            En esta V1 contamos con los 294 clientes del listado STEIL.
+                        </span>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- LINEAS -->
+
+            <div class="oferta-card">
+
+                <div class="oferta-card-header">
+
+                    <div>
+                        <h2>Líneas de la oferta</h2>
+                        <span>Descripción y precio introducidos manualmente</span>
+                    </div>
+
+                </div>
+
+                <div class="oferta-card-body">
+
+                    <div class="lineas-table-wrap">
+
+                        <table class="lineas-table">
+
+                            <thead>
+
+                                <tr>
+                                    <th>Descripción</th>
+                                    <th>Cantidad</th>
+                                    <th>Precio</th>
+                                    <th>Dto. %</th>
+                                    <th>Importe</th>
+                                    <th></th>
+                                </tr>
+
+                            </thead>
+
+                            <tbody id="ofertaLineas"></tbody>
+
+                        </table>
+
+                    </div>
+
+
+                    <button
+                        type="button"
+                        class="btn btn-secondary btn-add-line"
+                        id="ofertaAgregarLinea"
+                    >
+                        <i class="fa-solid fa-plus"></i>
+                        Añadir línea
+                    </button>
+
+                </div>
+
+            </div>
+
+
+            <!-- TOTALES -->
+
+            <div class="oferta-card">
+
+                <div class="oferta-card-header">
+
+                    <div>
+                        <h2>Totales</h2>
+                        <span>Importes de la oferta</span>
+                    </div>
+
+                </div>
+
+                <div class="oferta-card-body">
+
+                    <div class="totales">
+
+                        <div class="total-row">
+                            <span>
+                                Base imponible
+                            </span>
+
+                            <strong id="ofertaBase">
+                                0,00 €
+                            </strong>
+                        </div>
+
+
+                        <div class="total-row">
+
+                            <span>
+                                Transporte
+                            </span>
+
+                            <input
+                                type="number"
+                                class="total-input"
+                                id="ofertaTransporte"
+                                value="0"
+                                min="0"
+                                step="0.01"
+                            >
+
+                        </div>
+
+
+                        <div class="total-row">
+
+                            <span>
+                                Otros gastos
+                            </span>
+
+                            <input
+                                type="number"
+                                class="total-input"
+                                id="ofertaOtros"
+                                value="0"
+                                min="0"
+                                step="0.01"
+                            >
+
+                        </div>
+
+
+                        <div class="total-row">
+
+                            <span>
+                                IVA %
+                            </span>
+
+                            <input
+                                type="number"
+                                class="total-input"
+                                id="ofertaIva"
+                                value="21"
+                                min="0"
+                                step="0.01"
+                            >
+
+                        </div>
+
+
+                        <div class="total-row">
+
+                            <span>
+                                IVA
+                            </span>
+
+                            <strong id="ofertaImporteIva">
+                                0,00 €
+                            </strong>
+
+                        </div>
+
+
+                        <div class="total-row total-final">
+
+                            <span>
+                                TOTAL
+                            </span>
+
+                            <strong id="ofertaTotal">
+                                0,00 €
+                            </strong>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- OBSERVACIONES -->
+
+            <div class="oferta-card">
+
+                <div class="oferta-card-header">
+
+                    <div>
+                        <h2>Observaciones</h2>
+                        <span>Condiciones o información adicional</span>
+                    </div>
+
+                </div>
+
+                <div class="oferta-card-body">
+
+                    <textarea
+                        id="ofertaObservaciones"
+                        placeholder="Condiciones, plazo de entrega, validez de la oferta..."
+                    ></textarea>
+
+                </div>
+
+            </div>
+
+
+            <!-- HISTÓRICO -->
+
+            <div class="oferta-card">
+
+                <div class="oferta-card-header">
+
+                    <div>
+                        <h2>Histórico de ofertas</h2>
+                        <span>Consulta rápida del estado comercial</span>
+                    </div>
+
+                    <select
+                        id="filtroEstadoOfertas"
+                        class="estado-selector"
+                        style="width:170px;"
+                    >
+                        <option value="Todos">Todos</option>
+                        <option value="Borrador">Borrador</option>
+                        <option value="Enviada">Enviada</option>
+                        <option value="Pendiente">Pendiente</option>
+                        <option value="Aceptada">Aceptada</option>
+                        <option value="Rechazada">Rechazada</option>
+                        <option value="Caducada">Caducada</option>
+                    </select>
+
+                </div>
+
+                <div class="oferta-card-body">
+
+                    <div class="historico-table-wrap">
+
+                        <table class="historico-table">
+
+                            <thead>
+
+                                <tr>
+                                    <th>Nº</th>
+                                    <th>Fecha</th>
+                                    <th>Cliente</th>
+                                    <th>Importe</th>
+                                    <th>Estado</th>
+                                    <th></th>
+                                </tr>
+
+                            </thead>
+
+                            <tbody id="historicoOfertas"></tbody>
+
+                        </table>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+        </div>
+
+
+        <!-- =================================================
+             COLUMNA LATERAL
+        ================================================== -->
+
+        <aside class="ofertas-side">
+
+
+            <!-- RESUMEN -->
+
+            <div class="oferta-card">
+
+                <div class="oferta-card-header">
+
+                    <div>
+                        <h2>Resumen</h2>
+                        <span>Situación de las ofertas</span>
+                    </div>
+
+                </div>
+
+                <div class="oferta-card-body">
+
+                    <div class="side-stat-grid">
+
+                        <div class="side-stat">
+                            <span>Total</span>
+                            <strong id="statTotal">0</strong>
+                        </div>
+
+                        <div class="side-stat">
+                            <span>Pendientes</span>
+                            <strong id="statPendientes">0</strong>
+                        </div>
+
+                        <div class="side-stat">
+                            <span>Aceptadas</span>
+                            <strong id="statAceptadas">0</strong>
+                        </div>
+
+                        <div class="side-stat">
+                            <span>Enviadas</span>
+                            <strong id="statEnviadas">0</strong>
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- VISTA PREVIA -->
+
+            <div class="oferta-card">
+
+                <div class="oferta-card-header">
+
+                    <div>
+                        <h2>Vista previa</h2>
+                        <span>Así verá el cliente la oferta</span>
+                    </div>
+
+                </div>
+
+                <div class="oferta-card-body">
+
+                    <div class="preview-box">
+
+                        <div class="preview-brand">
+                            STEIL
+                        </div>
+
+                        <div class="preview-title">
+                            OFERTA <span id="previewNumero">OF-2026-001</span>
+                        </div>
+
+                        <div
+                            style="margin-top:10px;font-size:11px;color:#777;"
+                            id="previewCliente"
+                        >
+                            Cliente pendiente
+                        </div>
+
+                        <div id="previewLineas" style="margin-top:10px;"></div>
+
+                        <div class="preview-total">
+
+                            <span>
+                                TOTAL
+                            </span>
+
+                            <span id="previewTotal">
+                                0,00 €
+                            </span>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- ACCIONES -->
+
+            <div class="oferta-card">
+
+                <div class="oferta-card-header">
+
+                    <div>
+                        <h2>Acciones</h2>
+                        <span>Gestión de la oferta</span>
+                    </div>
+
+                </div>
+
+                <div class="oferta-card-body">
+
+                    <button
+                        type="button"
+                        class="btn btn-primary"
+                        id="ofertaGuardar"
+                        style="width:100%;margin-bottom:9px;"
+                    >
+                        <i class="fa-solid fa-floppy-disk"></i>
+                        Guardar
+                    </button>
+
+
+                    <button
+                        type="button"
+                        class="btn btn-secondary"
+                        id="ofertaMarcarEnviada"
+                        style="width:100%;margin-bottom:9px;"
+                    >
+                        <i class="fa-solid fa-paper-plane"></i>
+                        Marcar como enviada
+                    </button>
+
+
+                    <button
+                        type="button"
+                        class="btn btn-secondary"
+                        id="ofertaVistaPrevia"
+                        style="width:100%;"
+                    >
+                        <i class="fa-solid fa-eye"></i>
+                        Actualizar vista previa
+                    </button>
+
+                </div>
+
+            </div>
+
+
+        </aside>
+
+
+    </div>
+
+
+    <!-- =====================================================
+         JAVASCRIPT · OFERTAS V1
+    ====================================================== -->
+
+    <script>
+
+    (function () {
+
+        if (window.__STEIL_OFERTAS_V1__) {
+            return;
+        }
+
+        window.__STEIL_OFERTAS_V1__ = true;
+
+
+        /* =====================================================
+           CLIENTES · 294
+        ====================================================== */
+
+        const CLIENTES_STEIL = [
+            "FRANCISCO JAVIER ANDREU PERIS",
+            "OCA GLOBAL PREVENTION SERVICES, S.A.",
+            "NATRA CACAO, S.L.",
+            "PLAYMUSIC GLOBAL PRO, S.L.U.",
+            "FERNANDO ROMERO CALONGE",
+            "ROSAURA CAMPOS ÁLVAREZ",
+            "MIGUEL ÁNGEL PÉREZ PUIG",
+            "CARLOS DABAUZA NAVARRO",
+            "SILVIA LÓPEZ MONZO",
+            "SUMINISTROS MORENTÍN SERRANO, S.L.",
+            "PRODISEI TECHNOLOGIES, S.L.",
+            "IMASD ELECTRIC, S.L.U.",
+            "TALLERES RAFAEL CUBELLS BALLESTER, S.L.U.",
+            "ROLY CORTEZ CUELLAR",
+            "B&M ASESORES ENERGÉTICOS, S.L.",
+            "REFORMAXIS VALENCIA, S.L.",
+            "EXCAVACIONES MENESES, S.L.",
+            "LLUM I PÓLVORA EVENTS, S.L.",
+            "CARLOS RAMÍREZ SÁIZ",
+            "CARLOS BALANZÁ PASCUAL",
+            "ALGOCEL TEXTIL, S.L.",
+            "MANUELA RODRÍGUEZ RÍSQUEZ",
+            "DIEGO SORLÍ HUERTA",
+            "GIOMAR 77, S.L.",
+            "FABRICACIONES E INSTALACIONES PEPITO GUIÑÓN, S.L.U.",
+            "CALDERERÍA CAPILLA, S.A.",
+            "CRISTINA GARCÍA LUJÁN",
+            "SECURE VIAJES, S.L.",
+            "PETUG GUTEP, S.L.",
+            "VARA-TRUCK, S.L.",
+            "INGENIERIA Y MONTAJES BELENGUER, S.L.",
+            "MANUEL REDONDO TINACO",
+            "ARCHITECTURE SUSTAINABILITY RESPONSABILITY, S.L.",
+            "BV CARGO DE MERCANCÍAS Y LOGÍSTICA, S.L.",
+            "TALLERES GABARDA, S.L.",
+            "TENTS AND EVENTS, S.L.",
+            "NUEVA ESTUDI PATRIMONIAL, S.L.",
+            "PLÁSTICOS GAMÓN, S.A.",
+            "STUDIO QBICO, S.L.",
+            "CESYR ESTUDIOS Y CONSTRUCCIONES, S.L.",
+            "CREACIONES METÁLICAS SORIANO, S.L.",
+            "JC GAIBOR MONTAJES Y ELECTRICIDAD, S.L.",
+            "IDEAS SYROKO EVENTS, S.L.",
+            "CARPINTERÍA DE ALUMINIO PRADAS, S.L.",
+            "TORNS COILS ESPAÑA, S.L.",
+            "JOMIVAL SUMINISTROS, S.L.",
+            "SONDEOS AFOROS INSTALACIONES LEVANTE, S.L.",
+            "DAVID GRANELL ORTS",
+            "LONAS Y TOLDOS NAVARRO, S.L.",
+            "INMAPLAS, S.L.",
+            "TOLDOS Y PERSIANAS GUIÑÓN, S.L.",
+            "RESISTENCIAS Y CONTROL TÉRMICO RESGÓN, S.L.",
+            "DUPONT INSTALACIONES, S.L.",
+            "MULTISERVICIOS MURVIEDRO, S.L.",
+            "METALBORAYA, S.L.",
+            "CABAÑERO, S.L.",
+            "TOLDOS Y PERSIANAS LA FÁBRICA, S.L.",
+            "SERVANDO SÁNCHEZ PRIETO",
+            "CERRAJERÍA CALVO, S.L.",
+            "IMAGINE CREATIVE PROJECTS, S.L.",
+            "JOSÉ ANTONIO TAMARIT NAVARRO",
+            "RODAMIENTOS Y TRANSMISIONES, S.L.",
+            "VIDAL AUTOMATIZACIÓN Y CONTROL, S.L.",
+            "MOLINS E HIJOS, S.L.",
+            "GARCÍA CÁMARA, S.L.",
+            "CENTRE D'ENTRENAMENT PARC PATERNA, S.L.",
+            "GRUPO LOHA 2025, S.L.",
+            "NURIA ALEIXOS BORRÁS",
+            "ARCOTECTURA, S.L.",
+            "GASCONFORTVAL, S.L.",
+            "RAMÓN HERNÁNDEZ VILLALBA",
+            "PETAR KIRILOV PETROV",
+            "FRANCISCO ARNAL BOLEA",
+            "ANDRÉS PRIMA COLL",
+            "WATTUSSI PRODUCCIONES, S.L.",
+            "EMYRA CERRAMIENTOS, S.L.U.",
+            "FALLA PLAZA LEPANTO",
+            "FRANCISCO JAVIER ESTEVE HONZO",
+            "MOVILFRÍO, S.L.",
+            "BIENESTAR ADMINISTRACIÓN DE FINCAS Y ASESORÍA JURÍDICA",
+            "ANDRÉS SEDEÑO MARTÍN",
+            "ALEJANDRO ROIG VIÑAS",
+            "RICOLFE CONSTRUCCIÓN Y ARQUITECTURA, S.L.",
+            "ANYEER ÁLEX ROSALES ZUSKOWSKY",
+            "INSTALACIONES XÁTIVA, S.L.",
+            "MARUNTELU, S.L.",
+            "ADMINISTRACIONES JIMÉNEZ LOZANO, S.L.",
+            "NOVES MARCO, S.L.",
+            "CONSTRUMAR 1800, S.L.",
+            "FAMILIA FN4, C.B.",
+            "HAMID YERROU HERRERO",
+            "ALMUDENA LINARES VALERA",
+            "FERNANDO SÁNCHEZ GIL",
+            "FERNANDO FRANCIA PEÑALVER",
+            "CAMPUS LYCEUM, S.L.",
+            "ASZENDE, S.L.U.",
+            "ROBERTO JULIÁN CASTAÑEDA CALVO",
+            "AMARA MEGAFONÍA CCTV VOZ DATOS, S.L.",
+            "MARIO TORRES ORIOLA",
+            "ENRIQUE TEJEDOR HARGAIX",
+            "CARRIÓN BERLANGA, O.E.",
+            "MYKHAYLIV ANDRIY",
+            "JOSÉ MARÍA SEGURA VIZCAÍNO",
+            "COHERMA SEMIRREMOLQUES, S.L.",
+            "COLORBAN DESIGN 20115, S.L.",
+            "GLOBALKLEE, S.L.",
+            "PARKING AVENIDA VALENCIA, S.L.U.",
+            "CLEOP, S.A.",
+            "NOVAEDAT CULLERA, S.L.",
+            "NOVAEDAT MUTXAMEL, S.L.",
+            "NOVAEDAT VALL D´UIXÓ, S.L.",
+            "STURM 2000, S.L.",
+            "GEROCLEOP, S.L.",
+            "NOVAEDAT BENESTAR, S.L.",
+            "NOVAEDAT SEDAVÍ, S.L.",
+            "MIGUEL ÁNGEL ALBALAT MARTÍ",
+            "FRANCISCO JOSÉ JUAN BALLESTER",
+            "FEBOLEC, S.L.",
+            "JOSÉ ADRIÁ ORTIZ",
+            "VICENT DURÀ ESTEVE",
+            "FALLA EL BARRIET",
+            "COMUNIDAD DE PROPIETARIOS C/ ESCULTOR AIXA Nº 12",
+            "CLIENTES MOSTRADOR",
+            "ESPERANZA SANZ BRAVO",
+            "L SAMYS ENERGÍA, S.L.",
+            "JOSÉ MARTÍNEZ HUGUET",
+            "ESPACIOS DEL ESTE, S.L.",
+            "REFRIGERACIÓN RICOR, S.L.",
+            "VALERO YAGÜE CONSTRUCCIONES, S.L.U.",
+            "RHERNANDEZ STUDIO, S.L.",
+            "U.V.E., S.A.",
+            "I.E.S. ENRIQUE TIERNO GALVÁN",
+            "OBO BETTERMANN, S.A.",
+            "ONLY ELÉCTRICA, S.L.",
+            "JUAN LUÍS PAREDES TORTOSA",
+            "TERMOGAMA, S.L.",
+            "TECNOLOGÍA EN INSTALACIÓN Y MANTENIMIENTO PARA EMPRESAS, S.L.",
+            "REPRESENTACIONES ROSARIO SOLSONA, S.L.",
+            "REYMA HOUSE, S.L.",
+            "ÁNGEL PUCHOL GARCÍA",
+            "ELIT INFRAESTRUCTURAS Y CANALIZACIONES, S.L.",
+            "JAVIER CLAUDIO URQUIZA OLAY",
+            "ELECTRICIDAD Y SERVICIOS BERDÚN, S.L.",
+            "SALVADOR CONDE GARCÍA",
+            "EL CHURRO PRODUCCIONES, S.L.",
+            "COELSER SERVICIOS, S.L.",
+            "PRODUCCIONES LA COMPETENCIA, S.L.",
+            "VICENTE SANTOS PÉREZ PALLARÉS",
+            "MARIANO MARTÍNEZ RECALDE",
+            "ELECTRICIDAD TRES FORQUES, S.L.",
+            "ESCUELA INFANTIL SAN RAFAEL",
+            "JAVIER MIL MÁÑEZ",
+            "VÍCTOR MANUEL TANGARIFE MEDINA",
+            "XUFES PASTOR, S.L.",
+            "TANTOMONTA VALENCIA, S.L.",
+            "SUMINISTROS INDUSTRIALES SERVOFLUID, S.L.",
+            "REMOLQUES 2020, S.L.",
+            "SERVICIOS FUNERARIOS TANATORIO AUÑÓN",
+            "DIPTIKA, C.B.",
+            "AYUNTAMIENTO DE BONREPÒS I MIRAMBELL",
+            "DYMSA INGENIERÍA, S.L.",
+            "MANUEL MANSILLA LÓPEZ",
+            "ACTIO LUMINIS, S.L.",
+            "SOL FOTOVOLTAICA ELECTRICIDAD, S.L.",
+            "HUMARFLOW, S.L.",
+            "DANIEL MÁRQUEZ RODRÍGUEZ",
+            "AREFORMARTE, S.L.",
+            "GASOLWIN, S.L.",
+            "CREMALLERAS ARNAU, S.L.",
+            "ANA MARÍA COLL DOMINGO",
+            "MIGUEL DOÑATE GÓMEZ",
+            "AYUNTAMIENTO DE TAVERNES BLANQUES",
+            "MANUEL VALENTÍN GALINDO LÓPEZ Y CIA, C.B.",
+            "VICENTE BURGOS MARTÍNEZ",
+            "JUAN MANUEL BLANCO FURIÓ",
+            "JESÚS BAREA MILARA",
+            "FRIAVI, S.L.",
+            "LUÍS FERNELLY LÓPEZ TORO",
+            "OCTANFUEL, S.L.",
+            "JOSÉ SEPÚLVEDA PASCUAL",
+            "INSTITUTO VALENCIANO DE INVESTIGACIONES AGRARIAS",
+            "TECNO 3 AUTOMOCIÓN, S.L.",
+            "FRANCISCO MANUEL VALERO MOLES",
+            "JOSÉ VICENTE FERRANDO IZQUIERDO",
+            "TOR-MOL, S.L.",
+            "DAVID GARCÍA PALACIOS",
+            "ASUNCIÓN LÓPEZ FLORES",
+            "MERCADONA, S.A.",
+            "COMUNIDAD DE PROPIETARIOS C/ ALACANT Nº 10",
+            "SALVIVAL INSTALACIONES, S.L.",
+            "OPTIMIZA TECNOLOGÍA, S.L.",
+            "NUTRIAGRO NOVATERRA, S.L.",
+            "SOGESER FACILITY SERVICES, S.L.",
+            "JUAN GARCÍA MORATALLA",
+            "DELPLAS, S.L.",
+            "NOSTRUM CONSULTORES, S.L.",
+            "GERMINAR AGRICULTURA, S.L.U.",
+            "SEGETEMA, S.L.",
+            "LAURIA, S.L.",
+            "ANTONIO FRANCISCO MARTÍNEZ OLIVER",
+            "COMUNIDAD DE PROPIETARIOS C/ MARIANO BENLLIURE Nº 11",
+            "RUGAR, S.L.",
+            "HORCHATAS JUANJO, S.L.",
+            "JUAN MANUEL LLOPIS BADÍA",
+            "ANTONIO SEGOVIA GARCÍA",
+            "IDEAS Y PROYECTOS VIDREGLASS, S.L.",
+            "BM VALGRAP, S.L.",
+            "NEOTEK INGENIERÍA CREATIVA, S.L.",
+            "CHELO AGRAMUNT PELUQUEROS, S.L.",
+            "SCOMYTEC SEGURIDAD, S.L.",
+            "VICENTE JOSÉ MACHI GONZÁLEZ",
+            "TELECOMUNICACIONES SILLA PEIRÓ, S.L.",
+            "TALLERES USO MAXCOLOR, S.L.",
+            "JOSÉ IBORRA TORRES",
+            "PARROQUIA DE SAN JUAN Y SAN VICENTE",
+            "SINALCO, S.A.",
+            "TOT LLUM LA PLANA, S.L.U.",
+            "ATENEO MERCANTIL DE VALENCIA",
+            "SUMINISTROS ELÉCTRICOS MATELSAN, S.L.",
+            "ÓSCAR APARICIO CELADA",
+            "AUTO TABER, S.L.",
+            "JOSÉ RAMÓN GARABATO QUINTANS",
+            "JOSÉ LUÍS MIRANDA MARTÍN",
+            "JUAN JOSÉ ÁLVAREZ GARCÍA",
+            "NOVA INSTAN BCN, S.L.",
+            "INSTARUÍZ, S.L.",
+            "OBRA NUEVA Y REFORMAS LOHA, S.L.",
+            "CREATIVE CABLES IBÉRICA, S.L.",
+            "DAVISAN SUMINISTROS INDUSTRIALES, S.L.",
+            "REFORMAS Y CONSTRUCCIONES ARALU, S.L.",
+            "VILLARREAL C.F. S.A.D.",
+            "SADAFRUIT, S.L.",
+            "DUTTILE PLASTICA, S.L.",
+            "TECNOLOGÍAS ELÉCTRICAS SANES, S.L",
+            "BD ENTERPRISE, S.L.",
+            "ELECTRICIDAD MARAL, S.L.",
+            "KH VIVES, S.L.",
+            "ENRIQUE GÁLVEZ Y ASOCIADOS, S.L.",
+            "NOU ZIEL INVESTMENT, S.L.",
+            "URBEM, S.A.",
+            "TURISME COMUNITAT VALENCIANA",
+            "ILUNION HOTELS, S.A.",
+            "CONSTRUCCIONES MECÁNICAS CASTELLÓ, S.L.",
+            "EMPRESA DE TRANSFORMACIÓN AGRARIA, S.A. S.M.E. M.P.",
+            "HOTEL MADEIRA CENTRO",
+            "CATMAN FRESH, S.A.",
+            "NAS CAPERS, C.B.",
+            "LEGUA CARRIÓN INSTALACIONES, S.L.",
+            "3F LABORATORIO FOTOGRÁFICO Y ENCUADERNACIÓN, S.L.",
+            "INSTALACIONES ELÉCTRICAS FRAMA, S.L.",
+            "INSTALACIONES ELÉCTRICAS VICENT PANACH, S.L.",
+            "CLUB DE TENIS ALTEA",
+            "ILUNION TURISMO RESPONSABLE, S.L.",
+            "CREASINERGIAS, S.L.",
+            "CALDERERÍA LÓPEZ HERMANOS, S.L.",
+            "ARCOHABITAT SERVICIOS INMOBILIARIOS, S.L.",
+            "SISTEMAS DE ENVASADO FILL PACK, S.L.U.",
+            "MOSTRADOR",
+            "LAC MAQUINARIA, S.L.",
+            "ILUMINACIÓN TÉCNICA DECORATIVA DEL MEDITERRÁNEO, S.L.",
+            "ARSPOTENTIA COOPERATIVA VALENCIANA",
+            "MATRICERÍA MAUTEC, S.L.",
+            "DAVID OLMOS BOSCÁ",
+            "TEJAS BORJA, S.A.U.",
+            "ATELIER HOSPITALITY OPERATIONS, S.A.U.",
+            "COGOLLOS ASOCIADOS MEDITERRÁNEO CONTRUCCIONES, S.L.",
+            "KEOPS CONSTRUCCIONES Y REFORMAS, S.L.",
+            "REMOLQUES Y VOLQUETES, S.L.",
+            "ARCOTECTURA ESPACIO CREATIVO, S.L.",
+            "JUAN DANIEL ASÍS GIMENO",
+            "DCM INGENIERÍA MECÁNICA, S.L.",
+            "PANAROLA, S.L.",
+            "FERNANDO TORRES BUENO",
+            "AGOLAR GESTIÓN, S.L.",
+            "FRIGICOLL VALENCIA, S.A.",
+            "SOLUCIONES TÉCNICAS REALES, S.L.",
+            "RESTITUBO OBRAS Y SERVICIOS, S.L.U.",
+            "CONSTRUCCIONES Y VARADEROS, S.L.",
+            "TRUSS 30, S.L.",
+            "ASCENSORES DOMINGO, S.A.",
+            "INDUSTRIAS MECÁNICAS SEGUÍ, S.L",
+            "GRUPO SADA P.A., S.A.",
+            "INSTALACIONES HERRANZ ESTEBAN, S.C.P.",
+            "ARTURO MORENO SEGUÍ",
+            "HOTEL PRIMUS VALENCIA, S.L.U.",
+            "INSTAL.LACIONS ELÉCTRIQUES HUSAL, S.L.",
+            "SALVAPLAST, S.A.",
+            "MAPANVA, S.L.",
+            "VENTURA ORTS, S.A.",
+            "VAPREL, S.L.",
+            "ULTRASONIDOS LOVER, S.A.",
+            "CÉSAR FRANCISCO OLIVA ALCAÑÍZ",
+            "EQUILIBRIO URBANO, S.L.",
+            "REAL CLUB NÁUTICO DE VALENCIA"
+        ];
+
+
+        /* =====================================================
+           DATOS
+        ====================================================== */
+
+        const OFERTAS_KEY = "STEIL_OFERTAS_V1";
+        const CLIENTES_DATOS_KEY = "STEIL_CLIENTES_DATOS_V1";
+        const DESCRIPCIONES_KEY = "STEIL_OFERTAS_DESCRIPCIONES_V1";
+
+        let ofertas = [];
+        let ofertaActual = null;
+        let destinoActual = "cliente";
+
+
+        /* =====================================================
+           UTILIDADES
+        ====================================================== */
+
+        function hoyISO() {
+
+            const d = new Date();
+
+            const y = d.getFullYear();
+            const m = String(d.getMonth() + 1).padStart(2, "0");
+            const day = String(d.getDate()).padStart(2, "0");
+
+            return y + "-" + m + "-" + day;
+        }
+
+
+        function formatoFecha(fecha) {
+
+            if (!fecha) {
+                return "";
+            }
+
+            const partes = fecha.split("-");
+
+            if (partes.length !== 3) {
+                return fecha;
+            }
+
+            return partes[2] + "/" + partes[1] + "/" + partes[0];
+        }
+
+
+        function euros(valor) {
+
+            const numero = Number(valor) || 0;
+
+            return numero.toLocaleString("es-ES", {
+                minimumFractionDigits: 2,
+                maximumFractionDigits: 2
+            }) + " €";
+        }
+
+
+        function escapar(texto) {
+
+            return String(texto ?? "")
+                .replace(/&/g, "&amp;")
+                .replace(/</g, "&lt;")
+                .replace(/>/g, "&gt;")
+                .replace(/"/g, "&quot;")
+                .replace(/'/g, "&#039;");
+        }
+
+
+        function normalizar(texto) {
+
+            return String(texto || "")
+                .normalize("NFD")
+                .replace(/[\u0300-\u036f]/g, "")
+                .toLowerCase();
+        }
+
+
+        function mostrarAviso(texto) {
+
+            const aviso = document.getElementById("ofertaNotice");
+
+            if (!aviso) {
+                return;
+            }
+
+            aviso.textContent = texto;
+            aviso.classList.add("active");
+
+            clearTimeout(window.__STEIL_OFERTA_AVISO__);
+
+            window.__STEIL_OFERTA_AVISO__ = setTimeout(function () {
+                aviso.classList.remove("active");
+            }, 3000);
+        }
+
+
+        /* =====================================================
+           CARGA / GUARDADO
+        ====================================================== */
+
+        function cargarDatos() {
+
+            try {
+
+                const guardadas = JSON.parse(
+                    localStorage.getItem(OFERTAS_KEY) || "[]"
+                );
+
+                ofertas = Array.isArray(guardadas)
+                    ? guardadas
+                    : [];
+
+            } catch (e) {
+
+                ofertas = [];
+
+            }
+
+        }
+
+
+        function guardarDatos() {
+
+            localStorage.setItem(
+                OFERTAS_KEY,
+                JSON.stringify(ofertas)
+            );
+
+        }
+
+
+        function cargarDatosCliente(nombre) {
+
+            try {
+
+                const datos = JSON.parse(
+                    localStorage.getItem(CLIENTES_DATOS_KEY) || "{}"
+                );
+
+                return datos[nombre] || {
+                    contacto: "",
+                    telefono: "",
+                    email: ""
+                };
+
+            } catch (e) {
+
+                return {
+                    contacto: "",
+                    telefono: "",
+                    email: ""
+                };
+
+            }
+
+        }
+
+
+        function guardarDatosCliente(nombre) {
+
+            if (!nombre) {
+                return;
+            }
+
+            let datos = {};
+
+            try {
+
+                datos = JSON.parse(
+                    localStorage.getItem(CLIENTES_DATOS_KEY) || "{}"
+                );
+
+            } catch (e) {
+
+                datos = {};
+
+            }
+
+            datos[nombre] = {
+                contacto: document.getElementById("ofertaContacto").value.trim(),
+                telefono: document.getElementById("ofertaTelefono").value.trim(),
+                email: document.getElementById("ofertaEmail").value.trim()
+            };
+
+            localStorage.setItem(
+                CLIENTES_DATOS_KEY,
+                JSON.stringify(datos)
+            );
+
+        }
+
+
+        function cargarDescripciones() {
+
+            try {
+
+                const datos = JSON.parse(
+                    localStorage.getItem(DESCRIPCIONES_KEY) || "[]"
+                );
+
+                return Array.isArray(datos)
+                    ? datos
+                    : [];
+
+            } catch (e) {
+
+                return [];
+
+            }
+
+        }
+
+
+        function guardarDescripciones(lineas) {
+
+            const anteriores = cargarDescripciones();
+
+            lineas.forEach(function (linea) {
+
+                const descripcion = String(
+                    linea.descripcion || ""
+                ).trim();
+
+                if (!descripcion) {
+                    return;
+                }
+
+                const existente = anteriores.find(function (x) {
+
+                    return normalizar(x.descripcion) ===
+                        normalizar(descripcion);
+
+                });
+
+                if (existente) {
+
+                    existente.precio = Number(linea.precio) || 0;
+                    existente.fecha = new Date().toISOString();
+
+                } else {
+
+                    anteriores.push({
+                        descripcion: descripcion,
+                        precio: Number(linea.precio) || 0,
+                        fecha: new Date().toISOString()
+                    });
+
+                }
+
+            });
+
+            localStorage.setItem(
+                DESCRIPCIONES_KEY,
+                JSON.stringify(anteriores)
+            );
+
+        }
+
+
+        /* =====================================================
+           NUMERACIÓN
+        ====================================================== */
+
+        function siguienteNumero() {
+
+            const año = new Date().getFullYear();
+
+            let maximo = 0;
+
+            ofertas.forEach(function (oferta) {
+
+                const numero = String(
+                    oferta.numero || ""
+                );
+
+                const match = numero.match(
+                    /^OF-(\d{4})-(\d+)$/
+                );
+
+                if (match && Number(match[1]) === año) {
+
+                    maximo = Math.max(
+                        maximo,
+                        Number(match[2])
+                    );
+
+                }
+
+            });
+
+            return "OF-" +
+                año +
+                "-" +
+                String(maximo + 1).padStart(3, "0");
+
+        }
+
+
+        /* =====================================================
+           NUEVA OFERTA
+        ====================================================== */
+
+        function nuevaOferta() {
+
+            ofertaActual = {
+                numero: siguienteNumero(),
+                fecha: hoyISO(),
+                estado: "Borrador",
+                destino: "cliente",
+                cliente: "",
+                contacto: "",
+                telefono: "",
+                email: "",
+                lineas: [],
+                transporte: 0,
+                otros: 0,
+                iva: 21,
+                observaciones: ""
+            };
+
+            destinoActual = "cliente";
+
+            pintarFormulario();
+
+        }
+
+
+        /* =====================================================
+           FORMULARIO
+        ====================================================== */
+
+        function pintarFormulario() {
+
+            if (!ofertaActual) {
+                return;
+            }
+
+            document.getElementById("ofertaNumero").value =
+                ofertaActual.numero || "";
+
+            document.getElementById("ofertaFecha").value =
+                ofertaActual.fecha || hoyISO();
+
+            document.getElementById("ofertaEstado").value =
+                ofertaActual.estado || "Borrador";
+
+            document.getElementById("ofertaCliente").value =
+                ofertaActual.cliente || "";
+
+            document.getElementById("ofertaClienteBuscar").value =
+                ofertaActual.cliente || "";
+
+            document.getElementById("ofertaContacto").value =
+                ofertaActual.contacto || "";
+
+            document.getElementById("ofertaTelefono").value =
+                ofertaActual.telefono || "";
+
+            document.getElementById("ofertaEmail").value =
+                ofertaActual.email || "";
+
+            document.getElementById("ofertaTransporte").value =
+                Number(ofertaActual.transporte) || 0;
+
+            document.getElementById("ofertaOtros").value =
+                Number(ofertaActual.otros) || 0;
+
+            document.getElementById("ofertaIva").value =
+                Number(ofertaActual.iva ?? 21);
+
+            document.getElementById("ofertaObservaciones").value =
+                ofertaActual.observaciones || "";
+
+            destinoActual =
+                ofertaActual.destino || "cliente";
+
+            actualizarDestino();
+
+            pintarLineas();
+
+            recalcular();
+
+            actualizarEstadoBadge();
+
+            actualizarPreview();
+
+        }
+
+
+        /* =====================================================
+           CLIENTES
+        ====================================================== */
+
+        function buscarClientes() {
+
+            const input =
+                document.getElementById("ofertaClienteBuscar");
+
+            const contenedor =
+                document.getElementById("clienteSuggestions");
+
+            const texto = normalizar(input.value);
+
+            if (!texto) {
+
+                contenedor.style.display = "none";
+                contenedor.innerHTML = "";
+
+                return;
+            }
+
+            const resultados =
+                CLIENTES_STEIL
+                    .filter(function (cliente) {
+
+                        return normalizar(cliente)
+                            .includes(texto);
+
+                    })
+                    .slice(0, 12);
+
+
+            if (!resultados.length) {
+
+                contenedor.innerHTML =
+                    '<div class="cliente-suggestion">' +
+                    'No se han encontrado clientes' +
+                    '</div>';
+
+                contenedor.style.display = "block";
+
+                return;
+            }
+
+
+            contenedor.innerHTML =
+                resultados.map(function (cliente) {
+
+                    const datos =
+                        cargarDatosCliente(cliente);
+
+                    return (
+                        '<div class="cliente-suggestion" ' +
+                        'data-cliente="' +
+                        escapar(cliente) +
+                        '">' +
+
+                        '<strong>' +
+                        escapar(cliente) +
+                        '</strong>' +
+
+                        (
+                            datos.email
+                                ? '<small>' +
+                                  escapar(datos.email) +
+                                  '</small>'
+                                : '<small>Sin datos de contacto guardados</small>'
+                        ) +
+
+                        '</div>'
+                    );
+
+                }).join("");
+
+            contenedor.style.display = "block";
+
+
+            contenedor
+                .querySelectorAll(".cliente-suggestion[data-cliente]")
+                .forEach(function (elemento) {
+
+                    elemento.addEventListener(
+                        "click",
+                        function () {
+
+                            seleccionarCliente(
+                                elemento.getAttribute(
+                                    "data-cliente"
+                                )
+                            );
+
+                        }
+                    );
+
+                });
+
+        }
+
+
+        function seleccionarCliente(cliente) {
+
+            const datos =
+                cargarDatosCliente(cliente);
+
+            ofertaActual.cliente = cliente;
+            ofertaActual.contacto = datos.contacto || "";
+            ofertaActual.telefono = datos.telefono || "";
+            ofertaActual.email = datos.email || "";
+
+            document.getElementById(
+                "clienteSuggestions"
+            ).style.display = "none";
+
+            pintarFormulario();
+
+        }
+
+
+        /* =====================================================
+           DESTINATARIO
+        ====================================================== */
+
+        function actualizarDestino() {
+
+            const cliente =
+                document.getElementById("destinoCliente");
+
+            const masivo =
+                document.getElementById("destinoMasivo");
+
+            const clienteBox =
+                document.getElementById("clienteBox");
+
+            const massiveBox =
+                document.getElementById("massiveBox");
+
+
+            if (destinoActual === "masivo") {
+
+                cliente.classList.remove("active");
+                masivo.classList.add("active");
+
+                clienteBox.style.display = "none";
+                massiveBox.classList.add("active");
+
+            } else {
+
+                cliente.classList.add("active");
+                masivo.classList.remove("active");
+
+                clienteBox.style.display = "block";
+                massiveBox.classList.remove("active");
+
+            }
+
+        }
+
+
+        /* =====================================================
+           LINEAS
+        ====================================================== */
+
+        function pintarLineas() {
+
+            const tbody =
+                document.getElementById("ofertaLineas");
+
+            if (!tbody) {
+                return;
+            }
+
+            tbody.innerHTML = "";
+
+
+            if (
+                !ofertaActual.lineas ||
+                !ofertaActual.lineas.length
+            ) {
+
+                añadirLinea(false);
+
+                return;
+
+            }
+
+
+            ofertaActual.lineas.forEach(
+                function (linea, indice) {
+
+                    crearFilaLinea(
+                        linea,
+                        indice
+                    );
+
+                }
+            );
+
+        }
+
+
+        function añadirLinea(recalcularAhora) {
+
+            if (!ofertaActual) {
+                return;
+            }
+
+            if (!Array.isArray(ofertaActual.lineas)) {
+                ofertaActual.lineas = [];
+            }
+
+            ofertaActual.lineas.push({
+                descripcion: "",
+                cantidad: 1,
+                precio: 0,
+                descuento: 0
+            });
+
+            crearFilaLinea(
+                ofertaActual.lineas[
+                    ofertaActual.lineas.length - 1
+                ],
+                ofertaActual.lineas.length - 1
+            );
+
+            if (recalcularAhora !== false) {
+                recalcular();
+            }
+
+        }
+
+
+        function crearFilaLinea(linea, indice) {
+
+            const tbody =
+                document.getElementById("ofertaLineas");
+
+            const tr =
+                document.createElement("tr");
+
+            tr.setAttribute(
+                "data-indice",
+                indice
+            );
+
+
+            tr.innerHTML =
+
+                '<td class="line-sugerencias">' +
+
+                    '<input ' +
+                        'class="line-desc" ' +
+                        'type="text" ' +
+                        'value="' +
+                        escapar(linea.descripcion || "") +
+                        '" ' +
+                        'placeholder="Ej. Cable 1,5 mm² azul" ' +
+                        'autocomplete="off">' +
+
+                    '<div class="line-suggestions"></div>' +
+
+                '</td>' +
+
+
+                '<td>' +
+
+                    '<input ' +
+                        'class="line-cantidad" ' +
+                        'type="number" ' +
+                        'min="0" ' +
+                        'step="0.01" ' +
+                        'value="' +
+                        Number(linea.cantidad || 1) +
+                        '">' +
+
+                '</td>' +
+
+
+                '<td>' +
+
+                    '<input ' +
+                        'class="line-precio" ' +
+                        'type="number" ' +
+                        'min="0" ' +
+                        'step="0.0001" ' +
+                        'value="' +
+                        Number(linea.precio || 0) +
+                        '">' +
+
+                '</td>' +
+
+
+                '<td>' +
+
+                    '<input ' +
+                        'class="line-descuento" ' +
+                        'type="number" ' +
+                        'min="0" ' +
+                        'max="100" ' +
+                        'step="0.01" ' +
+                        'value="' +
+                        Number(linea.descuento || 0) +
+                        '">' +
+
+                '</td>' +
+
+
+                '<td class="line-import">' +
+                    '0,00 €' +
+                '</td>' +
+
+
+                '<td>' +
+
+                    '<button ' +
+                        'type="button" ' +
+                        'class="btn-remove-line" ' +
+                        'title="Eliminar línea">' +
+
+                        '<i class="fa-solid fa-trash"></i>' +
+
+                    '</button>' +
+
+                '</td>';
+
+
+            tbody.appendChild(tr);
+
+
+            const descripcion =
+                tr.querySelector(".line-desc");
+
+            const cantidad =
+                tr.querySelector(".line-cantidad");
+
+            const precio =
+                tr.querySelector(".line-precio");
+
+            const descuento =
+                tr.querySelector(".line-descuento");
+
+            const eliminar =
+                tr.querySelector(".btn-remove-line");
+
+
+            descripcion.addEventListener(
+                "input",
+                function () {
+
+                    ofertaActual.lineas[indice].descripcion =
+                        descripcion.value;
+
+                    mostrarSugerenciasLinea(
+                        descripcion,
+                        tr.querySelector(".line-suggestions")
+                    );
+
+                    recalcular();
+
+                }
+            );
+
+
+            descripcion.addEventListener(
+                "focus",
+                function () {
+
+                    mostrarSugerenciasLinea(
+                        descripcion,
+                        tr.querySelector(".line-suggestions")
+                    );
+
+                }
+            );
+
+
+            cantidad.addEventListener(
+                "input",
+                function () {
+
+                    ofertaActual.lineas[indice].cantidad =
+                        Math.max(
+                            0,
+                            Number(cantidad.value) || 0
+                        );
+
+                    recalcular();
+
+                }
+            );
+
+
+            precio.addEventListener(
+                "input",
+                function () {
+
+                    ofertaActual.lineas[indice].precio =
+                        Math.max(
+                            0,
+                            Number(precio.value) || 0
+                        );
+
+                    recalcular();
+
+                }
+            );
+
+
+            descuento.addEventListener(
+                "input",
+                function () {
+
+                    ofertaActual.lineas[indice].descuento =
+                        Math.min(
+                            100,
+                            Math.max(
+                                0,
+                                Number(descuento.value) || 0
+                            )
+                        );
+
+                    recalcular();
+
+                }
+            );
+
+
+            eliminar.addEventListener(
+                "click",
+                function () {
+
+                    ofertaActual.lineas.splice(
+                        indice,
+                        1
+                    );
+
+                    pintarLineas();
+                    recalcular();
+
+                }
+            );
+
+        }
+
+
+        function mostrarSugerenciasLinea(
+            input,
+            contenedor
+        ) {
+
+            const texto =
+                normalizar(input.value);
+
+            if (!texto) {
+
+                contenedor.style.display = "none";
+                contenedor.innerHTML = "";
+
+                return;
+
+            }
+
+
+            const historial =
+                cargarDescripciones();
+
+            const resultados =
+                historial
+                    .filter(function (item) {
+
+                        return normalizar(
+                            item.descripcion
+                        ).includes(texto);
+
+                    })
+                    .sort(function (a, b) {
+
+                        return new Date(b.fecha) -
+                            new Date(a.fecha);
+
+                    })
+                    .slice(0, 8);
+
+
+            if (!resultados.length) {
+
+                contenedor.style.display = "none";
+                contenedor.innerHTML = "";
+
+                return;
+
+            }
+
+
+            contenedor.innerHTML =
+                resultados.map(function (item) {
+
+                    return (
+
+                        '<div class="line-suggestion" ' +
+                        'data-descripcion="' +
+                        escapar(item.descripcion) +
+                        '" ' +
+                        'data-precio="' +
+                        Number(item.precio || 0) +
+                        '">' +
+
+                        '<strong>' +
+                        escapar(item.descripcion) +
+                        '</strong>' +
+
+                        '<small>' +
+                        'Último precio: ' +
+                        euros(item.precio) +
+                        '</small>' +
+
+                        '</div>'
+
+                    );
+
+                }).join("");
+
+
+            contenedor.style.display = "block";
+
+
+            contenedor
+                .querySelectorAll(
+                    ".line-suggestion"
+                )
+                .forEach(function (elemento) {
+
+                    elemento.addEventListener(
+                        "click",
+                        function () {
+
+                            input.value =
+                                elemento.getAttribute(
+                                    "data-descripcion"
+                                );
+
+                            const fila =
+                                input.closest("tr");
+
+                            const indice =
+                                Number(
+                                    fila.getAttribute(
+                                        "data-indice"
+                                    )
+                                );
+
+                            ofertaActual.lineas[
+                                indice
+                            ].descripcion =
+                                input.value;
+
+                            ofertaActual.lineas[
+                                indice
+                            ].precio =
+                                Number(
+                                    elemento.getAttribute(
+                                        "data-precio"
+                                    )
+                                ) || 0;
+
+
+                            fila.querySelector(
+                                ".line-precio"
+                            ).value =
+                                ofertaActual.lineas[
+                                    indice
+                                ].precio;
+
+
+                            contenedor.style.display =
+                                "none";
+
+                            recalcular();
+
+                        }
+                    );
+
+                });
+
+        }
+
+
+        /* =====================================================
+           RECÁLCULO
+        ====================================================== */
+
+        function recalcular() {
+
+            if (!ofertaActual) {
+                return;
+            }
+
+            let base = 0;
+
+
+            ofertaActual.lineas.forEach(
+                function (linea, indice) {
+
+                    const cantidad =
+                        Math.max(
+                            0,
+                            Number(linea.cantidad) || 0
+                        );
+
+                    const precio =
+                        Math.max(
+                            0,
+                            Number(linea.precio) || 0
+                        );
+
+                    const descuento =
+                        Math.min(
+                            100,
+                            Math.max(
+                                0,
+                                Number(linea.descuento) || 0
+                            )
+                        );
+
+                    const importe =
+                        cantidad *
+                        precio *
+                        (1 - descuento / 100);
+
+                    base += importe;
+
+
+                    const fila =
+                        document.querySelector(
+                            '#ofertaLineas tr[data-indice="' +
+                            indice +
+                            '"]'
+                        );
+
+                    if (fila) {
+
+                        const celda =
+                            fila.querySelector(
+                                ".line-import"
+                            );
+
+                        if (celda) {
+                            celda.textContent =
+                                euros(importe);
+                        }
+
+                    }
+
+                }
+            );
+
+
+            const transporte =
+                Math.max(
+                    0,
+                    Number(
+                        document.getElementById(
+                            "ofertaTransporte"
+                        ).value
+                    ) || 0
+                );
+
+
+            const otros =
+                Math.max(
+                    0,
+                    Number(
+                        document.getElementById(
+                            "ofertaOtros"
+                        ).value
+                    ) || 0
+                );
+
+
+            const ivaPorcentaje =
+                Math.max(
+                    0,
+                    Number(
+                        document.getElementById(
+                            "ofertaIva"
+                        ).value
+                    ) || 0
+                );
+
+
+            const subtotal =
+                base +
+                transporte +
+                otros;
+
+
+            const importeIva =
+                subtotal *
+                ivaPorcentaje /
+                100;
+
+
+            const total =
+                subtotal +
+                importeIva;
+
+
+            ofertaActual.transporte =
+                transporte;
+
+            ofertaActual.otros =
+                otros;
+
+            ofertaActual.iva =
+                ivaPorcentaje;
+
+
+            document.getElementById(
+                "ofertaBase"
+            ).textContent =
+                euros(base);
+
+
+            document.getElementById(
+                "ofertaImporteIva"
+            ).textContent =
+                euros(importeIva);
+
+
+            document.getElementById(
+                "ofertaTotal"
+            ).textContent =
+                euros(total);
+
+
+            actualizarPreview();
+
+        }
+
+
+        function obtenerTotal() {
+
+            if (!ofertaActual) {
+                return 0;
+            }
+
+            let base = 0;
+
+            ofertaActual.lineas.forEach(
+                function (linea) {
+
+                    const cantidad =
+                        Number(linea.cantidad) || 0;
+
+                    const precio =
+                        Number(linea.precio) || 0;
+
+                    const descuento =
+                        Number(linea.descuento) || 0;
+
+                    base +=
+                        cantidad *
+                        precio *
+                        (1 - descuento / 100);
+
+                }
+            );
+
+
+            const subtotal =
+                base +
+                (Number(ofertaActual.transporte) || 0) +
+                (Number(ofertaActual.otros) || 0);
+
+
+            return subtotal +
+                subtotal *
+                (Number(ofertaActual.iva) || 0) /
+                100;
+
+        }
+
+
+        /* =====================================================
+           GUARDAR OFERTA
+        ====================================================== */
+
+        function recogerFormulario() {
+
+            if (!ofertaActual) {
+                return;
+            }
+
+            ofertaActual.fecha =
+                document.getElementById(
+                    "ofertaFecha"
+                ).value || hoyISO();
+
+            ofertaActual.estado =
+                document.getElementById(
+                    "ofertaEstado"
+                ).value;
+
+            ofertaActual.cliente =
+                document.getElementById(
+                    "ofertaCliente"
+                ).value.trim();
+
+            ofertaActual.contacto =
+                document.getElementById(
+                    "ofertaContacto"
+                ).value.trim();
+
+            ofertaActual.telefono =
+                document.getElementById(
+                    "ofertaTelefono"
+                ).value.trim();
+
+            ofertaActual.email =
+                document.getElementById(
+                    "ofertaEmail"
+                ).value.trim();
+
+            ofertaActual.transporte =
+                Number(
+                    document.getElementById(
+                        "ofertaTransporte"
+                    ).value
+                ) || 0;
+
+            ofertaActual.otros =
+                Number(
+                    document.getElementById(
+                        "ofertaOtros"
+                    ).value
+                ) || 0;
+
+            ofertaActual.iva =
+                Number(
+                    document.getElementById(
+                        "ofertaIva"
+                    ).value
+                ) || 0;
+
+            ofertaActual.observaciones =
+                document.getElementById(
+                    "ofertaObservaciones"
+                ).value.trim();
+
+            ofertaActual.destino =
+                destinoActual;
+
+
+            if (
+                destinoActual === "cliente" &&
+                ofertaActual.cliente
+            ) {
+
+                guardarDatosCliente(
+                    ofertaActual.cliente
+                );
+
+            }
+
+
+            ofertaActual.total =
+                obtenerTotal();
+
+            ofertaActual.modificada =
+                new Date().toISOString();
+
+        }
+
+
+        function guardarOferta() {
+
+            if (!ofertaActual) {
+                nuevaOferta();
+            }
+
+            recogerFormulario();
+
+            if (
+                destinoActual === "cliente" &&
+                !ofertaActual.cliente
+            ) {
+
+                mostrarAviso(
+                    "Selecciona un cliente antes de guardar."
+                );
+
+                return;
+
+            }
+
+
+            guardarDescripciones(
+                ofertaActual.lineas
+            );
+
+
+            const indice =
+                ofertas.findIndex(
+                    function (item) {
+
+                        return item.numero ===
+                            ofertaActual.numero;
+
+                    }
+                );
+
+
+            if (indice >= 0) {
+
+                ofertas[indice] =
+                    JSON.parse(
+                        JSON.stringify(ofertaActual)
+                    );
+
+            } else {
+
+                ofertaActual.creada =
+                    new Date().toISOString();
+
+                ofertas.unshift(
+                    JSON.parse(
+                        JSON.stringify(ofertaActual)
+                    )
+                );
+
+            }
+
+
+            guardarDatos();
+
+            pintarHistorico();
+            actualizarEstadisticas();
+
+            mostrarAviso(
+                "Oferta " +
+                ofertaActual.numero +
+                " guardada correctamente."
+            );
+
+        }
+
+
+        function marcarEnviada() {
+
+            if (!ofertaActual) {
+                nuevaOferta();
+            }
+
+            recogerFormulario();
+
+            ofertaActual.estado =
+                "Enviada";
+
+            document.getElementById(
+                "ofertaEstado"
+            ).value =
+                "Enviada";
+
+            guardarOferta();
+
+            actualizarEstadoBadge();
+
+            mostrarAviso(
+                "Oferta " +
+                ofertaActual.numero +
+                " marcada como enviada."
+            );
+
+        }
+
+
+        /* =====================================================
+           HISTÓRICO
+        ====================================================== */
+
+        function pintarHistorico() {
+
+            const tbody =
+                document.getElementById(
+                    "historicoOfertas"
+                );
+
+            if (!tbody) {
+                return;
+            }
+
+            const filtro =
+                document.getElementById(
+                    "filtroEstadoOfertas"
+                ).value;
+
+
+            const lista =
+                ofertas.filter(
+                    function (oferta) {
+
+                        return filtro === "Todos" ||
+                            oferta.estado === filtro;
+
+                    }
+                );
+
+
+            if (!lista.length) {
+
+                tbody.innerHTML =
+                    '<tr>' +
+                    '<td colspan="6" style="padding:25px;text-align:center;color:#888;">' +
+                    'Todavía no hay ofertas guardadas.' +
+                    '</td>' +
+                    '</tr>';
+
+                actualizarEstadisticas();
+
+                return;
+
+            }
+
+
+            tbody.innerHTML =
+                lista.map(
+                    function (oferta) {
+
+                        const estadoClase =
+                            "estado-" +
+                            normalizar(
+                                oferta.estado
+                            ).replace(
+                                /\s+/g,
+                                ""
+                            );
+
+
+                        const cliente =
+                            oferta.destino === "masivo"
+                                ? "ENVÍO MASIVO"
+                                : (
+                                    oferta.cliente ||
+                                    "Sin cliente"
+                                );
+
+
+                        return (
+
+                            '<tr>' +
+
+                                '<td>' +
+                                    '<strong>' +
+                                    escapar(
+                                        oferta.numero
+                                    ) +
+                                    '</strong>' +
+                                '</td>' +
+
+                                '<td>' +
+                                    formatoFecha(
+                                        oferta.fecha
+                                    ) +
+                                '</td>' +
+
+                                '<td>' +
+                                    escapar(cliente) +
+                                '</td>' +
+
+                                '<td>' +
+                                    euros(
+                                        oferta.total
+                                    ) +
+                                '</td>' +
+
+                                '<td>' +
+
+                                    '<span class="estado-badge ' +
+                                    estadoClase +
+                                    '">' +
+
+                                    escapar(
+                                        oferta.estado
+                                    ) +
+
+                                    '</span>' +
+
+                                '</td>' +
+
+                                '<td>' +
+
+                                    '<div class="historico-actions">' +
+
+                                        '<button ' +
+                                            'type="button" ' +
+                                            'class="mini-btn btn-abrir-oferta" ' +
+                                            'data-numero="' +
+                                            escapar(
+                                                oferta.numero
+                                            ) +
+                                            '">' +
+                                            'Abrir' +
+                                        '</button>' +
+
+                                    '</div>' +
+
+                                '</td>' +
+
+                            '</tr>'
+
+                        );
+
+                    }
+                ).join("");
+
+
+            tbody
+                .querySelectorAll(
+                    ".btn-abrir-oferta"
+                )
+                .forEach(
+                    function (boton) {
+
+                        boton.addEventListener(
+                            "click",
+                            function () {
+
+                                abrirOferta(
+                                    boton.getAttribute(
+                                        "data-numero"
+                                    )
+                                );
+
+                            }
+                        );
+
+                    }
+                );
+
+
+            actualizarEstadisticas();
+
+        }
+
+
+        function abrirOferta(numero) {
+
+            const encontrada =
+                ofertas.find(
+                    function (oferta) {
+
+                        return oferta.numero ===
+                            numero;
+
+                    }
+                );
+
+
+            if (!encontrada) {
+                return;
+            }
+
+
+            ofertaActual =
+                JSON.parse(
+                    JSON.stringify(encontrada)
+                );
+
+
+            destinoActual =
+                ofertaActual.destino ||
+                "cliente";
+
+
+            pintarFormulario();
+
+
+            window.scrollTo({
+                top: 0,
+                behavior: "smooth"
+            });
+
+        }
+
+
+        /* =====================================================
+           ESTADÍSTICAS
+        ====================================================== */
+
+        function actualizarEstadisticas() {
+
+            const total =
+                ofertas.length;
+
+            const pendientes =
+                ofertas.filter(
+                    function (o) {
+                        return o.estado === "Pendiente";
+                    }
+                ).length;
+
+            const aceptadas =
+                ofertas.filter(
+                    function (o) {
+                        return o.estado === "Aceptada";
+                    }
+                ).length;
+
+            const enviadas =
+                ofertas.filter(
+                    function (o) {
+                        return o.estado === "Enviada";
+                    }
+                ).length;
+
+
+            document.getElementById(
+                "statTotal"
+            ).textContent =
+                total;
+
+            document.getElementById(
+                "statPendientes"
+            ).textContent =
+                pendientes;
+
+            document.getElementById(
+                "statAceptadas"
+            ).textContent =
+                aceptadas;
+
+            document.getElementById(
+                "statEnviadas"
+            ).textContent =
+                enviadas;
+
+        }
+
+
+        /* =====================================================
+           ESTADO
+        ====================================================== */
+
+        function actualizarEstadoBadge() {
+
+            if (!ofertaActual) {
+                return;
+            }
+
+            const estado =
+                ofertaActual.estado ||
+                "Borrador";
+
+            const clase =
+                "estado-" +
+                normalizar(
+                    estado
+                ).replace(
+                    /\s+/g,
+                    ""
+                );
+
+
+            document.getElementById(
+                "ofertaEstadoBadge"
+            ).innerHTML =
+
+                '<span class="estado-badge ' +
+                clase +
+                '">' +
+                escapar(estado) +
+                '</span>';
+
+        }
+
+
+        /* =====================================================
+           VISTA PREVIA
+        ====================================================== */
+
+        function actualizarPreview() {
+
+            if (!ofertaActual) {
+                return;
+            }
+
+            document.getElementById(
+                "previewNumero"
+            ).textContent =
+                ofertaActual.numero || "";
+
+
+            document.getElementById(
+                "previewCliente"
+            ).textContent =
+
+                ofertaActual.destino === "masivo"
+                    ? "Envío masivo"
+                    : (
+                        ofertaActual.cliente ||
+                        "Cliente pendiente"
+                    );
+
+
+            const contenedor =
+                document.getElementById(
+                    "previewLineas"
+                );
+
+
+            const lineas =
+                (ofertaActual.lineas || [])
+                    .filter(
+                        function (linea) {
+
+                            return String(
+                                linea.descripcion || ""
+                            ).trim();
+
+                        }
+                    );
+
+
+            contenedor.innerHTML =
+                lineas.map(
+                    function (linea) {
+
+                        const importe =
+                            (
+                                Number(linea.cantidad) || 0
+                            ) *
+                            (
+                                Number(linea.precio) || 0
+                            ) *
+                            (
+                                1 -
+                                (
+                                    Number(
+                                        linea.descuento
+                                    ) || 0
+                                ) / 100
+                            );
+
+
+                        return (
+
+                            '<div class="preview-line">' +
+
+                                '<span>' +
+                                    escapar(
+                                        linea.descripcion
+                                    ) +
+                                '</span>' +
+
+                                '<strong>' +
+                                    euros(importe) +
+                                '</strong>' +
+
+                            '</div>'
+
+                        );
+
+                    }
+                ).join("");
+
+
+            document.getElementById(
+                "previewTotal"
+            ).textContent =
+                euros(
+                    obtenerTotal()
+                );
+
+        }
+
+
+        /* =====================================================
+           EVENTOS
+        ====================================================== */
+
+        function inicializarEventos() {
+
+            document.getElementById(
+                "ofertaNueva"
+            ).addEventListener(
+                "click",
+                nuevaOferta
+            );
+
+
+            document.getElementById(
+                "ofertaGuardar"
+            ).addEventListener(
+                "click",
+                guardarOferta
+            );
+
+
+            document.getElementById(
+                "ofertaGuardarTop"
+            ).addEventListener(
+                "click",
+                guardarOferta
+            );
+
+
+            document.getElementById(
+                "ofertaMarcarEnviada"
+            ).addEventListener(
+                "click",
+                marcarEnviada
+            );
+
+
+            document.getElementById(
+                "ofertaVistaPrevia"
+            ).addEventListener(
+                "click",
+                function () {
+
+                    recogerFormulario();
+                    recalcular();
+                    actualizarPreview();
+
+                    mostrarAviso(
+                        "Vista previa actualizada."
+                    );
+
+                }
+            );
+
+
+            document.getElementById(
+                "ofertaAgregarLinea"
+            ).addEventListener(
+                "click",
+                function () {
+
+                    añadirLinea(true);
+
+                }
+            );
+
+
+            document.getElementById(
+                "ofertaClienteBuscar"
+            ).addEventListener(
+                "input",
+                buscarClientes
+            );
+
+
+            document.getElementById(
+                "ofertaClienteBuscar"
+            ).addEventListener(
+                "focus",
+                buscarClientes
+            );
+
+
+            document.getElementById(
+                "destinoCliente"
+            ).addEventListener(
+                "click",
+                function () {
+
+                    destinoActual =
+                        "cliente";
+
+                    ofertaActual.destino =
+                        "cliente";
+
+                    actualizarDestino();
+                    actualizarPreview();
+
+                }
+            );
+
+
+            document.getElementById(
+                "destinoMasivo"
+            ).addEventListener(
+                "click",
+                function () {
+
+                    destinoActual =
+                        "masivo";
+
+                    ofertaActual.destino =
+                        "masivo";
+
+                    actualizarDestino();
+                    actualizarPreview();
+
+                }
+            );
+
+
+            document.getElementById(
+                "ofertaEstado"
+            ).addEventListener(
+                "change",
+                function () {
+
+                    ofertaActual.estado =
+                        this.value;
+
+                    actualizarEstadoBadge();
+
+                }
+            );
+
+
+            document.getElementById(
+                "ofertaFecha"
+            ).addEventListener(
+                "change",
+                function () {
+
+                    ofertaActual.fecha =
+                        this.value;
+
+                }
+            );
+
+
+            document.getElementById(
+                "ofertaTransporte"
+            ).addEventListener(
+                "input",
+                recalcular
+            );
+
+
+            document.getElementById(
+                "ofertaOtros"
+            ).addEventListener(
+                "input",
+                recalcular
+            );
+
+
+            document.getElementById(
+                "ofertaIva"
+            ).addEventListener(
+                "input",
+                recalcular
+            );
+
+
+            document.getElementById(
+                "ofertaCliente"
+            ).addEventListener(
+                "input",
+                function () {
+
+                    ofertaActual.cliente =
+                        this.value;
+
+                }
+            );
+
+
+            document.getElementById(
+                "ofertaContacto"
+            ).addEventListener(
+                "input",
+                function () {
+
+                    ofertaActual.contacto =
+                        this.value;
+
+                }
+            );
+
+
+            document.getElementById(
+                "ofertaTelefono"
+            ).addEventListener(
+                "input",
+                function () {
+
+                    ofertaActual.telefono =
+                        this.value;
+
+                }
+            );
+
+
+            document.getElementById(
+                "ofertaEmail"
+            ).addEventListener(
+                "input",
+                function () {
+
+                    ofertaActual.email =
+                        this.value;
+
+                }
+            );
+
+
+            document.getElementById(
+                "ofertaObservaciones"
+            ).addEventListener(
+                "input",
+                function () {
+
+                    ofertaActual.observaciones =
+                        this.value;
+
+                }
+            );
+
+
+            document.getElementById(
+                "filtroEstadoOfertas"
+            ).addEventListener(
+                "change",
+                pintarHistorico
+            );
+
+
+            document.addEventListener(
+                "click",
+                function (event) {
+
+                    const clienteWrap =
+                        document.querySelector(
+                            "#page-ofertas .cliente-search-wrap"
+                        );
+
+                    const lineas =
+                        document.querySelectorAll(
+                            "#page-ofertas .line-sugerencias"
+                        );
+
+
+                    if (
+                        clienteWrap &&
+                        !clienteWrap.contains(
+                            event.target
+                        )
+                    ) {
+
+                        const sugerencias =
+                            document.getElementById(
+                                "clienteSuggestions"
+                            );
+
+                        if (sugerencias) {
+                            sugerencias.style.display =
+                                "none";
+                        }
+
+                    }
+
+
+                    lineas.forEach(
+                        function (linea) {
+
+                            if (
+                                !linea.contains(
+                                    event.target
+                                )
+                            ) {
+
+                                const sugerencias =
+                                    linea.querySelector(
+                                        ".line-suggestions"
+                                    );
+
+                                if (sugerencias) {
+                                    sugerencias.style.display =
+                                        "none";
+                                }
+
+                            }
+
+                        }
+                    );
+
+                }
+            );
+
+        }
+
+
+        /* =====================================================
+           INICIO
+        ====================================================== */
+
+        function iniciar() {
+
+            cargarDatos();
+
+            inicializarEventos();
+
+            nuevaOferta();
+
+            pintarHistorico();
+
+            actualizarEstadisticas();
+
+        }
+
+
+        iniciar();
+
+    })();
+
+    </script>
+
+</div>
 
 
             <!-- =================================================
