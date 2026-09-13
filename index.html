@@ -307,7 +307,7 @@
                         <div class="kpi-content">
 
                             <span>
-                                Albaranes pendientes
+                                 pendientes
                             </span>
 
                             <strong>
@@ -11106,268 +11106,96 @@
             <!-- =================================================
                  ALBARANES
             ================================================== -->
+<!-- =================================================
+     ALBARANES
+================================================== -->
 
-            <div
-                class="page"
-                id="page-albaranes"
+<div
+    class="page"
+    id="page-albaranes"
+>
+
+    <div class="page-header">
+
+        <div>
+
+            <span class="page-kicker">
+                GESTIÓN DE ALBARANES
+            </span>
+
+            <h1>
+                Albaranes
+            </h1>
+
+            <p>
+                Consulta y registra los albaranes de STEIL.
+            </p>
+
+        </div>
+
+
+        <div class="page-actions">
+
+            <button
+                class="btn btn-primary"
+                id="btnNuevoAlbaran"
             >
 
-                <div class="page-header">
+                <i class="fa-solid fa-plus"></i>
 
-                    <div>
+                Nuevo albarán
 
-                        <span class="page-kicker">
-                            GESTIÓN DE ALBARANES
-                        </span>
+            </button>
 
-                        <h1>
-                            Albaranes
-                        </h1>
+        </div>
 
-                        <p>
-                            Escanea, guarda y consulta los albaranes de STEIL.
-                        </p>
+    </div>
 
-                    </div>
 
+    <!-- OPCIONES PRINCIPALES -->
 
-                    <div class="page-actions">
+    <div class="albaranes-options">
 
-                        <button
-                            class="btn btn-primary"
-                            id="btnNuevoAlbaran"
-                        >
 
-                            <i class="fa-solid fa-plus"></i>
+        <!-- CONSULTAR ALBARANES -->
 
-                            Nuevo albarán
+        <div
+            class="albaran-option-card"
+            id="optionConsultar"
+        >
 
-                        </button>
+            <div class="albaran-option-icon">
 
-                    </div>
-
-                </div>
-
-
-                <!-- OPCIONES -->
-
-                <div class="albaranes-options">
-
-
-                    <!-- ESCANEAR -->
-
-                    <div
-                        class="albaran-option-card"
-                        id="optionEscanear"
-                    >
-
-                        <div class="albaran-option-icon">
-                            <i class="fa-solid fa-camera"></i>
-                        </div>
-
-                        <div class="albaran-option-content">
-
-                            <h2>
-                                Escanear albarán
-                            </h2>
-
-                            <p>
-                                Haz una fotografía del albarán y guarda sus datos.
-                            </p>
-
-                        </div>
-
-                        <div class="albaran-option-arrow">
-                            <i class="fa-solid fa-chevron-right"></i>
-                        </div>
-
-                    </div>
-
-
-                    <!-- CONSULTAR -->
-
-                    <div
-                        class="albaran-option-card"
-                        id="optionConsultar"
-                    >
-
-                        <div class="albaran-option-icon">
-                            <i class="fa-solid fa-folder-open"></i>
-                        </div>
-
-                        <div class="albaran-option-content">
-
-                            <h2>
-                                Consultar albaranes
-                            </h2>
-
-                            <p>
-                                Busca y consulta los albaranes guardados.
-                            </p>
-
-                        </div>
-
-                        <div class="albaran-option-arrow">
-                            <i class="fa-solid fa-chevron-right"></i>
-                        </div>
-
-                    </div>
-
-                </div>
-
-
-                <!-- RESUMEN -->
-
-                <div class="albaranes-summary">
-
-                    <div class="summary-card">
-
-                        <span>
-                            Total albaranes
-                        </span>
-
-                        <strong id="totalAlbaranes">
-                            0
-                        </strong>
-
-                    </div>
-
-
-                    <div class="summary-card">
-
-                        <span>
-                            Pendientes
-                        </span>
-
-                        <strong id="albaranesPendientes">
-                            0
-                        </strong>
-
-                    </div>
-
-
-                    <div class="summary-card">
-
-                        <span>
-                            Firmados
-                        </span>
-
-                        <strong id="albaranesFirmados">
-                            0
-                        </strong>
-
-                    </div>
-
-
-                    <div class="summary-card">
-
-                        <span>
-                            Este mes
-                        </span>
-
-                        <strong id="albaranesMes">
-                            0
-                        </strong>
-
-                    </div>
-
-                </div>
-
-
-                <!-- ÚLTIMOS ALBARANES -->
-
-                <div class="panel albaranes-recent-panel">
-
-                    <div class="panel-header">
-
-                        <div>
-
-                            <h2>
-                                Últimos albaranes
-                            </h2>
-
-                            <span>
-                                Albaranes registrados recientemente
-                            </span>
-
-                        </div>
-
-                        <button
-                            class="text-button"
-                            id="verTodosAlbaranes"
-                        >
-                            Ver todos
-                        </button>
-
-                    </div>
-
-
-                    <div class="albaranes-table-container">
-
-                        <table class="albaranes-table">
-
-                            <thead>
-
-                                <tr>
-
-                                    <th>
-                                        ALBARÁN
-                                    </th>
-
-                                    <th>
-                                        FECHA
-                                    </th>
-
-                                    <th>
-                                        CLIENTE
-                                    </th>
-
-                                    <th>
-                                        ESTADO
-                                    </th>
-
-                                    <th>
-                                        ACCIONES
-                                    </th>
-
-                                </tr>
-
-                            </thead>
-
-
-                            <tbody id="albaranesTableBody">
-
-                                <tr class="empty-table-row">
-
-                                    <td colspan="5">
-
-                                        <div class="empty-table">
-
-                                            <i class="fa-solid fa-file-circle-plus"></i>
-
-                                            <strong>
-                                                Todavía no hay albaranes
-                                            </strong>
-
-                                            <span>
-                                                Los albaranes que registres aparecerán aquí.
-                                            </span>
-
-                                        </div>
-
-                                    </td>
-
-                                </tr>
-
-                            </tbody>
-
-                        </table>
-
-                    </div>
-
-                </div>
+                <i class="fa-solid fa-folder-open"></i>
 
             </div>
+
+
+            <div class="albaran-option-content">
+
+                <h2>
+                    Consultar albaranes
+                </h2>
+
+                <p>
+                    Busca y consulta los albaranes registrados.
+                </p>
+
+            </div>
+
+
+            <div class="albaran-option-arrow">
+
+                <i class="fa-solid fa-chevron-right"></i>
+
+            </div>
+
+        </div>
+
+
+    </div>
+
+</div>
 
 
             <!-- =================================================
