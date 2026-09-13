@@ -381,9 +381,15 @@
 
     function () {
 
-        mostrarPagina("albaranes-consulta");
+   function () {
 
-        renderConsultaAlbaranes();
+    mostrarPagina("albaranes-consulta");
+
+    renderConsultaAlbaranes();
+
+}
+
+
 
     }
 
