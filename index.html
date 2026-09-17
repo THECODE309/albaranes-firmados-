@@ -11093,7 +11093,7 @@
 
 
 <!-- =================================================
-     ALBARANES 
+     ALBARANES
 ================================================== -->
 
 <div
@@ -11114,7 +11114,7 @@
             </h1>
 
             <p>
-                Consulta y registra los albaranes de STEIL.
+                Escanea, guarda y consulta los albaranes de STEIL.
             </p>
 
         </div>
@@ -11125,6 +11125,334 @@
             <button
                 class="btn btn-primary"
                 id="btnNuevoAlbaran"
+                type="button"
+            >
+                <i class="fa-solid fa-plus"></i>
+                Nuevo albarán
+            </button>
+
+        </div>
+
+    </div>
+
+
+    <!-- =================================================
+         PESTAÑAS / OPCIONES PRINCIPALES
+    ================================================== -->
+
+    <div class="albaranes-options">
+
+        <!-- ESCANEAR -->
+
+        <div
+            class="albaran-option-card"
+            id="optionEscanear"
+        >
+
+            <div class="albaran-option-icon">
+                <i class="fa-solid fa-camera"></i>
+            </div>
+
+            <div class="albaran-option-content">
+
+                <h2>
+                    Escanear albarán
+                </h2>
+
+                <p>
+                    Haz una fotografía del albarán y guarda sus datos.
+                </p>
+
+            </div>
+
+            <div class="albaran-option-arrow">
+                <i class="fa-solid fa-chevron-right"></i>
+            </div>
+
+        </div>
+
+
+        <!-- SUBIR ARCHIVO -->
+
+        <div
+            class="albaran-option-card"
+            id="optionSubirArchivo"
+        >
+
+            <div class="albaran-option-icon">
+                <i class="fa-solid fa-file-arrow-up"></i>
+            </div>
+
+            <div class="albaran-option-content">
+
+                <h2>
+                    Subir archivo
+                </h2>
+
+                <p>
+                    Sube un albarán desde tu ordenador.
+                </p>
+
+            </div>
+
+            <div class="albaran-option-arrow">
+                <i class="fa-solid fa-chevron-right"></i>
+            </div>
+
+        </div>
+
+
+        <!-- CONSULTAR -->
+
+        <div
+            class="albaran-option-card"
+            id="optionConsultar"
+        >
+
+            <div class="albaran-option-icon">
+                <i class="fa-solid fa-folder-open"></i>
+            </div>
+
+            <div class="albaran-option-content">
+
+                <h2>
+                    Consultar albaranes
+                </h2>
+
+                <p>
+                    Busca y consulta los albaranes guardados.
+                </p>
+
+            </div>
+
+            <div class="albaran-option-arrow">
+                <i class="fa-solid fa-chevron-right"></i>
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- =================================================
+         INPUT OCULTO PARA SUBIR ARCHIVO
+    ================================================== -->
+
+    <input
+        type="file"
+        id="inputSubirAlbaran"
+        accept=".pdf,.jpg,.jpeg,.png"
+        style="display:none;"
+    >
+
+
+    <!-- =================================================
+         RESUMEN
+    ================================================== -->
+
+    <div class="albaranes-summary">
+
+        <div class="summary-card">
+
+            <span>
+                Total albaranes
+            </span>
+
+            <strong id="totalAlbaranes">
+                0
+            </strong>
+
+        </div>
+
+
+        <div class="summary-card">
+
+            <span>
+                Pendientes
+            </span>
+
+            <strong id="albaranesPendientes">
+                0
+            </strong>
+
+        </div>
+
+
+        <div class="summary-card">
+
+            <span>
+                Firmados
+            </span>
+
+            <strong id="albaranesFirmados">
+                0
+            </strong>
+
+        </div>
+
+
+        <div class="summary-card">
+
+            <span>
+                Este mes
+            </span>
+
+            <strong id="albaranesMes">
+                0
+            </strong>
+
+        </div>
+
+    </div>
+
+
+    <!-- =================================================
+         ÚLTIMOS ALBARANES
+    ================================================== -->
+
+    <div class="panel albaranes-recent-panel">
+
+        <div class="panel-header">
+
+            <div>
+
+                <h2>
+                    Últimos albaranes
+                </h2>
+
+                <span>
+                    Albaranes registrados recientemente
+                </span>
+
+            </div>
+
+
+            <button
+                class="text-button"
+                id="verTodosAlbaranes"
+                type="button"
+            >
+                Ver todos
+            </button>
+
+        </div>
+
+
+        <div class="albaranes-table-container">
+
+            <table class="albaranes-table">
+
+                <thead>
+
+                    <tr>
+
+                        <th>
+                            ALBARÁN
+                        </th>
+
+                        <th>
+                            FECHA
+                        </th>
+
+                        <th>
+                            CLIENTE
+                        </th>
+
+                        <th>
+                            ESTADO
+                        </th>
+
+                        <th>
+                            ACCIONES
+                        </th>
+
+                    </tr>
+
+                </thead>
+
+
+                <tbody id="albaranesTableBody">
+
+                    <tr class="empty-table-row">
+
+                        <td colspan="5">
+
+                            <div class="empty-table">
+
+                                <i class="fa-solid fa-file-circle-plus"></i>
+
+                                <strong>
+                                    Todavía no hay albaranes
+                                </strong>
+
+                                <span>
+                                    Los albaranes que registres aparecerán aquí.
+                                </span>
+
+                            </div>
+
+                        </td>
+
+                    </tr>
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- =================================================
+     CONSULTA DE ALBARANES
+================================================== -->
+
+<div
+    class="page"
+    id="page-albaranes-consulta"
+>
+
+    <div class="page-header">
+
+        <div>
+
+            <span class="page-kicker">
+                GESTIÓN DE ALBARANES
+            </span>
+
+            <h1>
+                Consultar albaranes
+            </h1>
+
+            <p>
+                Busca, filtra y consulta los albaranes registrados.
+            </p>
+
+        </div>
+
+
+        <div class="page-actions">
+
+            <button
+                class="btn btn-secondary"
+                id="btnVolverAlbaranes"
+                type="button"
+            >
+
+                <i class="fa-solid fa-arrow-left"></i>
+
+                Volver
+
+            </button>
+
+
+            <button
+                class="btn btn-primary"
+                id="btnNuevoAlbaranConsulta"
+                type="button"
             >
 
                 <i class="fa-solid fa-plus"></i>
@@ -11138,497 +11466,362 @@
     </div>
 
 
-<!-- =================================================
-     OPCIONES PRINCIPALES · ALBARANES
-================================================== -->
-
-<div class="albaranes-options">
-
-    <!-- ESCANEAR ALBARÁN -->
+    <!-- =================================================
+         FILTROS
+    ================================================== -->
 
     <div
-        class="albaran-option-card"
-        id="optionEscanear"
+        class="panel"
+        style="
+            margin-bottom:20px;
+            padding:20px;
+        "
     >
 
-        <div class="albaran-option-icon">
-
-            <i class="fa-solid fa-camera"></i>
-
-        </div>
-
-        <div class="albaran-option-content">
-
-            <h2>
-                Escanear albarán
-            </h2>
-
-            <p>
-                Haz una fotografía del albarán y guarda sus datos.
-            </p>
-
-        </div>
-
-        <div class="albaran-option-arrow">
-
-            <i class="fa-solid fa-chevron-right"></i>
-
-        </div>
-
-    </div>
+        <div
+            style="
+                display:grid;
+                grid-template-columns:
+                    1.5fr
+                    1.5fr
+                    1fr
+                    1fr
+                    1fr;
+                gap:12px;
+                align-items:end;
+            "
+        >
 
 
-    <!-- CONSULTAR ALBARANES -->
+            <!-- BUSCAR -->
 
-    <div
-        class="albaran-option-card"
-        id="optionConsultar"
-    >
+            <div>
 
-        <div class="albaran-option-icon">
-
-            <i class="fa-solid fa-folder-open"></i>
-
-        </div>
-
-        <div class="albaran-option-content">
-
-            <h2>
-                Consultar albaranes
-            </h2>
-
-            <p>
-                Busca y consulta los albaranes registrados.
-            </p>
-
-        </div>
-
-        <div class="albaran-option-arrow">
-
-            <i class="fa-solid fa-chevron-right"></i>
-
-        </div>
-
-    </div>
-
-</div>
-            <!-- =================================================
-                 CONSULTA DE ALBARANES
-            ================================================== -->
-
-            <div
-                class="page"
-                id="page-albaranes-consulta"
-            >
-
-                <div class="page-header">
-
-                    <div>
-
-                        <span class="page-kicker">
-                            GESTIÓN DE ALBARANES
-                        </span>
-
-                        <h1>
-                            Consultar albaranes
-                        </h1>
-
-                        <p>
-                            Busca, filtra y consulta los albaranes registrados.
-                        </p>
-
-                    </div>
-
-
-                    <div class="page-actions">
-
-                        <button
-                            class="btn btn-secondary"
-                            id="btnVolverAlbaranes"
-                        >
-
-                            <i class="fa-solid fa-arrow-left"></i>
-
-                            Volver
-
-                        </button>
-
-
-                        <button
-                            class="btn btn-primary"
-                            id="btnNuevoAlbaranConsulta"
-                        >
-
-                            <i class="fa-solid fa-plus"></i>
-
-                            Nuevo albarán
-
-                        </button>
-
-                    </div>
-
-                </div>
-
-
-                <!-- FILTROS -->
+                <label
+                    style="
+                        display:block;
+                        font-size:9px;
+                        font-weight:700;
+                        color:#52616a;
+                        margin-bottom:7px;
+                        letter-spacing:.4px;
+                    "
+                >
+                    BUSCAR
+                </label>
 
                 <div
-                    class="panel"
                     style="
-                        margin-bottom:20px;
-                        padding:20px;
+                        position:relative;
                     "
                 >
 
-                    <div
+                    <i
+                        class="fa-solid fa-magnifying-glass"
                         style="
-                            display:grid;
-                            grid-template-columns:
-                                1.5fr
-                                1.5fr
-                                1fr
-                                1fr
-                                1fr;
-                            gap:12px;
-                            align-items:end;
+                            position:absolute;
+                            left:11px;
+                            top:50%;
+                            transform:translateY(-50%);
+                            color:#8b969b;
+                            font-size:11px;
+                        "
+                    ></i>
+
+                    <input
+                        type="text"
+                        id="consultaBuscar"
+                        placeholder="Nº albarán o cliente"
+                        style="
+                            width:100%;
+                            box-sizing:border-box;
+                            height:38px;
+                            padding:0 12px 0 31px;
+                            border:1px solid #d8dfe2;
+                            border-radius:7px;
+                            font-size:11px;
+                            outline:none;
+                            background:#fff;
                         "
                     >
-
-
-                        <!-- BUSCAR -->
-
-                        <div>
-
-                            <label
-                                style="
-                                    display:block;
-                                    font-size:9px;
-                                    font-weight:700;
-                                    color:#52616a;
-                                    margin-bottom:7px;
-                                    letter-spacing:.4px;
-                                "
-                            >
-                                BUSCAR
-                            </label>
-
-
-                            <div
-                                style="
-                                    position:relative;
-                                "
-                            >
-
-                                <i
-                                    class="fa-solid fa-magnifying-glass"
-                                    style="
-                                        position:absolute;
-                                        left:11px;
-                                        top:50%;
-                                        transform:translateY(-50%);
-                                        color:#8b969b;
-                                        font-size:11px;
-                                    "
-                                ></i>
-
-
-                                <input
-                                    type="text"
-                                    id="consultaBuscar"
-                                    placeholder="Nº albarán o cliente"
-                                    style="
-                                        width:100%;
-                                        box-sizing:border-box;
-                                        height:38px;
-                                        padding:0 12px 0 31px;
-                                        border:1px solid #d8dfe2;
-                                        border-radius:7px;
-                                        font-size:11px;
-                                        outline:none;
-                                        background:#fff;
-                                    "
-                                >
-
-                            </div>
-
-                        </div>
-
-
-                        <!-- FECHA DESDE -->
-
-                        <div>
-
-                            <label
-                                style="
-                                    display:block;
-                                    font-size:9px;
-                                    font-weight:700;
-                                    color:#52616a;
-                                    margin-bottom:7px;
-                                    letter-spacing:.4px;
-                                "
-                            >
-                                FECHA DESDE
-                            </label>
-
-
-                            <input
-                                type="date"
-                                id="consultaFechaDesde"
-                                style="
-                                    width:100%;
-                                    box-sizing:border-box;
-                                    height:38px;
-                                    padding:0 10px;
-                                    border:1px solid #d8dfe2;
-                                    border-radius:7px;
-                                    font-size:11px;
-                                    outline:none;
-                                    background:#fff;
-                                "
-                            >
-
-                        </div>
-
-
-                        <!-- FECHA HASTA -->
-
-                        <div>
-
-                            <label
-                                style="
-                                    display:block;
-                                    font-size:9px;
-                                    font-weight:700;
-                                    color:#52616a;
-                                    margin-bottom:7px;
-                                    letter-spacing:.4px;
-                                "
-                            >
-                                FECHA HASTA
-                            </label>
-
-
-                            <input
-                                type="date"
-                                id="consultaFechaHasta"
-                                style="
-                                    width:100%;
-                                    box-sizing:border-box;
-                                    height:38px;
-                                    padding:0 10px;
-                                    border:1px solid #d8dfe2;
-                                    border-radius:7px;
-                                    font-size:11px;
-                                    outline:none;
-                                    background:#fff;
-                                "
-                            >
-
-                        </div>
-
-
-                        <!-- ESTADO -->
-
-                        <div>
-
-                            <label
-                                style="
-                                    display:block;
-                                    font-size:9px;
-                                    font-weight:700;
-                                    color:#52616a;
-                                    margin-bottom:7px;
-                                    letter-spacing:.4px;
-                                "
-                            >
-                                ESTADO
-                            </label>
-
-
-                            <select
-                                id="consultaEstado"
-                                style="
-                                    width:100%;
-                                    box-sizing:border-box;
-                                    height:38px;
-                                    padding:0 10px;
-                                    border:1px solid #d8dfe2;
-                                    border-radius:7px;
-                                    font-size:11px;
-                                    outline:none;
-                                    background:#fff;
-                                    color:#35434b;
-                                "
-                            >
-
-                                <option value="Todos">
-                                    Todos
-                                </option>
-
-                                <option value="Pendiente">
-                                    Pendientes
-                                </option>
-
-                                <option value="Firmado">
-                                    Firmados
-                                </option>
-
-                            </select>
-
-                        </div>
-
-
-                        <!-- BOTONES -->
-
-                        <div
-                            style="
-                                display:flex;
-                                gap:8px;
-                            "
-                        >
-
-                            <button
-                                type="button"
-                                id="btnBuscarAlbaranes"
-                                class="btn btn-primary"
-                                style="
-                                    height:38px;
-                                    flex:1;
-                                "
-                            >
-
-                                <i class="fa-solid fa-magnifying-glass"></i>
-
-                                Buscar
-
-                            </button>
-
-
-                            <button
-                                type="button"
-                                id="btnLimpiarConsulta"
-                                class="btn btn-secondary"
-                                style="
-                                    height:38px;
-                                    width:42px;
-                                    padding:0;
-                                "
-                                title="Limpiar filtros"
-                            >
-
-                                <i class="fa-solid fa-rotate-left"></i>
-
-                            </button>
-
-                        </div>
-
-                    </div>
-
-                </div>
-
-
-                <!-- RESULTADOS -->
-
-                <div class="panel">
-
-                    <div class="panel-header">
-
-                        <div>
-
-                            <h2>
-                                Resultados
-                            </h2>
-
-                            <span id="consultaResultadosTexto">
-                                Mostrando todos los albaranes
-                            </span>
-
-                        </div>
-
-
-                        <div
-                            id="consultaContador"
-                            style="
-                                font-size:10px;
-                                font-weight:700;
-                                color:#176d79;
-                            "
-                        >
-                            0 albaranes
-                        </div>
-
-                    </div>
-
-
-                    <div class="albaranes-table-container">
-
-                        <table class="albaranes-table">
-
-                            <thead>
-
-                                <tr>
-
-                                    <th>
-                                        ALBARÁN
-                                    </th>
-
-                                    <th>
-                                        FECHA
-                                    </th>
-
-                                    <th>
-                                        CLIENTE
-                                    </th>
-
-                                    <th>
-                                        ESTADO
-                                    </th>
-
-                                    <th>
-                                        ACCIONES
-                                    </th>
-
-                                </tr>
-
-                            </thead>
-
-
-                            <tbody id="consultaAlbaranesTableBody">
-
-                                <tr class="empty-table-row">
-
-                                    <td colspan="5">
-
-                                        <div class="empty-table">
-
-                                            <i class="fa-solid fa-magnifying-glass"></i>
-
-                                            <strong>
-                                                No hay albaranes
-                                            </strong>
-
-                                            <span>
-                                                Los resultados de la búsqueda aparecerán aquí.
-                                            </span>
-
-                                        </div>
-
-                                    </td>
-
-                                </tr>
-
-                            </tbody>
-
-                        </table>
-
-                    </div>
 
                 </div>
 
             </div>
 
 
+            <!-- FECHA DESDE -->
+
+            <div>
+
+                <label
+                    style="
+                        display:block;
+                        font-size:9px;
+                        font-weight:700;
+                        color:#52616a;
+                        margin-bottom:7px;
+                        letter-spacing:.4px;
+                    "
+                >
+                    FECHA DESDE
+                </label>
+
+                <input
+                    type="date"
+                    id="consultaFechaDesde"
+                    style="
+                        width:100%;
+                        box-sizing:border-box;
+                        height:38px;
+                        padding:0 10px;
+                        border:1px solid #d8dfe2;
+                        border-radius:7px;
+                        font-size:11px;
+                        outline:none;
+                        background:#fff;
+                    "
+                >
+
+            </div>
+
+
+            <!-- FECHA HASTA -->
+
+            <div>
+
+                <label
+                    style="
+                        display:block;
+                        font-size:9px;
+                        font-weight:700;
+                        color:#52616a;
+                        margin-bottom:7px;
+                        letter-spacing:.4px;
+                    "
+                >
+                    FECHA HASTA
+                </label>
+
+                <input
+                    type="date"
+                    id="consultaFechaHasta"
+                    style="
+                        width:100%;
+                        box-sizing:border-box;
+                        height:38px;
+                        padding:0 10px;
+                        border:1px solid #d8dfe2;
+                        border-radius:7px;
+                        font-size:11px;
+                        outline:none;
+                        background:#fff;
+                    "
+                >
+
+            </div>
+
+
+            <!-- ESTADO -->
+
+            <div>
+
+                <label
+                    style="
+                        display:block;
+                        font-size:9px;
+                        font-weight:700;
+                        color:#52616a;
+                        margin-bottom:7px;
+                        letter-spacing:.4px;
+                    "
+                >
+                    ESTADO
+                </label>
+
+                <select
+                    id="consultaEstado"
+                    style="
+                        width:100%;
+                        box-sizing:border-box;
+                        height:38px;
+                        padding:0 10px;
+                        border:1px solid #d8dfe2;
+                        border-radius:7px;
+                        font-size:11px;
+                        outline:none;
+                        background:#fff;
+                        color:#35434b;
+                    "
+                >
+
+                    <option value="Todos">
+                        Todos
+                    </option>
+
+                    <option value="Pendiente">
+                        Pendientes
+                    </option>
+
+                    <option value="Firmado">
+                        Firmados
+                    </option>
+
+                </select>
+
+            </div>
+
+
+            <!-- BOTONES -->
+
+            <div
+                style="
+                    display:flex;
+                    gap:8px;
+                "
+            >
+
+                <button
+                    type="button"
+                    id="btnBuscarAlbaranes"
+                    class="btn btn-primary"
+                    style="
+                        height:38px;
+                        flex:1;
+                    "
+                >
+
+                    <i class="fa-solid fa-magnifying-glass"></i>
+
+                    Buscar
+
+                </button>
+
+
+                <button
+                    type="button"
+                    id="btnLimpiarConsulta"
+                    class="btn btn-secondary"
+                    style="
+                        height:38px;
+                        width:42px;
+                        padding:0;
+                    "
+                    title="Limpiar filtros"
+                >
+
+                    <i class="fa-solid fa-rotate-left"></i>
+
+                </button>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- =================================================
+         RESULTADOS
+    ================================================== -->
+
+    <div class="panel">
+
+        <div class="panel-header">
+
+            <div>
+
+                <h2>
+                    Resultados
+                </h2>
+
+                <span id="consultaResultadosTexto">
+                    Mostrando todos los albaranes
+                </span>
+
+            </div>
+
+
+            <div
+                id="consultaContador"
+                style="
+                    font-size:10px;
+                    font-weight:700;
+                    color:#176d79;
+                "
+            >
+                0 albaranes
+            </div>
+
+        </div>
+
+
+        <div class="albaranes-table-container">
+
+            <table class="albaranes-table">
+
+                <thead>
+
+                    <tr>
+
+                        <th>
+                            ALBARÁN
+                        </th>
+
+                        <th>
+                            FECHA
+                        </th>
+
+                        <th>
+                            CLIENTE
+                        </th>
+
+                        <th>
+                            ESTADO
+                        </th>
+
+                        <th>
+                            ACCIONES
+                        </th>
+
+                    </tr>
+
+                </thead>
+
+
+                <tbody id="consultaAlbaranesBody">
+
+                    <tr class="empty-table-row">
+
+                        <td colspan="5">
+
+                            <div class="empty-table">
+
+                                <i class="fa-solid fa-magnifying-glass"></i>
+
+                                <strong>
+                                    No hay resultados
+                                </strong>
+
+                                <span>
+                                    No hay albaranes que coincidan con los filtros.
+                                </span>
+
+                            </div>
+
+                        </td>
+
+                    </tr>
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
+</div>
             <!-- =================================================
                  FACTURAS
             ================================================== -->
