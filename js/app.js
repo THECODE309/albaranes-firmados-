@@ -572,6 +572,38 @@ if (verTodos) {
                             >
 
                                 <label>
+                                <div
+    class="steil-form-group"
+    style="grid-column:1/-1;"
+>
+    <label>
+        DOCUMENTO DEL ALBARÁN
+    </label>
+
+    <div class="steil-document-upload">
+
+        <button
+            type="button"
+            class="btn btn-secondary"
+            id="steilSubirArchivoAlbaran"
+        >
+            <i class="fa-solid fa-upload"></i>
+            Subir archivo
+        </button>
+
+        <span id="steilNombreArchivoAlbaran">
+            Ningún archivo seleccionado
+        </span>
+
+        <input
+            type="file"
+            id="steilArchivoAlbaran"
+            accept="image/*,.pdf"
+            hidden
+        >
+
+    </div>
+</div>
                                     OBSERVACIONES
                                 </label>
 
