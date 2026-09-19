@@ -651,7 +651,61 @@ if (verTodos) {
 
 
         document.body.appendChild(modal);
+/* -----------------------------------------
+   SUBIR ARCHIVO DEL ALBARÁN
+----------------------------------------- */
 
+const botonSubirArchivo =
+    document.getElementById("steilSubirArchivoAlbaran");
+
+const archivoAlbaran =
+    document.getElementById("steilArchivoAlbaran");
+
+const nombreArchivoAlbaran =
+    document.getElementById("steilNombreArchivoAlbaran");
+
+if (botonSubirArchivo && archivoAlbaran) {
+
+    botonSubirArchivo.addEventListener("click", function () {
+        archivoAlbaran.click();
+    });
+
+    archivoAlbaran.addEventListener("change", function () {
+
+        const archivo =
+            archivoAlbaran.files && archivoAlbaran.files[0];
+
+        if (!archivo) {
+            return;
+        }
+
+        if (nombreArchivoAlbaran) {
+            nombreArchivoAlbaran.textContent = archivo.name;
+        }
+
+        const lector = new FileReader();
+
+        lector.onload = function () {
+            modal.dataset.documentoAlbaranNombre = archivo.name;
+            modal.dataset.documentoAlbaranData =
+                String(lector.result || "");
+        };
+
+        lector.onerror = function () {
+            modal.dataset.documentoAlbaranNombre = "";
+            modal.dataset.documentoAlbaranData = "";
+
+            if (nombreArchivoAlbaran) {
+                nombreArchivoAlbaran.textContent =
+                    "No se pudo leer el archivo";
+            }
+
+            mostrarAviso("No se pudo leer el archivo seleccionado.");
+        };
+
+        lector.readAsDataURL(archivo);
+    });
+}
 
         /* -----------------------------------------
            ESTADO
