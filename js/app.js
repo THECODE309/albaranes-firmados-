@@ -892,7 +892,27 @@ if (botonSubirArchivo && archivoAlbaran) {
 
             observaciones:
                 observaciones || "",
+documentoNombre:
+    document.getElementById("steilAlbaranModal")
+        ?.dataset.documentoAlbaranNombre || "",
 
+documentoData:
+    document.getElementById("steilAlbaranModal")
+        ?.dataset.documentoAlbaranData || "",
+
+
+
+
+
+
+
+
+
+
+
+
+
+           
             creado:
                 new Date().toISOString()
 
@@ -2568,7 +2588,22 @@ if (botonSubirArchivo && archivoAlbaran) {
 
         }
 
+.steil-document-upload {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 12px;
+    padding: 12px 14px;
+    border: 1px dashed #cbd5e1;
+    border-radius: 8px;
+    background: #f8fafc;
+}
 
+.steil-document-upload span {
+    color: #64748b;
+    font-size: 13px;
+    overflow-wrap: anywhere;
+}
         .steil-modal-footer {
 
             display:flex;
